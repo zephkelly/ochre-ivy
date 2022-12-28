@@ -4,10 +4,11 @@ const express = require('express');
 
 const app = express();
 
-app.use(express.static('dist'));
+app.use(express.static('./dist'));
 
 app.get('/', (req, res) => {
-  res.sendFile('app.html', { root: __dirname });
+  res.sendFile('index.html', { root: __dirname });
+  console.log(__dirname);
 });
 
 app.listen(PORT, () => {
