@@ -5,14 +5,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: {
-    style: './src/style.css',
-    server: './server.js',
-    app: './src/app.js',
-    posts: './src/routes/posts.js'
-  },
+  entry: [
+    './src/style.css',
+    './src/app.js',
+    './src/routes/posts.js'
+  ],
   output: {
-    filename: '[name].bundle.js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
