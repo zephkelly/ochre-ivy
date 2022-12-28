@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zephkelly/webpack-test.git"
+    "url": "git+https://github.com/zephkelly/ochre-ivy.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zephkelly/webpack-test/issues"
+    "url": "https://github.com/zephkelly/ochre-ivy/issues"
   },
-  "homepage": "https://github.com/zephkelly/webpack-test#readme",
+  "homepage": "https://github.com/zephkelly/ochre-ivy#readme",
   "devDependencies": {
     "css-loader": "^6.7.3",
     "html-webpack-plugin": "^5.5.0",
