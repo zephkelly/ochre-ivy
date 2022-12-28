@@ -1,0 +1,40 @@
+{
+  "name": "webpack-test",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "sass": "sass style.scss ./src/style.css",
+    "tsc": "tsc",
+    "webpack": "npx webpack",
+    "watch:sass": "sass --watch style.scss ./src/style.css",
+    "build": "npm run sass && npm run tsc",
+    "bundle": "npm run build && webpack",
+    "start": "node ./dist/index.bundle.js",
+    "bundle:start": "npm run bundle && npm run start",
+    "publish": "git subtree push --prefix dist origin gh-pages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zephkelly/webpack-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zephkelly/webpack-test/issues"
+  },
+  "homepage": "https://github.com/zephkelly/webpack-test#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.3",
+    "html-webpack-plugin": "^5.5.0",
+    "node-sass": "^8.0.0",
+    "style-loader": "^3.3.1",
+    "typescript": "^4.9.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
