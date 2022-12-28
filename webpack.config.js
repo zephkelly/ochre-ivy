@@ -7,7 +7,8 @@ module.exports = {
   mode: 'development',
   entry: {
     style: './src/style.css',
-    index: './index.js', 
+    server: './server.js',
+    app: './src/app.js',
     posts: './src/routes/posts.js'
   },
   output: {

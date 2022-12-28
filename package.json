@@ -10,7 +10,7 @@
     "watch:sass": "sass --watch style.scss ./src/style.css",
     "build": "npm run sass && npm run tsc",
     "bundle": "npm run build && webpack",
-    "start": "node ./dist/index.bundle.js",
+    "start": "node ./dist/server.bundle.js",
     "bundle:start": "npm run bundle && npm run start",
     "publish": "git subtree push --prefix dist origin gh-pages"
   },

@@ -1,3 +1,26 @@
+body {
+  margin: 0rem;
+  background-color: ghostwhite;
+}
+body header {
+  background-color: white;
+  height: 6rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
+}
+body #content {
+  max-width: 1280px;
+}
 
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem 2rem;
+  height: 100%;
+}
+.nav .nav-logo {
+  font-size: 1.4rem;
+}
 
 /*# sourceMappingURL=style.css.map */
