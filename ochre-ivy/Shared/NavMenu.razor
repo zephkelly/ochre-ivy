@@ -1,0 +1,38 @@
+﻿<div class="top-row navbar">
+    <div class="container">
+        <a class="navbar-brand" href="">ochre-ivy</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="nav-item-container">
+        <div class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+              Home
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="counter">
+              Counter
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" href="fetchdata">
+              Fetchdata
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
