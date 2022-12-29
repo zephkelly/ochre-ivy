@@ -23,8 +23,8 @@ module.exports = {
   externals: [nodeExternals()],
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Webpack',
-      template: './src/template-index.html'
+      template: './src/template-index.html',
+      clean: true,
     }),
   ],
   devtool: 'inline-source-map',

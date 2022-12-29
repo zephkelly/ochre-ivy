@@ -1,14 +1,24 @@
-const PORT = 62264;
-
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 const app = express();
+const PORT = 62264;
 
+app.use(cookieParser());
 app.use(express.static('./dist'));
 
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: __dirname });
-  console.log(__dirname);
+  res.sendFile('index.html');
+});
+
+//Routes
+app.get('/setuser', (req, res) => {
+  res.cookie('user', 'John');
+  res.send('User is set');
+});
+
+app.get('/getuser', (req, res) => {
+  res.send(req.cookies);
 });
 
 app.listen(PORT, () => {

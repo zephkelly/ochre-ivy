@@ -1,27 +1,47 @@
 body {
   margin: 0rem;
   background-color: ghostwhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
     background-color: white;
-    height: 6rem;
+    height: 3rem;
     box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
   }
 
   #content {
+    margin-top: 5rem;
     max-width: 1280px;
+    min-height: 200vh;
   }
 }
 
-.nav {
+.navbar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  padding: 0rem 2rem;
-  height: 100%;
+  align-items: flex-end;
+  padding: 1rem 2rem;
+  padding-top: 2rem;
+  transition: padding-top 0.3s ease-out;
 
-  .nav-logo {
-    font-size: 1.4rem;
+  .nav-text {
+    transition: font-size 0.15s ease-out;
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .nav-menu-btn {
+    font-size: 1.8rem;
+  }
+
+  .nav-menu-btn:hover {
+    opacity: 0.6;
   }
 }

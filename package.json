@@ -4,14 +4,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "sass": "sass style.scss ./src/style.css",
-    "tsc": "tsc",
-    "webpack": "npx webpack",
-    "watch:sass": "sass --watch style.scss ./src/style.css",
-    "build": "npm run sass && npm run tsc",
-    "bundle": "npm run build && webpack",
+    "sass": "npx sass style.scss ./src/style.css",
+    "all": "npm run sass && tsc",
+    "bundle": "npm run all && npx webpack",
     "start": "node ./dist/server.js",
-    "bundle:start": "npm run bundle && npm run start",
     "publish": "git subtree push --prefix dist origin gh-pages"
   },
   "repository": {
@@ -35,6 +31,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "express": "^4.18.2"
   }
 }
