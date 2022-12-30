@@ -7,9 +7,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   mode: 'development',
   entry: [
-    './src/style.css',
-    './src/app.js',
-    './src/routes/posts.js'
+    './src/client/style.css',
+    './src/client/app.js',
+    './src/client/modules/domInteraction.js'
   ],
   output: {
     filename: 'bundle.js',
@@ -24,13 +24,13 @@ module.exports = {
   externals: [nodeExternals()],
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/template-index.html',
+      template: './src/client/template-index.html',
       clean: true,
     }),
 
     new CopyPlugin({
       patterns: [
-        { from: "server.js", to: "server.js" }
+        { from: "./src/server/server.js", to: "server.js" },
       ],
     }),
   ],

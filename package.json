@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "sass": "npx sass style.scss ./src/style.css",
+    "sass": "npx sass ./src/client/style.scss ./src/client/style.css",
     "all": "npm run sass && tsc",
     "bundle": "npm run all && npx webpack",
     "start": "node ./dist/server.js",
