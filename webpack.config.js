@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'development',
@@ -26,6 +27,12 @@ module.exports = {
       template: './src/template-index.html',
       clean: true,
     }),
+
+    new CopyPlugin({
+      patterns: [
+        { from: "server.js", to: "server.js" }
+      ],
+    }),
   ],
   devtool: 'inline-source-map',
   devServer: {
@@ -45,4 +52,5 @@ module.exports = {
       test: /\.(woff|woff2|eot|ttf|otf)$/i,
       type: 'asset/resource',
     },],
-},};
+  },
+};

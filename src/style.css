@@ -1,3 +1,8 @@
+button {
+  background: none;
+  border: none;
+}
+
 body {
   margin: 0rem;
   background-color: ghostwhite;
@@ -35,7 +40,12 @@ body #content {
   margin: 0;
 }
 .navbar .nav-menu-btn {
+  transform: font-size 0.15s ease-out;
   font-size: 1.8rem;
+  padding: 0rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 .navbar .nav-menu-btn:hover {
   opacity: 0.6;
