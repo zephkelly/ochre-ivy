@@ -13,17 +13,18 @@ body {
   header {
     position: fixed;
     top: 0;
-    right: 0;
     left: 0;
+    right: 0;
+    height: 4.6rem;
+    transition: height 0.3s ease-out, box-shadow 0.3s ease-out;
     background-color: white;
-    height: 3rem;
-    box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
   }
 
   #content {
     margin-top: 5rem;
     max-width: 1280px;
     min-height: 200vh;
+    background-color: #f8c6b7;
   }
 }
 
@@ -33,8 +34,7 @@ body {
   justify-content: space-between;
   align-items: flex-end;
   padding: 1rem 2rem;
-  padding-top: 2rem;
-  transition: padding-top 0.3s ease-out;
+  padding-top: 0rem;
 
   .nav-text {
     transition: font-size 0.15s ease-out;
@@ -43,8 +43,8 @@ body {
   }
 
   .nav-menu-btn {
-    transform: font-size 0.15s ease-out;
-    font-size: 1.8rem;
+    transition: font-size 0.15s ease-out;
+    font-size: 2.2rem;
     padding: 0rem;
     display: flex;
     align-items: flex-end;
@@ -52,6 +52,12 @@ body {
   }
 
   .nav-menu-btn:hover {
-    opacity: 0.6;
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: "428px") {
+  .nav-menu-btn {
+    background-color: aqua;
   }
 }
