@@ -28,8 +28,6 @@ function shrinkNavbar() {
 
     shrunkNavbar = false;
   }
-
-  console.log("scrolling")
 }
 //--------------------------------------------------------------
 

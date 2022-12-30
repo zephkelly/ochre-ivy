@@ -21,6 +21,5 @@ function shrinkNavbar() {
         navMenuBtn.style.fontSize = "2.2rem";
         shrunkNavbar = false;
     }
-    console.log("scrolling");
 }
 //# sourceMappingURL=app.js.map
