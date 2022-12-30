@@ -1,29 +1,38 @@
+:root {
+  --accent-color: #f8c6b7;
+  --dark: #1a1a1a;
+  --light: #fcfcfc;
+}
+
 button {
   background: none;
   border: none;
 }
 
+.hidden {
+  display: none;
+}
+
 body {
   margin: 0rem;
-  background-color: ghostwhite;
+  background-color: var(--light);
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+body body.dark-mode {
+  background-color: var(--dark);
 }
 body header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  transition: height 0.3s ease-out, box-shadow 0.3s ease-out;
-  background-color: white;
+  background-color: var(--light);
+  z-index: 10;
 }
-body #content {
-  padding-top: 5rem;
-  width: 100%;
-  max-width: 1280px;
-  min-height: 200vh;
-  background-color: #f8c6b7;
+body header.dark-mode {
+  background-color: var(--dark);
 }
 
 .navbar {
@@ -35,9 +44,26 @@ body #content {
   padding-top: 0rem;
 }
 .navbar .nav-text {
-  transition: font-size 0.15s ease-out;
+  transition: 0.15s ease-out;
   font-size: 1.8rem;
   margin: 0;
+  margin-bottom: 0.4rem;
+  color: var(--dark);
+}
+.navbar .nav-text.dark-mode {
+  color: var(--light);
+}
+.navbar .nav-text-spacer {
+  position: relative;
+  transition: 0.15s ease-out;
+  height: 0.2rem;
+  left: 0.6rem;
+  bottom: 0.2rem;
+  width: 7.7rem;
+  background-color: var(--dark);
+}
+.navbar .nav-text-spacer.dark-mode {
+  background-color: var(--light);
 }
 .navbar .nav-menu-btn {
   transition: font-size 0.15s ease-out;
@@ -46,19 +72,85 @@ body #content {
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
+  color: var(--dark);
+  text-decoration: none;
+}
+.navbar .nav-menu-btn.dark-mode {
+  color: var(--light);
 }
 .navbar .nav-menu-btn:hover {
   opacity: 0.8;
 }
 
+#content {
+  height: 300vh;
+  width: 100%;
+}
+
+#landing {
+  height: 580px;
+}
+#landing .container {
+  position: relative;
+  box-sizing: border-box;
+  width: 85%;
+  max-width: 800px;
+  min-height: 140px;
+  margin: auto;
+  margin-top: 13rem;
+  margin-bottom: 8rem;
+  padding: 1rem;
+}
+#landing .container > * {
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+#landing h3 {
+  font-size: 2.1rem;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  color: var(--dark);
+}
+#landing h3.dark-mode {
+  color: var(--light);
+}
+#landing #hero-illustration {
+  position: absolute;
+  width: 60%;
+  min-width: 5rem;
+  right: 0rem;
+  height: auto;
+  z-index: 0;
+  filter: invert(0);
+}
+#landing #hero-illustration.dark-mode {
+  filter: invert(1);
+}
+#landing #landing-bgBox {
+  position: absolute;
+  top: -28vh;
+  right: -3rem;
+  z-index: -1;
+  border-radius: 10rem;
+  transform: rotate(18deg);
+  background-color: var(--accent-color);
+  width: 120%;
+  height: 80%;
+}
+
 @media (min-width: 320px) {
   header {
-    height: 7rem;
+    height: 6rem;
+  }
+  #landing h3 {
+    font-size: 2.1rem;
   }
 }
 @media (min-width: 430px) {
-  header {
-    height: 6rem;
+  #landing h3 {
+    max-width: 30rem;
+    font-size: 2.6rem;
   }
 }
 @media (min-width: 768px) {
