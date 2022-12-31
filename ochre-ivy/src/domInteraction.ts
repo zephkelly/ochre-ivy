@@ -5,29 +5,16 @@ const navText: HTMLElement = document.querySelector(".nav-text") as HTMLElement;
 const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as HTMLElement;
 const navMenuBtn: HTMLElement= document.querySelector(".nav-menu-btn") as HTMLElement;
 
-//-- EVENTS
-//-----------------------------------------------------------------------------
-window.addEventListener("load", () => {
-  setNavbarInitial();
-});
-
-window.addEventListener("scroll", () => {
-  shrinkNavbar();
-});
-
-//-- COMPONENTS
-//-----------------------------------------------------------------------------
-
 // -- NAVIGATION BAR ----
 // -- Shrinking navbar on scroll
 let shrunkNavbar: boolean = false;
 let navBarShrinkTimeout: boolean = false;
 
-function setNavbarInitial() {
+export function setNavbarInitial() {
   navbar.style.backgroundColor = '#f8c6b7';
 }
 
-function shrinkNavbar() {
+export function shrinkNavbar() {
   if (navBarShrinkTimeout) return;
 
   (function callTimeout() {
@@ -107,14 +94,16 @@ function shrinkNavbar() {
     return
   }
 
+    /*
   let screenWidthTabletLarge = {
     min: window.matchMedia("(min-width: 1025px)"),
     max: window.matchMedia("(min-width: 1280px)")
   }
+  */
 }
 
 //Helper function for manipulating the DOM for nav
-function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {
+export function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {
   navbar.style.boxShadow = bShadow;
   navbar.style.height = height;
   navText.style.fontSize = tFont;
@@ -142,6 +131,7 @@ function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont:
   }
 }
 
-function delay(ms: number) {
+// -- HELPER FUNCTIONS ----
+export function delay(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
 }

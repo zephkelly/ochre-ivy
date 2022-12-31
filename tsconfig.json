@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "es5",
-    "removeComments": true,
-    "sourceMap": true
-  },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules"]
-}
