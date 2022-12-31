@@ -6,11 +6,9 @@ const PORT = 62264;
 
 app.use(cookieParser());
 app.use(express.static('./dist'));
-app.use(express.static('./dist/assets/images'))
 
 app.get('/', (req, res) => {
   res.sendFile('index.html');
-  res.sendFile('painters-palette.jpg');
 });
 
 //Routes
