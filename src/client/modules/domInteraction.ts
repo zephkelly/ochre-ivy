@@ -44,7 +44,7 @@ function shrinkNavbar() {
   }
 
   if (screenWidthPhone.min.matches && screenWidthPhone.max.matches) {
-    if (scrollY > 60) {
+    if (scrollY > 30) {
       if (shrunkNavbar) return;
       
       manipulateNavDOM(
@@ -68,7 +68,7 @@ function shrinkNavbar() {
   }
 
   if (screenWidthTabletSmall.min.matches && screenWidthTabletSmall.max.matches) {
-    if (scrollY > 60) {
+    if (scrollY > 30) {
       if (shrunkNavbar) return;
       manipulateNavDOM(
         '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.03)',
@@ -91,7 +91,7 @@ function shrinkNavbar() {
   }
 
   if (screenWidthTabletMedium.min.matches && screenWidthTabletMedium.max.matches) {
-    if (scrollY > 60) {
+    if (scrollY > 30) {
       if (shrunkNavbar) return;
       manipulateNavDOM(
         '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.03)',

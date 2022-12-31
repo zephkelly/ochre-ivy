@@ -4,6 +4,10 @@
   --light: #fcfcfc;
 }
 
+button {
+  text-decoration: none;
+}
+
 .hidden {
   display: none;
 }
@@ -69,7 +73,6 @@ body header.dark-mode {
   align-items: flex-end;
   justify-content: flex-end;
   color: var(--dark);
-  text-decoration: none;
 }
 .navbar .nav-menu-btn.dark-mode {
   color: var(--light);
@@ -97,7 +100,7 @@ body header.dark-mode {
   max-width: 800px;
   min-height: 320px;
   margin: auto;
-  margin-top: 13rem;
+  margin-top: 10rem;
   margin-bottom: 11rem;
   padding: 1rem;
 }
