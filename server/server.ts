@@ -5,7 +5,7 @@ const app = express();
 const PORT = 62264;
 
 app.use(cookieParser());
-app.use(express.static('../ochre-ivy/dist'));
+app.use(express.static('./ochre-ivy/dist'));
 
 app.get('/', (req, res) => {
   res.sendFile('index.html');
