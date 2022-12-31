@@ -100,7 +100,7 @@ body header.dark-mode {
   max-width: 800px;
   min-height: 320px;
   margin: auto;
-  margin-top: 10rem;
+  margin-top: 9rem;
   margin-bottom: 11rem;
   padding: 1rem;
 }
@@ -118,7 +118,7 @@ body header.dark-mode {
   color: var(--light);
 }
 #landing .hero-description {
-  margin-top: 3rem;
+  margin-top: 2rem;
   font-size: 1.4rem;
   font-family: "Lato", sans-serif;
 }

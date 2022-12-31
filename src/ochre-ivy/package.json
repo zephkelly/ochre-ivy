@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
     "dependencies": {
-    "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
     "typescript": "^4.9.4",
     "vite": "^4.0.3"

@@ -44,7 +44,6 @@ export function shrinkNavbar() {
       manipulateNavDOM('', '', '', '', false);
     }
 
-    console.log("phone screen");
     return;
   }
 
@@ -67,7 +66,6 @@ export function shrinkNavbar() {
       manipulateNavDOM('', '', '', '', false);
     }
 
-    console.log("tablet small");
     return;
   }
 
@@ -90,7 +88,6 @@ export function shrinkNavbar() {
       manipulateNavDOM('', '', '', '', false);
     }
 
-    console.log("tablet medium");
     return
   }
 
