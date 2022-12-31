@@ -1,2 +1,3 @@
-/node_modules
-/ochre-ivy/node_modules
+/src/node_modules
+/src/ochre-ivy/node_modules
+/dist/node_modules
