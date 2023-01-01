@@ -1,3 +1,4 @@
+import { delay } from './helperFunctions'
 //-- ELEMENTS
 //-----------------------------------------------------------------------------
 const navbar: HTMLElement = document.querySelector(".navbar") as HTMLElement;
@@ -10,32 +11,34 @@ const navMenuBtn: HTMLElement= document.querySelector(".nav-menu-btn") as HTMLEl
 let shrunkNavbar: boolean = false;
 let navBarShrinkTimeout: boolean = false;
 
-export function setNavbarInitial() {
-  navbar.style.backgroundColor = '#f8c6b7';
-}
+(function setNavbarInitial() {
+  window.addEventListener('load', () => {
+    navbar.style.backgroundColor = '#f8c6b7';
+  });
+})();
 
 export function shrinkNavbar() {
   if (navBarShrinkTimeout) return;
 
   (function callTimeout() {
     navBarShrinkTimeout = true;
-    delay(200).then(() => navBarShrinkTimeout = false);
+    delay(400).then(() => navBarShrinkTimeout = false);
   });
 
   let scrollY: number = document.documentElement.scrollTop;
 
-  //Mobile --------------------
   let screenWidthPhone = {
+    smaller: window.matchMedia("(max-width: 319px)"),
     min: window.matchMedia("(min-width: 320px)"),
     max: window.matchMedia("(max-width: 430px)")
   }
 
-  if (screenWidthPhone.min.matches && screenWidthPhone.max.matches) {
+  if ((screenWidthPhone.min.matches && screenWidthPhone.max.matches) || screenWidthPhone.smaller.matches) {
     if (scrollY > 30) {
       if (shrunkNavbar) return;
       
       manipulateNavDOM(
-        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.03)',
+        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
         '3rem', '1.4rem', '1.8rem', true
       );
     }
@@ -44,20 +47,20 @@ export function shrinkNavbar() {
       manipulateNavDOM('', '', '', '', false);
     }
 
-    return;
+    return
   }
 
-  //Tablet --------------------
   let screenWidthTabletSmall = {
     min: window.matchMedia("(min-width: 431px)"),
     max: window.matchMedia("(max-width: 767px)")
   }
 
+  //Tablet small --------------
   if (screenWidthTabletSmall.min.matches && screenWidthTabletSmall.max.matches) {
     if (scrollY > 30) {
       if (shrunkNavbar) return;
       manipulateNavDOM(
-        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.03)',
+        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
         '3rem', '1.4rem', '1.8rem', true
       );
     }
@@ -68,7 +71,7 @@ export function shrinkNavbar() {
 
     return;
   }
-
+  
   //Tablet medium  -------------
   let screenWidthTabletMedium = {
     min: window.matchMedia("(min-width: 768px)"),
@@ -79,7 +82,7 @@ export function shrinkNavbar() {
     if (scrollY > 30) {
       if (shrunkNavbar) return;
       manipulateNavDOM(
-        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.03)',
+        '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
         '3rem', '1.4rem', '1.8rem', true
       );
     }
@@ -100,7 +103,7 @@ export function shrinkNavbar() {
 }
 
 //Helper function for manipulating the DOM for nav
-export function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {
+function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {
   navbar.style.boxShadow = bShadow;
   navbar.style.height = height;
   navText.style.fontSize = tFont;
@@ -126,9 +129,4 @@ export function manipulateNavDOM(bShadow: string, height: string, tFont: string,
     navTextSpacer.style.left = '';
     navTextSpacer.style.height = '';
   }
-}
-
-// -- HELPER FUNCTIONS ----
-export function delay(ms: number) {
-  return new Promise( resolve => setTimeout(resolve, ms) );
 }

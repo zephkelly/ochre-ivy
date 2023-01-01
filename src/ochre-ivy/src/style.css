@@ -1,9 +1,11 @@
 :root {
   --accent-color: #f8c6b7;
+  --accent-color-dark: #79574c;
   --dark: #1a1a1a;
   --light: #fcfcfc;
 }
 
+/*Globals*/
 button {
   text-decoration: none;
 }
@@ -11,6 +13,23 @@ button {
 .hidden {
   display: none;
 }
+
+.ochre-btn {
+  height: 2rem;
+  border: solid 0.15rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  color: var(--dark);
+}
+
+.ochre-btn-accent {
+  height: 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--accent-color);
+  color: var(--light);
+}
+/* ///// */
 
 body {
   margin: 0rem;
@@ -20,10 +39,10 @@ body {
   align-items: center;
   overflow-x: hidden;
 }
-body body.dark-mode {
+  body.dark-mode {
   background-color: var(--dark);
 }
-body header {
+body .navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -31,7 +50,7 @@ body header {
   background-color: var(--light);
   z-index: 10;
 }
-body header.dark-mode {
+body .navbar.dark-mode {
   background-color: var(--dark);
 }
 
@@ -42,6 +61,7 @@ body header.dark-mode {
   align-items: flex-end;
   padding: 1rem 2rem;
   padding-top: 0rem;
+  height: 5.5rem;
 }
 .navbar .nav-text {
   transition: 0.15s ease-out;
@@ -78,20 +98,21 @@ body header.dark-mode {
   color: var(--light);
 }
 .navbar .nav-menu-btn:hover {
-  opacity: 0.8;
+  transition: color 0.15s ease-out;
+  color: var(--accent-color-dark);
 }
 .navbar button {
   background: none;
   border: none;
 }
 
-#content {
+main {
   height: 300vh;
   width: 100%;
 }
 
 #landing {
-  height: 650px;
+  height: 550px;
 }
 #landing .container {
   position: relative;
@@ -101,7 +122,7 @@ body header.dark-mode {
   min-height: 320px;
   margin: auto;
   margin-top: 9rem;
-  margin-bottom: 11rem;
+  margin-bottom: 14rem;
   padding: 1rem;
 }
 #landing .container > * {
@@ -123,16 +144,17 @@ body header.dark-mode {
   font-family: "Lato", sans-serif;
 }
 #landing .hero-learnmore-btn {
-  width: 6rem;
-  height: 2rem;
-  border: solid 0.15rem;
-  border-radius: 0.5rem;
-  background-color: transparent;
   margin-top: 1rem;
+  width: 7rem;
+}
+#landing .hero-learnmore-btn:hover {
+  transition: color 0.15s ease-out;
+  color: var(--accent-color-dark);
 }
 #landing #hero-illustration {
   position: absolute;
-  margin-top: 3rem;
+  margin-top: 4rem;
+  transition: margin-top, right 0.3s ease-out;
   right: 0rem;
   width: 80%;
   min-width: 5rem;
@@ -140,12 +162,9 @@ body header.dark-mode {
   z-index: 0;
   filter: invert(0);
 }
-#landing #hero-illustration.dark-mode {
-  filter: invert(1);
-}
 #landing #landing-bgBox {
   position: relative;
-  top: -52rem;
+  top: -48rem;
   left: -5rem;
   z-index: -1;
   border-radius: 10rem;
@@ -155,12 +174,79 @@ body header.dark-mode {
   height: 120%;
 }
 
+
+#blog-section {
+  height: 550px;
+}
+#blog-section .container {
+  position: relative;
+  box-sizing: border-box;
+  width: 85%;
+  max-width: 800px;
+  min-height: 320px;
+  margin: auto;
+  margin-top: 6rem;
+  margin-bottom: 14rem;
+  padding: 1rem;
+}
+#blog-section .blog-text {
+  font-size: 2.2rem;
+  font-weight: 400;
+  font-family: "Lato", sans-serif;
+  text-align: end;
+}
+#blog-section .blog-description {
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-family: "Lato", sans-serif;
+  text-align: end;
+}
+#blog-section .blog-btn {
+  position: absolute;
+  right: 1rem;
+  width: 6.2rem;
+  height: 2.2rem;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+#blog-section .blog-btn:hover {
+  transition: 0.15s ease-out;
+  background-color: transparent;
+  border: solid 0.16rem var(--accent-color-dark);
+  color: var(--accent-color-dark);
+}
+#blog-section #blog-illustration {
+  position: absolute;
+  margin-top: 0rem;
+  transition: margin-top, right 0.3s ease-out;
+  left: -3rem;
+  width: 80%;
+  min-width: 5rem;
+  height: auto;
+  z-index: 0;
+  transform: rotate(35deg);
+}
+#blog-section #blog-bgBox {
+  position: relative;
+  top: -25rem;
+  left: -27rem;
+  border-radius: 10rem;
+  background-color: var(--accent-color);
+  transform: rotate(33deg);
+  width: 30rem;
+  height: 40rem;
+  z-index: -1;
+}
+
 @media (min-width: 320px) {
-  header {
-    height: 6rem;
+  .navbar {
+    height: 5.5rem;
   }
   #landing h3 {
     font-size: 2.1rem;
+  }
+  #landing #hero-illustration.dark-mode {
+  margin-top: 1rem;
   }
 }
 @media (min-width: 430px) {
@@ -168,19 +254,23 @@ body header.dark-mode {
     max-width: 30rem;
     font-size: 2.6rem;
   }
+  #landing #hero-illustration.dark-mode {
+    margin-top: 1rem;
+    right: -1rem;
+  }
 }
 @media (min-width: 768px) {
-  header {
+  .navbar {
     height: 5rem;
   }
 }
 @media (min-width: 1080px) {
-  header {
+  .navbar {
     height: 4.8rem;
   }
 }
 @media (min-width: 1280px) {
-  header {
+  .navbar {
     height: 4.6rem;
   }
 }

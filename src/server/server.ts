@@ -3,20 +3,20 @@ const express = require('express');
 const app = express();
 const PORT = 62264;
 
-app.use(cookieParser());
+//Static files
 app.use(express.static('./ochre-ivy/dist'));
 
+//Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//Routes
 app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
-//Routes
-app.get('/setuser', (req, res) => {
-  res.cookie('user', 'John');
-  res.send('User is set');
-});
 
-app.get('/getuser', (req, res) => {
-  res.send(req.cookies);
+app.get('/blog', (req, res) => {
+  res.sendFile('blog.html');
 });
 
 app.listen(PORT, () => {
