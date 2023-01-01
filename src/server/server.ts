@@ -4,11 +4,9 @@ const app = express();
 const PORT = 62264;
 
 //Static files
-app.use(express.static('./ochre-ivy/dist'));
+app.use(express.static('/'));
 
 //Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 //Routes
 app.get('/', (req, res) => {
