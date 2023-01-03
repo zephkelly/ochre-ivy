@@ -173,12 +173,15 @@ main {
   color: var(--dark);
 }
 #landing .hero-learnmore-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1.5rem;
   width: 8rem;
   height: 3rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
   background-color: transparent;
   transition: 0.15s ease-out;
   border: solid 0.2rem var(--dark);
@@ -246,6 +249,9 @@ main {
   padding-left: 25rem;
 }
 #blog-section .blog-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   right: 1rem;
   width: 7rem;
@@ -253,17 +259,18 @@ main {
   margin-top: 1.5rem;
   margin-right: -2rem;
   font-size: 1.1rem;
-  background-color: var(--accent-color);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
   color: var(--light);
-  border: 0.2rem;
+  background-color: var(--accent-color);
+  border: 0.2rem var(--accent-color) solid;
   border-radius: 1.17rem;
-  transition: background-color, color 0.15s ease-out;
+  transition: 0.15s ease-out;
 }
 #blog-section .blog-btn:hover {
   background-color: transparent;
-  border: solid 0.15rem var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
   color: var(--accent-color-secondary);
-  background-color: transparent;
 }
 #blog-section #blog-illustration {
   position: absolute;
@@ -280,7 +287,7 @@ main {
 #blog-section #blog-bgBox {
   position: relative;
   bottom: 30rem;
-  left: -15rem;
+  left: -13rem;
   border-radius: 15rem;
   background-color: var(--accent-color);
   width: 36rem;
@@ -296,21 +303,28 @@ main {
   @keyframes softRotate {
     0% {
       transform: rotate(38deg);
+      height: 40rem;
     }
     25% {
       transform: rotate(60deg);
+      height: 36rem;
     }
     33% {
       transform: rotate(25deg);
     }
     50% {
       transform: rotate(42deg);
+      border-radius: 15rem;
+  
     }
     75% {
-      transform: rotate(34deg);
+      transform: rotate(95deg);
+      border-radius: 25rem;
     }
     82% {
       transform: rotate(60deg);
+      border-radius: 15rem;
+      height: 40rem;
     }
     100% {
       transform: rotate(38deg);
@@ -319,6 +333,7 @@ main {
 
 #recipes-section {
   height: 1000px;
+  margin-top: 2rem;
 }
 #recipes-section .container {
   position: relative;
@@ -344,12 +359,17 @@ main {
   text-align: start;
 }
 #recipes-section .recipes-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0rem;
   margin-top: 1.5rem;
   position: absolute;
   left: 1rem;
   width: 7rem;
   height: 3rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
   font-size: 1.1rem;
   background-color: transparent;
   transition: 0.15s ease-out;
@@ -373,7 +393,7 @@ main {
   height: auto;
   z-index: 0;
 }
-#recipes-section #recipe-bgBox {
+#recipes-section .recipe-bgBox {
   position: absolute;
   left: -40rem;
   top: 20rem;
@@ -384,7 +404,7 @@ main {
   height: 150vw;
   z-index: -1;
 }
-#recipes-section #recipe-bgBox:last-of-type {
+#recipes-section .recipe-bgBox:last-of-type {
   position: absolute;
   left: -80rem;
   top: 30rem;
@@ -394,4 +414,71 @@ main {
   width: 100vw;
   height: 100vw;
   z-index: -1;
+}
+
+#footer-main {
+  position: realtive;
+  bottom: 0;
+  height: auto;
+  left: 0;
+  right: 0;
+  background-color: var(--accent-color);
+}
+#footer-main .container {
+  border-top: 0.2rem solid;
+  border-color: var(--dark);
+  box-sizing: border-box;
+  position: relative;
+  width: 75%;
+  min-height: 320px;
+  max-width: 1280px;
+  margin: auto;
+  padding: 2rem 0rem;
+}
+#footer-main .footer-links {
+  display: grid;
+  grid-template-columns: 2fr 2fr 3fr;
+}
+#footer-main .footer-nav-menu {
+  padding: 0rem;
+  margin: 0rem;
+}
+#footer-main .footer-nav-item {
+  list-style: none;
+  cursor: pointer;
+  width: 7rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+#footer-main .footer-nav-item a {
+  text-decoration: none;
+  color: var(--dark);
+  font-family: 'Lato', sans-serif;
+  margin-left: 1.8rem;
+}
+
+@media (max-width: 1920px) {
+  #landing #hero-illustration {
+    margin-top: -2rem;
+  }
+  #landing .landing-bgBox {
+  position: absolute;
+  bottom: 2rem;
+  }
+
+  #blog-section {
+    margin-top: 16rem;
+  }
+
+  #recipes-section {
+    margin-top: 4rem;
+  }
+}
+
+@media (max-width: 1650px) {
+  #landing .landing-bgBox {
+     right: -20rem;
+  }
 }
