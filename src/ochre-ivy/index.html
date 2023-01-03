@@ -18,14 +18,22 @@
         <h3 class="nav-text">Ochre & Ivy</h3>
         <div class="nav-text-spacer"></div>
       </div>
-      <button type="button"><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+      <button type="button" class="hidden"><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#">Home</a></li>
+          <li class="nav-item"><a href="#">Recipes</a></li>
+          <li class="nav-item"><a href="#">Blog</a></li>
+          <li class="nav-item"><a href="#">About</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
   <main>
     <section id="landing">
       <div class="container">
-        <h3 class="hero-text">Nourish, Create, Motivate.</h3>
-        <p class="hero-description">RECIPES & BLOGS FOR WHOLISTIC LIVING</p>
+        <h3 class="hero-text">NOURISH, CREATE MOTIVATE</h3>
+        <p class="hero-description">Recipes & blogs for wholistic living</p>
         <button class="hero-learnmore-btn">Learn More</button>
         <img id="hero-illustration" class="" src="./painters-palette.png" alt="A painting paintbrush">
       </div>
@@ -42,9 +50,11 @@
     </section>
     <section id="recipes-section">
       <div class="container">
-        <h3 class="recipes-text">Delicious, plant-based recipes</h3>
-        <p class="recipes-description">Boost your energy and help your body thrive with gut health friendly recipes.</p>
+        <h3 class="recipes-text">Delicious, <span class="accent-color">plant-based</span> recipes.</h3>
+        <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
         <button class="recipes-btn">Read now</button>
+        <div id="recipe-bgBox"></div>
+        <div id="recipe-bgBox"></div>
       </div>
     </section>
   </main>
