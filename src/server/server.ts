@@ -4,7 +4,7 @@ const app = express();
 const PORT = 62264;
 
 //Static files
-app.use(express.static('/'));
+app.use(express.static('./'));
 
 //Middleware
 
@@ -18,5 +18,5 @@ app.get('/blog', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Example app listening on port ' + PORT);
+  console.log('App listening on port ' + PORT);
 });
