@@ -24,8 +24,6 @@ const blogSchema = {
 
 const Blog = mongoose.model('Blog', blogSchema);
 
-//Middleware
-
 //Routes
 app.get('/', (req, res) => {
   res.sendFile('index.html');
@@ -36,8 +34,8 @@ app.get('/blog', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.send('Hey there! Here are all the blog posts: ');
-      res.json(blogs);
+      res.send('Here are all the blog posts: ');
+      //res.json(blogs);
     }
   });
 });
@@ -48,7 +46,8 @@ app.get('/blog/:blogTitle', (req, res) => {
       if (err) {
         res.send(err);
       } else {
-        res.send(blog);
+        //res.send(blog);
+        res.send('Here is the blog post you requested: ' + req.params.blogTitle);
       }
     })
 })
@@ -72,5 +71,5 @@ app.post('/blog', isAuthenticated, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('App listening on port ' + PORT);
+  console.log('Server listening on port ' + PORT);
 });

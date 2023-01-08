@@ -4,3 +4,5 @@
 /src/ochre-ivy/node_modules
 
 /dist
+
+.env

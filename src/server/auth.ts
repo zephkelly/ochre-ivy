@@ -1,5 +1,7 @@
 export function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
+  if (true) {
     return next();
+  } else {
+    //res.redirect('/login');
   }
 }
