@@ -378,7 +378,7 @@ main {
   color: var(--dark);
 }
 #recipes-section .recipes-btn:hover {
-  color: var(--light);
+  color: var(--accent-color);
   background-color: var(--dark);
   border-color: var(--dark);
 }
@@ -682,7 +682,7 @@ main {
   }
 
   #recipes-section {
-    margin-top: 8vw;
+    margin-top: 15vw;
     height: 900px;
   }
   #recipes-section .recipes-text {
@@ -787,7 +787,7 @@ main {
   #blog-section #blog-bgBox {
     right: auto;
     bottom: auto;
-    left: -30rem;
+    left: -24rem;
     top: -26rem;
   }
 
