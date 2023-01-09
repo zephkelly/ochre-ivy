@@ -1,8 +1,8 @@
-import { isAuthenticated } from "./auth";
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const authRoutes = require('./routes/authRoutes');
+const blogRoutes = require('./routes/blogRoutes');
 
 const app = express();
 const PORT = 62264;
@@ -24,52 +24,17 @@ const blogSchema = {
 
 const Blog = mongoose.model('Blog', blogSchema);
 
+//Middleware
+app.use(authRoutes);
+
 //Routes
 app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
-app.get('/blog', (req, res) => {
-  Blog.find({}, (err, blogs) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send('Here are all the blog posts: ');
-      //res.json(blogs);
-    }
-  });
-});
-
-app.get('/blog/:blogTitle', (req, res) => {
-  Blog.find({ title: req.params.blogTitle },
-    (err, blog) => {
-      if (err) {
-        res.send(err);
-      } else {
-        //res.send(blog);
-        res.send('Here is the blog post you requested: ' + req.params.blogTitle);
-      }
-    })
-})
-
-app.post('/blog', isAuthenticated, (req, res) => {
-  const title = req.body.title;
-  const content = req.body.content;
-
-  const blog = new Blog({
-    title: title,
-    content: content,
-  });
-
-  blog.save((err) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send('Successfully added a new blog post.');
-    }
-  });
-});
 
 app.listen(PORT, () => {
   console.log('Server listening on port ' + PORT);
 });
+
+module.exports = Blog;
