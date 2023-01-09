@@ -11,7 +11,7 @@ export function blog_get(req, res) {
   });
 }
 
-export function blog_getID(req, res) {
+export function blog_getTitle(req, res) {
   model.Blog.find({ title: req.params.blogTitle },
     (err, blog) => {
       if (err) {
@@ -28,7 +28,7 @@ export function blog_post(req, res) {
   const title = req.body.title;
   const content = req.body.content;
 
-  const blog = new Blog({
+  const blog = new model.Blog({
     title: title,
     content: content,
   });
@@ -38,6 +38,7 @@ export function blog_post(req, res) {
       res.send(err);
     } else {
       res.send('Successfully added a new blog post.');
+      console.log(model.Blog.find({ title })); //Test
     }
   });
 }

@@ -12,10 +12,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('./'));
 
 //Database
-mongoose.connect('mongodb://localhost:27017/ochre-ivy', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/ochre-ivy', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+  .then(() => {
+    //Only make connection after database connection is established
+    app.listen(PORT, () => { console.log('Listening on port ' + PORT); });
+  })
+  .catch((err) => console.log(err));
 
 const blogSchema = {
   title: String,
@@ -24,17 +26,12 @@ const blogSchema = {
 
 const Blog = mongoose.model('Blog', blogSchema);
 
-//Middleware
-app.use(authRoutes);
-
 //Routes
 app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
-
-app.listen(PORT, () => {
-  console.log('Server listening on port ' + PORT);
-});
+app.use(authRoutes);
+app.use(blogRoutes);
 
 module.exports = Blog;

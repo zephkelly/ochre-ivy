@@ -4,8 +4,8 @@ const blogController = require('../controllers/blogController');
 const router = Router();
 
 //Routes
-app.get('/blog', (req, res) => { blogController.blog_get(req, res) });
+router.get('/blog', (req, res) => { blogController.blog_get(req, res) });
 
-app.get('/blog/:blogTitle', (req, res) => { blogController.blog_getID(req, res) });
+router.get('/blog/:blogTitle', (req, res) => { blogController.blog_getTitle(req, res) });
 
-app.post('/blog', (req, res) => { blogController.blog_post(req, res) });
+router.post('/blog', authController.isAuthed(), (req, res) => { blogController.blog_post(req, res) });
