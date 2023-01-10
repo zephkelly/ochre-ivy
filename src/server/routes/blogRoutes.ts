@@ -1,11 +1,23 @@
 const { Router } = require('express');
 const blogController = require('../controllers/blogController');
+const { isAuthorised } = require('../controllers/authController');
 
 const router = Router();
 
-//Routes
-router.get('/blog', (req, res) => { blogController.blog_get(req, res) });
+//API Routes ------------------------------------------------
+router.get('/api/blog', (req, res) => { blogController.blogAPI_get(req, res) });
 
-router.get('/blog/:blogTitle', (req, res) => { blogController.blog_getTitle(req, res) });
+router.get('/api/blog/:blogID', (req, res) => { blogController.blogAPI_getID(req, res) });
 
-router.post('/blog', authController.isAuthed(), (req, res) => { blogController.blog_post(req, res) });
+router.post('/api/blog', isAuthorised, (req, res, next) => { blogController.blogAPI_post(req, res) });
+
+router.put('/api/blog/:blogID', isAuthorised, (req, res) => { blogController.blogAPI_update(req, res) });
+
+router.delete('/api/blog/:blogID', isAuthorised, (req, res) => { blogController.blogAPI_delete(req, res) });
+
+//Routes ------------------------------------------------
+router.get('/blog', (req, res) => { blogController.blog_get(req, res); });
+
+router.get('/blog/:blogID', (req, res) => { });
+
+module.exports = router;

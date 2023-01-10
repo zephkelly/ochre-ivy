@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build_blogController": "tsc ./controllers/blogController.ts",
+    "build_authController": "tsc ./controllers/authController.ts",
+    "build_blogRoutes": "tsc ./routes/blogRoutes.ts",
+    "build_authRoutes": "tsc ./routes/authRoutes.ts",
+    "build_server": "tsc ./server.ts",
+    "build": "npm run build_blogController && npm run build_authController && npm run build_blogRoutes && npm run build_authRoutes && npm run build_server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
     "express": "^4.18.2",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.3"

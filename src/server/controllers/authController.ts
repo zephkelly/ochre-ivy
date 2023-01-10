@@ -17,9 +17,8 @@ export function signup_post(req, res) {
 };
 
 //Authentication middleware
-export function isAuthed(req, res, next) {
-  if (true /*req.isAuthenticated()*/) {
-    return next();
-  }
-  /* res.redirect('/login'); */
+export function isAuthorised(req, res, next) {
+  
+  console.log("Here is the auth step");
+  return next();
 }
