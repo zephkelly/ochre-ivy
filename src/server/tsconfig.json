@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "module": "commonjs",
+        "module": "CommonJS",
         "target": "ES5",
         "rootDir": "./"
     }

@@ -1,3 +1,4 @@
+const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
 const ejs = require('ejs').ejs;
 
@@ -11,11 +12,9 @@ const Blog = mongoose.model('Blog', blogSchema);
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
   Blog.find({}, (err, blogs) => {
-    if (err) {
-      console.log(err);
-    }
+    if (err) { return console.log(err); }
 
-    res.send('Here are all the blog posts: ' + JSON.stringify(blogs))
+    res.send(JSON.stringify(blogs))
   });
 }
 
@@ -23,7 +22,7 @@ export function blogAPI_getID(req, res) {
   Blog.findById(req.params.blogID, (err, blog) => {
     if (err) { return console.log(err); }
 
-    res.send('Here is the blog post you requested: ' + blog);
+    res.send(blog);
   })
 }
 
@@ -70,8 +69,15 @@ export function blogAPI_delete(req, res) {
 }
 
 //Routes ------------------------------------------------
-export function blog_get(req, res) {
-  const homePage = ejs.renderFile('./views/blog.ejs', (err, html) => {
+export async function blog_getID(req, res) {
+  const blogId = req.params.blogID;
 
+  const response = await fetch('http://localhost:62264/api/blog/' + blogId);
+  const blogData = await response.json();
+
+  const blogPage = await res.render('post', { blogData }, (err, html) => {
+    if (err) { return console.log(err); }
+
+    res.send(html);
   });
 }

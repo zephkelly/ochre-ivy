@@ -7,6 +7,8 @@ const blogRoutes = require('./routes/blogRoutes');
 const app = express();
 const PORT = 62264;
 
+app.set('view engine', 'ejs');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('./'));

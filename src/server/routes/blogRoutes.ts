@@ -16,8 +16,8 @@ router.put('/api/blog/:blogID', isAuthorised, (req, res) => { blogController.blo
 router.delete('/api/blog/:blogID', isAuthorised, (req, res) => { blogController.blogAPI_delete(req, res) });
 
 //Routes ------------------------------------------------
-router.get('/blog', (req, res) => { blogController.blog_get(req, res); });
+router.get('/blog/:blogID', (req, res) => { blogController.blog_getID(req, res); });
 
-router.get('/blog/:blogID', (req, res) => { });
+router.get('/blog', (req, res) => { });
 
 module.exports = router;

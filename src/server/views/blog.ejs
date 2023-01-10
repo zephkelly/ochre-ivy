@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title>Ochre & Ivy</title>
+  <title>Ochre & Ivy Blog</title>
   <script type="module" crossorigin src="/assets/main-ac7bd629.js"></script>
   <link rel="stylesheet" href="/assets/index-6eab49a4.css">
 </head>
@@ -34,7 +34,20 @@
     </div>
   </header>
   <main>
+    <div id='content'>
+      <h1><%= blogData.title %></h1>
 
+      <div id="blog-content">
+        <%= blogData.content %>
+      </div>
+
+      <script>
+        const blogContentDiv = document.getElementById('blog-content');
+        const blogContent = blogContentDiv.innerText;
+
+        blogContentDiv.innerHTML = blogContent;
+      </script>
+    </div>
   </main>
   <footer id="footer-main">
     <div class="container">
