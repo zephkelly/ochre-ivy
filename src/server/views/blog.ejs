@@ -34,20 +34,20 @@
     </div>
   </header>
   <main>
-    <div id='content'>
       <h1><%= blogData.title %></h1>
+      <h2><%= blogData.subtitle %></h2>
+      <h3><%= blogData.createdDate %></h3>
 
-      <div id="blog-content">
+      <div id="blog-body">
         <%= blogData.content %>
       </div>
 
       <script>
-        const blogContentDiv = document.getElementById('blog-content');
+        const blogContentDiv = document.getElementById('blog-body');
         const blogContent = blogContentDiv.innerText;
 
         blogContentDiv.innerHTML = blogContent;
       </script>
-    </div>
   </main>
   <footer id="footer-main">
     <div class="container">
