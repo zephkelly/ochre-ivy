@@ -86,7 +86,7 @@ export async function blogAPI_post(req, res) {
     if (err) {
       res.send(err);
     } else {
-      res.send('Successfully added a new blog post. ' + blog);
+      res.status(200).send('Successfully added a new blog post. ' + blog);
     }
   });
 }
@@ -101,21 +101,26 @@ export async function blogAPI_update(req, res) {
   const filter = { uri: req.params.blogURI };
   let update = { uri: uri, title: title, subtitle: subtitle, updatedDate: updatedDate, content: content }
 
-  //Remove null values -----------------------------------------------
+  //Validate updated blog post ---------------------------------------
+  //Remove null/duplicate values
   for (let i = 0; i < Object.keys(update).length; i++) {
     if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
       delete update[Object.keys(update)[i]];
     }
   }
 
-  //Validate updated blog post ---------------------------------------
+  //If the uri is the same, ignore
+  if (update.uri == req.params.blogURI) {
+    delete update.uri;
+  }
+
+  //if uri already exists, permission denied editing wrong file
+  if (await Blog.find({ uri: update.uri }).countDocuments() > 0) {
+    res.status(403).send("Permission denied. URI already exists. Trying to change the wrong file?");
+    return;
+  }
+  
   const validateBlogPost = () => {
-    if (req.body.uri == req.params.blogURI
-      || req.body.uri == null
-      || req.body.uri == "") {
-      delete update.uri;
-    }
-    
     //Does post already exist?
     let postCount = Blog.find({ uri: req.body.uri }).countDocuments();
     if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
@@ -129,8 +134,9 @@ export async function blogAPI_update(req, res) {
     return { failedValidation: false };
   }
 
+  //If validation fails, bad request. Send error message
   if (validateBlogPost().failedValidation) {
-    res.send(validateBlogPost().message);
+    res.status(400).send("Bad request: " + validateBlogPost().message);
     return;
   }
 
@@ -138,20 +144,22 @@ export async function blogAPI_update(req, res) {
     if (err) {
       res.send(err);
     } else {
-      res.send(blog);
+      res.status(200).send(blog);
     }
   });
 }
 
 export function blogAPI_delete(req, res) {
-  Blog.findByIdAndDelete(req.params.blogURI, (err) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send('Successfully deleted the blog post: ' + req.params.blogID);
+  
+  Blog.deleteOne({ uri: req.params.blogURI }, async (err) => {
+    try {
+      res.status(200).send("Successfully deleted blog post");
+    } catch (error) {
+      res.send(error);
     }
   });
 }
+
 
 //Routes ------------------------------------------------
 export async function blog_getURI(req, res) {
@@ -165,10 +173,15 @@ export async function blog_getURI(req, res) {
     const blogPage = await res.render('post', { blogData }, (err, html) => {
       if (err) { return console.log(err); }
   
-      res.send(html);
+      res.status(200).send(html);
+      return
     });
+  } else if (response.status == 404) {
+    res.status(404).send("Blog post not found");
+    return;
   } else {
-    res.status(response.status).send("404");
+    res.status(response.status).send();
+    return;
   }
 }
 
