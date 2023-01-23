@@ -25,7 +25,7 @@ section {
   color: var(--light);
 }
 
-/* ///// */
+/* Client styling */
 body {
   box-sizing: border-box;
   margin: 0rem;
@@ -463,6 +463,48 @@ main {
 #footer-main .footer-nav-item:hover > * {
   color: var(--accent-color-secondary);
   font-size: 1.2rem;
+}
+
+/* Server rendered styles */
+#blog-post {
+  margin-top: 10rem;
+  min-height: 80vh;
+}
+
+#blog-post .container {
+  position: relative;
+  width: 85%;
+  min-height: 320px;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+#blog-post .post-title {
+  font-size: 3.5rem;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  text-align: start;
+  margin: 0rem;
+  margin-bottom: 1rem;
+  margin-left: -0.1rem;
+}
+
+#blog-post .post-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: 'Lato', sans-serif;
+  text-align: start;
+  margin-bottom: 0.2rem;
+}
+
+#blog-post #post-date {
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: 'Lato', sans-serif;
+  text-align: start;
+  margin: 0rem;
+  margin-bottom: 3rem;
+  color: grey;
 }
 
 @media (max-width: 3250px) {

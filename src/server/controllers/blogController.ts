@@ -69,7 +69,13 @@ export async function blogAPI_post(req, res) {
   const uri: string = req.body.uri
   const title: string = req.body.title;
   const subtitle: string = req.body.subtitle;
-  const createdDate: string = new Date().toISOString();
+  let createdDate: string;
+
+  if (req.body.date == null) {
+    createdDate = new Date().toISOString();
+  } else {
+    createdDate = req.body.date;
+  }
   const content: string = req.body.content;
 
   const blog = new Blog({
@@ -116,7 +122,7 @@ export async function blogAPI_update(req, res) {
 
   //if uri already exists, permission denied editing wrong file
   if (await Blog.find({ uri: update.uri }).countDocuments() > 0) {
-    res.status(403).send("Permission denied. URI already exists. Trying to change the wrong file?");
+    res.status(403).send("Permission denied. Post with that URI already exists. Try a different URI?");
     return;
   }
   
@@ -126,10 +132,13 @@ export async function blogAPI_update(req, res) {
     if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
     
     //Extra checks
-    if (req.body.uri.length > 50) { return { failedValidation: true, message: uriTooLongMsg }; }
-    else if (req.body.uri.length < 3) { return { failedValidation: true, message: uriTooShortMsg }; } 
-    else if (req.body.title == null) { return { failedValidation: true, message: titleEmptyMsg }; }
-    else if (req.body.content == null) { return { failedValidation: true, message: contentEmptyMsg }; }
+    if (req.body.uri != null) {
+      if (req.body.uri.length > 50) { return { failedValidation: true, message: uriTooLongMsg }; }
+      if (req.body.uri.length < 3) { return { failedValidation: true, message: uriTooShortMsg }; }
+    }
+     
+    //if (req.body.title == null) { return { failedValidation: true, message: titleEmptyMsg }; }
+    //if (req.body.content == null) { return { failedValidation: true, message: contentEmptyMsg }; }
 
     return { failedValidation: false };
   }

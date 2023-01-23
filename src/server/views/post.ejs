@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title>Ochre & Ivy Blog</title>
   <script type="module" crossorigin src="/assets/main-ac7bd629.js"></script>
-  <link rel="stylesheet" href="/assets/index-6eab49a4.css">
+  <link rel="stylesheet" href="/assets/index-6b029c01.css">
 </head>
 <body>
   <header>
@@ -34,20 +34,40 @@
     </div>
   </header>
   <main>
-      <h1><%= blogData.title %></h1>
-      <h2><%= blogData.subtitle %></h2>
-      <h3><%= blogData.createdDate %></h3>
+    <section id="blog-post">
+      <div class="container">
+        <h1 class="post-title"><%= blogData.title %></h1>
+        <h3 class="post-subtitle"><%= blogData.subtitle %></h3>
+        <h6 id="post-date">
+          <%= blogData.createdDate %>
+        </h6>
 
-      <div id="blog-body">
-        <%= blogData.content %>
+        <div id="blog-content">
+          <%= blogData.content %>
+        </div>
+
+        <script>
+          //Remove html tags in content
+          const blogContentDiv = document.getElementById('blog-content');
+          const blogContent = blogContentDiv.innerText;
+
+          blogContentDiv.innerHTML = blogContent;
+
+          // Format date
+          const blogCreatedDate = document.getElementById('post-date');
+          const blogCreatedDateText = blogCreatedDate.innerText;
+
+          var date = new Date(blogCreatedDateText);
+          date.toLocaleDateString('en-GB');
+          date = date.toDateString();
+
+          date = date.slice(0, 3) + "," + date.slice(3);
+          date = date.slice(0, 11) + "." + date.slice(11);
+
+          blogCreatedDate.innerText = date;
+        </script>
       </div>
-
-      <script>
-        const blogContentDiv = document.getElementById('blog-body');
-        const blogContent = blogContentDiv.innerText;
-
-        blogContentDiv.innerHTML = blogContent;
-      </script>
+    </section>
   </main>
   <footer id="footer-main">
     <div class="container">
