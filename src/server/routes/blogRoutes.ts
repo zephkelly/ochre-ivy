@@ -9,7 +9,7 @@ router.get('/api/blog', (req, res) => { blogController.blogAPI_get(req, res) });
 
 router.get('/api/blog/:blogURI', (req, res) => { blogController.blogAPI_getURI(req, res) });
 
-router.post('/api/blog', isAuthorised, (req, res, next) => { blogController.blogAPI_post(req, res) });
+router.post('/api/blog', isAuthorised, (req, res) => { blogController.blogAPI_post(req, res) });
 
 router.put('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController.blogAPI_update(req, res) });
 

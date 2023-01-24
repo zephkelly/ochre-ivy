@@ -1,24 +1,152 @@
-//Login
-export function login_get(req, res) {
-  res.render('login');
+import * as bcrypt from 'bcrypt';
+const mongoose = require('mongoose').mongoose;
+const fetch = require("node-fetch-commonjs");
+const ejs = require('ejs').ejs;
+
+const saltRounds = 12;
+
+// Models ------------------------------------------------
+const userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    trim: true,
+    default: '',
+    match: [/.+\@.+\..+/, 'Please fill a valid email address']
+  },
+  password: String,
+  joined: {
+    type: Date,
+    default: Date.now
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
+  roles: {
+    type: String,
+    default: 'user'
+  },
+});
+
+const User = mongoose.model('User', userSchema);
+
+// API Routes ---------------------------------------------
+export async function login_post(req, res) {
+  //Check session
+  if (req.session.userid) {
+    console.log("Already logged in");
+    res.status(200).redirect("/");
+    return;
+  }
+
+  //Validate inputs
+  if (req.body.email == null || req.body.password == null) {
+    res.status(400).send("Missing email or password");
+    return;
+  }
+  
+  //Check if user exists
+  User.find({ email: req.body.email }, async (err, user) => {
+    if (user.length == 0) {
+      res.status(404).send("Incorrect email or password");
+      return;
+    }
+    else {
+      const match = await bcrypt.compare(req.body.password, user[0].password);
+
+      if (match) {
+        req.session.userid = user[0]._id;
+        req.session.email = user[0].email;
+        req.session.roles = user[0].roles;
+        req.session.save();
+
+        console.log("Logging in user");
+        res.status(200).redirect("/");
+        return;
+      }
+      else {
+        res.status(401).send("Incorrect email or password");
+        return;
+      }
+    }
+  });
 };
 
-export function login_post(req, res) {
-  res.send('user login');
+export async function signup_post(req, res) {
+  User.find({ email: req.body.email }, async (err, user) => {
+    if (err) {
+      res.status(500).send(err);
+      return
+    }
+
+    if (user.length > 0) {
+      res.status(409).send("User with that email already exists");
+      return;
+    }
+    else {
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      
+      User.create({ email: req.body.email, password: hashedPassword }, (err, user) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+
+        res.status(200).send("Sucessfully signed up user");
+      });
+    }
+  });
 };
 
-//Signup
+/*
+export async function makeAdmin_get(req, res) {
+  User.findOneAndUpdate({ email: req.params.email }, { roles: 'admin' }, { new: true }, (err, user) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(user.roles);
+      res.send("Sucessfully made user admin");
+    }
+  });
+};
+*/
+
+// Routes -------------------------------------------------
 export function signup_get(req, res) {
   res.render('signup');
 };
 
-export function signup_post(req, res) {
-  res.send('new signup');
+export async function login_page(req, res) {
+  if (req.session.userid != null) {
+    console.log("Already logged in");
+    res.redirect("/");
+    return;
+  }
+
+  res.send("login page");
+  //res.sendFile("login.html");
+}
+
+export function logout_get(req, res) {
+  req.session.destroy();
+  res.redirect("/");
 };
 
 //Authentication middleware
 export function isAuthorised(req, res, next) {
-  
-  console.log("Here is the auth step");
+  if (req.session.userid == null) {
+    console.log("Not logged in");
+    res.status(401).redirect("/login");
+    return;
+  }
+
+  if (req.session.roles != 'admin') {
+    console.log(req.session.roles);
+    console.log("Not an admin");
+    res.status(403).redirect("/blog");
+    return;
+  }
+
+  console.log("Authenticated");
   return next();
 }

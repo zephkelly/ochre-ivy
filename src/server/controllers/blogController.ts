@@ -4,6 +4,7 @@ const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
 const ejs = require('ejs').ejs;
 
+// Model ----------------------------------------------------
 const blogSchema = new mongoose.Schema({
   uri: String,
   title: String,
@@ -74,7 +75,7 @@ export async function blogAPI_post(req, res) {
   if (req.body.date == null) {
     createdDate = new Date().toISOString();
   } else {
-    createdDate = req.body.date;
+    createdDate = new Date(req.body.date).toISOString();
   }
   const content: string = req.body.content;
 
@@ -101,14 +102,14 @@ export async function blogAPI_update(req, res) {
   const uri: string = req.body.uri;
   const title: string = req.body.title;
   const subtitle: string = req.body.subtitle;
+  const createdDate: string = req.body.date;
   const updatedDate: string = new Date().toISOString();
   const content: string = req.body.content;
 
   const filter = { uri: req.params.blogURI };
-  let update = { uri: uri, title: title, subtitle: subtitle, updatedDate: updatedDate, content: content }
+  let update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, content: content }
 
   //Validate updated blog post ---------------------------------------
-  //Remove null/duplicate values
   for (let i = 0; i < Object.keys(update).length; i++) {
     if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
       delete update[Object.keys(update)[i]];
@@ -120,15 +121,13 @@ export async function blogAPI_update(req, res) {
     delete update.uri;
   }
 
-  //if uri already exists, permission denied editing wrong file
-  if (await Blog.find({ uri: update.uri }).countDocuments() > 0) {
-    res.status(403).send("Permission denied. Post with that URI already exists. Try a different URI?");
-    return;
+  if (update.createdDate != null) {
+    update.createdDate = new Date(update.createdDate).toISOString();
   }
   
-  const validateBlogPost = () => {
+  const validateBlogPost = async () => {
     //Does post already exist?
-    let postCount = Blog.find({ uri: req.body.uri }).countDocuments();
+    let postCount = await Blog.find({ uri: req.body.uri }).countDocuments();
     if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
     
     //Extra checks
@@ -136,16 +135,15 @@ export async function blogAPI_update(req, res) {
       if (req.body.uri.length > 50) { return { failedValidation: true, message: uriTooLongMsg }; }
       if (req.body.uri.length < 3) { return { failedValidation: true, message: uriTooShortMsg }; }
     }
-     
-    //if (req.body.title == null) { return { failedValidation: true, message: titleEmptyMsg }; }
-    //if (req.body.content == null) { return { failedValidation: true, message: contentEmptyMsg }; }
 
     return { failedValidation: false };
   }
 
   //If validation fails, bad request. Send error message
-  if (validateBlogPost().failedValidation) {
-    res.status(400).send("Bad request: " + validateBlogPost().message);
+  const validationStatus = await validateBlogPost();
+
+  if (validationStatus.failedValidation) {
+    res.status(400).send("Bad request: " + validationStatus.message);
     return;
   }
 
@@ -158,7 +156,7 @@ export async function blogAPI_update(req, res) {
   });
 }
 
-export function blogAPI_delete(req, res) {
+export async function blogAPI_delete(req, res) {
   
   Blog.deleteOne({ uri: req.params.blogURI }, async (err) => {
     try {
@@ -196,7 +194,7 @@ export async function blog_getURI(req, res) {
 
 //Helper functions ---------------------------------------
 const uriEmptyMsg = "URI is empty";
-const postExistsMsg = "Post already exists";
+const postExistsMsg = "Post with that URI already exists";
 const uriTooLongMsg = "URI is too long";
 const uriTooShortMsg = "URI is too short";
 const titleEmptyMsg = "Title is empty";
