@@ -105,8 +105,12 @@ main {
   color: var(--accent-color-dark);
 }
 .navbar button {
+  display: none;
   background: none;
   border: none;
+}
+.navbar .nav-menu {
+  display: block;
 }
 .navbar .nav-list {
   display: flex;
@@ -632,8 +636,14 @@ main {
 }
 
 @media (max-width: 980px) {
+  .navbar button {
+    display: block;
+  }
+  .navbar .nav-menu {
+    display: none;
+  }
   #blog-section .blog-description {
-    padding-left: 35%;
+    padding-left: 32%;
   }
 }
 
