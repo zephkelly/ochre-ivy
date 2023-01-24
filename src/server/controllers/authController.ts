@@ -98,7 +98,6 @@ export async function signup_post(req, res) {
   });
 };
 
-/*
 export async function makeAdmin_get(req, res) {
   User.findOneAndUpdate({ email: req.params.email }, { roles: 'admin' }, { new: true }, (err, user) => {
     if (err) {
@@ -109,7 +108,6 @@ export async function makeAdmin_get(req, res) {
     }
   });
 };
-*/
 
 // Routes -------------------------------------------------
 export function signup_get(req, res) {

@@ -340,12 +340,13 @@ main {
   width: 85%;
   min-height: 320px;
   margin: auto;
-  margin-top: 2rem;
+  margin-top: 5rem;
   margin-bottom: 14rem;
   padding: 1rem;
 }
 #recipes-section .recipes-text {
   margin: 0rem;
+  margin-top: 2rem;
   font-size: 4.1rem;
   font-weight: 400;
   font-family: 'Poppins', sans-serif;
@@ -398,7 +399,7 @@ main {
   left: -40rem;
   top: 20rem;
   border-radius: 30rem;
-  transform: rotate(35deg);
+  transform: rotate(45deg);
   background-color: var(--accent-color);
   width: 150vw;
   height: 150vw;
@@ -555,11 +556,12 @@ main {
   }
   #recipes-section .recipe-bgBox:first-of-type {
     position: relative;
-    right: 58rem;
+    right: 61rem;
     left: auto;
-    top: 16rem;
+    top: 5rem;
     width: 200rem;
     height: 200rem;
+    border-radius: 48rem;
   }
   #recipes-section .recipe-bgBox:last-of-type {
     position: relative;
@@ -605,7 +607,7 @@ main {
   }
 
   #recipes-section {
-    margin-top: 5vw;
+    margin-top: 10vw;
   }
   #recipes-section .recipes-text {
     font-size: 3rem;
@@ -613,14 +615,31 @@ main {
 }
 
 @media (max-width: 1230px) {
+  #landing #hero-illustration {
+    margin-top: -1.5rem;
+  }
+
   #blog-section .blog-description {
     padding-left: 30%;
   }
 }
 
+@media (max-width: 1000px) {
+  #landing #hero-illustration {
+    width: 55%;
+    margin-top: -2rem;
+  }
+}
+
+@media (max-width: 980px) {
+  #blog-section .blog-description {
+    padding-left: 35%;
+  }
+}
+
 @media (max-width: 900px) {
   .navbar {
-    padding: 0.8rem 1.2rem;
+    padding: 0.8rem 2rem;
     height: 4.5rem;
   }
   .navbar .nav-text {
@@ -631,6 +650,20 @@ main {
     display: none;
   }
 
+  #landing {
+    height: 800px;
+  }
+  #landing .hero-text {
+    padding-right: 12%;
+  }
+  #landing #hero-illustration {
+    width: 65%;
+    margin-top: -2rem;
+  }
+
+  #blog-section {
+    margin-top: 20vw;
+  }
   #blog-section .blog-description {
     padding-left: 10%;
   }
@@ -644,18 +677,42 @@ main {
     height: 30rem;
   }
 
+  #recipes-section .container {
+    margin-top: 20vw;
+  }
+  #recipes-section .recipes-text {
+    padding-right: 10%;
+  }
   #recipes-section .recipe-bgBox:first-of-type {
-    top: 10rem;
-    right: 65rem;
+    top: -2rem;
+    right: 68rem;
   }
   #recipes-section .recipe-bgBox:last-of-type {
     display: none;
   }
 }
 
+@media (max-width: 720px) {
+  #blog-section {
+    margin-top: 30vw;
+  }
+
+  #recipes-section {
+    margin-top: 18vw;
+    height: 900px;
+  }
+  #recipes-section .recipe-bgBox:first-of-type {
+    right: 72rem;
+  }
+}
+
 @media (max-width: 630px) {
   section {
     width: 100%;
+  }
+
+  .navbar {
+    padding: 0.8rem 7.5vw;
   }
 
   #landing {
@@ -693,8 +750,8 @@ main {
   }
 
   #blog-section {
-    margin-top: 30vw;
-    height: 900px;
+    margin-top: 20vw;
+    height: 800px;
   }
   #blog-section .blog-text {
     font-size: 2rem;
@@ -724,7 +781,7 @@ main {
   }
 
   #recipes-section {
-    margin-top: 15vw;
+    margin-top: 10vw;
     height: 900px;
   }
   #recipes-section .recipes-text {
@@ -742,11 +799,11 @@ main {
   #recipes-section .recipe-bgBox:first-of-type {
     right: auto;
     bottom: auto;
-    left: -22rem;
-    top: -12rem;
+    left: -20rem;
+    top: -20rem;
     width: 60rem;
     height: 80rem;
-    border-radius: 15rem;
+    border-radius: 30rem;
   }
 
   #footer-main .footer-links{
@@ -755,10 +812,6 @@ main {
 }
 
 @media (max-width: 530px) {
-  .navbar {
-    padding: 0.8rem 1.2rem;
-    height: 4.5rem;
-  }
   .navbar .nav-text {
     font-size: 1.6rem;
     width: 10rem;
@@ -794,7 +847,7 @@ main {
   }
   #landing #hero-illustration {
     width: 90%;
-    margin-top: 5vw;
+    margin-top: 0vw;
   }
   #landing .landing-bgBox {
     right: -8rem;
@@ -829,7 +882,7 @@ main {
   #blog-section #blog-bgBox {
     right: auto;
     bottom: auto;
-    left: -24rem;
+    left: -20rem;
     top: -26rem;
   }
 
