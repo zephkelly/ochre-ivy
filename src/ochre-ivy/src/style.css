@@ -619,9 +619,7 @@ main {
 }
 
 @media (max-width: 1230px) {
-  #landing #hero-illustration {
-    margin-top: -1.5rem;
-  }
+  
 
   #blog-section .blog-description {
     padding-left: 30%;
@@ -641,6 +639,9 @@ main {
   }
   .navbar .nav-menu {
     display: none;
+  }
+  #blog-section {
+    margin-top: 27vw;
   }
   #blog-section .blog-description {
     padding-left: 32%;
@@ -671,9 +672,6 @@ main {
     margin-top: -2rem;
   }
 
-  #blog-section {
-    margin-top: 20vw;
-  }
   #blog-section .blog-description {
     padding-left: 10%;
   }
