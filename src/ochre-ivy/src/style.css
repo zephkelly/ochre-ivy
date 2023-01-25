@@ -145,6 +145,7 @@ main {
 #landing {
   height: 1000px;
   position: relative;
+  margin-bottom: 5rem;
 }
 #landing .container {
   position: relative;
@@ -160,7 +161,7 @@ main {
   font-size: 4rem;
   padding-right: 30%;
   margin: 0rem;
-  margin-top: 1rem;
+  margin-top: 4rem;
   line-height: 5rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
@@ -171,6 +172,7 @@ main {
 }
 #landing .hero-description {
   margin: 0rem;
+  width: auto;
   margin-top: 2rem;
   font-size: 2rem;
   font-family: "Lato", sans-serif;
@@ -290,7 +292,7 @@ main {
 }
 #blog-section #blog-bgBox {
   position: relative;
-  bottom: 30rem;
+  bottom: 32rem;
   left: -13rem;
   border-radius: 15rem;
   background-color: var(--accent-color);
@@ -533,7 +535,6 @@ main {
   }
   #landing .hero-text {
     font-size: 3.2rem;
-    margin-top: 0rem;
   }
   #landing .hero-description {
     font-size: 1.8rem;
@@ -552,7 +553,7 @@ main {
     font-size: 3rem;
   }
   #blog-section #blog-bgBox {
-    left: -10rem;
+    left: -10rem; 
   }
 
   #recipes-section .recipes-text {
@@ -592,7 +593,6 @@ main {
   }
   #landing .hero-text {
     font-size: 3.2rem;
-    margin-top: 0rem;
   }
   #landing .hero-description {
     font-size: 1.8rem;
@@ -619,14 +619,15 @@ main {
 }
 
 @media (max-width: 1230px) {
-  
-
   #blog-section .blog-description {
     padding-left: 30%;
   }
 }
 
 @media (max-width: 1000px) {
+  #landing .hero-text {
+    margin-top: 1rem;
+  }
   #landing #hero-illustration {
     width: 55%;
     margin-top: -2rem;
@@ -640,6 +641,11 @@ main {
   .navbar .nav-menu {
     display: none;
   }
+
+  #landing .hero-text {
+    margin-top: 0rem;
+  }
+
   #blog-section {
     margin-top: 27vw;
   }
@@ -701,6 +707,11 @@ main {
 }
 
 @media (max-width: 720px) {
+  #landing #hero-illustration {
+    width: 75%;
+    margin-top: -2rem;
+  }
+  
   #blog-section {
     margin-top: 30vw;
   }
@@ -730,10 +741,11 @@ main {
     padding: 0rem;
   }
   #landing .hero-text {
-    font-size: 1.9rem;
+    font-size: 2.2rem;
     align-self: flex-start;
     padding: 0rem;
-    font-weight: 400;
+    font-weight: 700;
+    letter-spacing: 0.08rem;
     line-height: 2.4rem;
   }
   #landing .hero-description {
@@ -745,8 +757,8 @@ main {
     height: 2.8rem;
   }
   #landing #hero-illustration {
-    width: 90%;
-    margin-top: 5vw;
+    width: 85%;
+    margin-top: 0rem;
     margin-right: -1rem;
   }
   #landing .landing-bgBox {
@@ -758,7 +770,7 @@ main {
   }
 
   #blog-section {
-    margin-top: 20vw;
+    margin-top: 15vw;
     height: 800px;
   }
   #blog-section .blog-text {
@@ -839,10 +851,9 @@ main {
     padding: 0rem;
   }
   #landing .hero-text {
-    font-size: 1.9rem;
+    font-size: 2rem;
     align-self: flex-start;
     padding: 0rem;
-    font-weight: 400;
     line-height: 2.4rem;
   }
   #landing .hero-description {
@@ -866,7 +877,7 @@ main {
   }
 
   #blog-section {
-    margin-top: 25vw;
+    margin-top: 10vw;
     height: 900px;
   }
   #blog-section .blog-text {
@@ -913,5 +924,11 @@ main {
 
   #footer-main .footer-links{
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  #blog-section {
+    margin-top: 0vw;
   }
 }
