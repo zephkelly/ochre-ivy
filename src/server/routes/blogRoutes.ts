@@ -18,6 +18,6 @@ router.delete('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController
 //Routes ------------------------------------------------
 router.get('/blog/:blogURI', (req, res) => { blogController.blog_getURI(req, res); });
 
-router.get('/blog', (req, res) => { });
+router.get('/blog', (req, res) => { blogController.blog_homePage(req, res); });
 
 module.exports = router;

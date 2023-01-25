@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title><%= blogData.title %></title>
+  <title>Ochre & Ivy</title>
   <script type="module" crossorigin src="/assets/main-a5e6d3b2.js"></script>
   <link rel="stylesheet" href="/assets/index-b04cff50.css">
 </head>
@@ -23,7 +21,7 @@
         <div class="nav-text-spacer"></div>
       </div>
       <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-      <nav class="nav-menu hidden">
+      <nav class="nav-menu">
         <ul class="nav-list">
           <li class="nav-item"><a href="/">Home</a></li>
           <li class="nav-item"><a href="#">Recipes</a></li>
@@ -34,44 +32,26 @@
     </div>
   </header>
   <main>
-    <section id="blog-post">
+    <section id="blog-hero">
       <div class="container">
-        <h1 class="post-title"><%= blogData.title %></h1>
-        <h3 class="post-subtitle"><%= blogData.subtitle %></h3>
-        <h6 id="post-date">
-          <%= blogData.createdDate %>
-        </h6>
-
-        <div id="blog-body">
-          <%= blogData.content %>
+        <div class="blog-hero-content">
+          <h1>Blog</h1>
+          <p>Browse my collection of blogs</p>
         </div>
-
-        <script>
-          //Remove html tags in content
-          const blogContentDiv = document.getElementById('blog-body');
-          const blogContent = blogContentDiv.innerText;
-
-          blogContentDiv.innerHTML = blogContent;
-
-          // Format date
-          const blogCreatedDate = document.getElementById('post-date');
-          const blogCreatedDateText = blogCreatedDate.innerText;
-
-          function formateDate(date) {
-            var date = new Date(date);
-            date.toLocaleDateString('en-GB');
-            date = date.toDateString();
-
-            date = date.slice(0, 3) + "," + date.slice(3);
-            date = date.slice(0, 11) + "." + date.slice(11);
-
-            return date;
-          }
-
-          const date = formateDate(blogCreatedDateText);
-
-          blogCreatedDate.innerText = date;
-        </script>
+      </div>
+    </section>
+    <section id="blog-featured">
+      <div class="container">
+        <div class="blog-featured-content">
+          <div class="wrapper">
+            <h3 class="blog-featured-title"><%= featuredBlog.title %></h3>
+            <h6 class="blog-featured-subtitle"><%= featuredBlog.title %></h6>
+            <p class="blog-featured-description"><%= featuredBlog.description %></p>
+          </div>
+          <div class="wrapper">
+            <img src='<%- featuredBlog.coverPath %>' alt="<%= featuredBlog.title %>" class="blog-featured-image">
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -80,7 +60,7 @@
       <section class="footer-links">
         <nav>
           <ul class="footer-nav-menu">
-            <li class="footer-nav-item"><a href="#">Home</a></li>
+            <li class="footer-nav-item"><a href="/">Home</a></li>
             <li class="footer-nav-item"><a href="#">Recipes</a></li>
             <li class="footer-nav-item"><a href="#">Blog</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
@@ -102,4 +82,7 @@
     </div>
   </footer>
 </body>
+  <footer>
+    <script type="module" src="/src/main.ts"></script>
+  </footer>
 </html>

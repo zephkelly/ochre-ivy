@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+const express = require('express');
 const mongoose = require('mongoose').mongoose;
 const fetch = require("node-fetch-commonjs");
 const ejs = require('ejs').ejs;
@@ -121,8 +122,7 @@ export async function login_page(req, res) {
     return;
   }
 
-  res.send("login page");
-  //res.sendFile("login.html");
+  res.render('login');
 }
 
 export function logout_get(req, res) {

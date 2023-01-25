@@ -3,6 +3,7 @@
   --accent-color-secondary: #b98c80;
   --accent-color-tertiary: #eaac99;
   --accent-color-dark: #79574c;
+  --accent-color-darker: #6b4c42;
   --dark: #231f20;
   --light: #fcfcfc;
 }
@@ -39,7 +40,7 @@ body .navbar {
   top: 0;
   left: 0;
   right: 0;
-  background-color: var(--light);
+  background-color: var(--accent-color);
   z-index: 10;
 }
 body .navbar.dark-mode {
@@ -101,7 +102,7 @@ main {
   color: var(--light);
 }
 .navbar .nav-menu-btn:hover {
-  transition: color 0.15s ease-out;
+  transition: color 0.1s ease-out;
   color: var(--accent-color-dark);
 }
 .navbar button {
@@ -157,7 +158,7 @@ main {
   margin-bottom: 14rem;
   padding: 1rem;
 }
-#landing h3 {
+#landing .hero-text {
   font-size: 4rem;
   padding-right: 30%;
   margin: 0rem;
@@ -167,7 +168,7 @@ main {
   font-weight: 400;
   color: var(--dark);
 }
-#landing h3.dark-mode {
+#landing .hero-text .dark-mode {
   color: var(--light);
 }
 #landing .hero-description {
@@ -473,9 +474,29 @@ main {
 }
 
 /* Server rendered styles */
+/* Login --------------------------------------- */
+#login-main {
+  height: 600px;
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+}
+
+/* Blog Home ----------------------------------- */
+#blog-hero {
+  height: 200px;
+  margin-top: 10rem;
+}
+
+#blog-featured {
+  height: 500px;
+  margin-top: 5rem;
+}
+
+/* Post ---------------------------------------- */
 #blog-post {
   margin-top: 10rem;
   min-height: 80vh;
+  margin-bottom: 10rem;
 }
 
 #blog-post .container {

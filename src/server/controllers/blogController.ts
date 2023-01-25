@@ -169,6 +169,17 @@ export async function blogAPI_delete(req, res) {
 
 
 //Routes ------------------------------------------------
+export async function blog_homePage(req, res) {
+  const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', coverPath: '../martini.png'}
+
+  res.render('blog', { featuredBlog }, (err, html) => {
+    if (err) { return console.log(err); }
+
+    res.status(200).send(html);
+    return
+  });
+}
+
 export async function blog_getURI(req, res) {
   const blogId = req.params.blogURI;
 

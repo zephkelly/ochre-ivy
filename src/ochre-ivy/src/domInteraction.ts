@@ -10,12 +10,6 @@ const navMenuBtn: HTMLElement= document.querySelector(".nav-menu-btn") as HTMLEl
 // -- Shrinking navbar on scroll
 let shrunkNavbar: boolean = false;
 
-(function setNavbarInitial() {
-  window.addEventListener('load', () => {
-    navbar.style.backgroundColor = '#f8c6b7';
-  });
-})();
-
 let scrollY = 0;
 export function shrinkNavbar() {
   delay(100)
@@ -44,7 +38,7 @@ export function shrinkNavbar() {
         navbar.style.transition = "all 0.3s ease-out";
 
         if (shrunkNavbar) {
-          navbar.style.backgroundColor = '';
+          navbar.style.backgroundColor = 'white';
           navText.style.marginBottom = '0';
           navTextSpacer.style.opacity = '0';
           navTextSpacer.style.bottom = '-0.5rem';
@@ -62,4 +56,3 @@ export function shrinkNavbar() {
       }
   });  
 }
-
