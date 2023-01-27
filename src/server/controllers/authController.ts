@@ -74,6 +74,9 @@ export async function login_post(req, res) {
 };
 
 export async function signup_post(req, res) {
+  const email = JSON.stringify(req.body.email);
+  const password = JSON.stringify(req.body.password);
+
   User.find({ email: req.body.email }, async (err, user) => {
     if (err) {
       res.status(500).send(err);
@@ -81,11 +84,16 @@ export async function signup_post(req, res) {
     }
 
     if (user.length > 0) {
-      res.status(409).send("User with that email already exists");
-      return;
+      const message = { text: "Account already registered with that email!" };
+      res.status(409).render('signup', { message }, (err, html) => {
+        if (err) { return console.log(err); }
+
+        res.status(409).send(html);
+        return;
+      });
     }
     else {
-      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
       
       User.create({ email: req.body.email, password: hashedPassword }, (err, user) => {
         if (err) {
@@ -111,8 +119,9 @@ export async function makeAdmin_get(req, res) {
 };
 
 // Routes -------------------------------------------------
-export function signup_get(req, res) {
-  res.render('signup');
+export function signup_page(req, res) {
+  const message = { text: "" };
+  res.status(200).render('signup', { message });
 };
 
 export async function login_page(req, res) {

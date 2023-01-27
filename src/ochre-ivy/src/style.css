@@ -476,9 +476,200 @@ main {
 /* Server rendered styles */
 /* Login --------------------------------------- */
 #login-main {
-  height: 600px;
-  margin-top: 10rem;
-  margin-bottom: 10rem;
+  height: 80vh;
+  min-height: 600px;
+  margin-top: 12rem;
+}
+#login-main .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  width: 85%;
+  height: 100%;
+  min-height: 320px;
+  margin: auto;
+}
+#login-main .login-title {
+  font-family: Poppins, sans-serif;
+  font-size: 3rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 5rem;
+}
+#login-main .login-subtitle {
+  font-family: Lato, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+#login-main .login-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+#login-main .wrapper {
+  height: 280px;
+  width: 350px;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.15);
+}
+#login-main .input-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#login-main .input-section label {
+  color: grey;
+  font-size: 1.1rem;
+}
+#login-main .input-section input {
+  height: 2rem;
+  border: none;
+  border-bottom: 1px solid grey;
+  outline: none;
+  font-size: 1.2rem;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}
+#login-main .login-button {
+  width: 100%;
+  height: 2.5rem;
+  border: 0.2rem var(--accent-color) solid;
+  border-radius: 0.5rem;
+  transition: 0.15s ease-out;
+  background-color: var(--accent-color);
+  color: white;
+  font-family: Lato, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+#login-main .login-button:hover {
+  background-color: var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
+}
+#login-main .signup-ref {
+  font-size: 1.2rem;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  margin-top: 2rem;
+  color: rgb(101, 101, 101);
+}
+
+/* Signup -------------------------------------- */
+#signup-main {
+  height: 80vh;
+  min-height: 600px;
+  margin-top: 12rem;
+}
+#signup-main .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  width: 85%;
+  height: 100%;
+  min-height: 320px;
+  margin: auto;
+}
+#signup-main .signup-title {
+  font-family: Poppins, sans-serif;
+  font-size: 3rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 3rem;
+}
+#signup-main .signup-subtitle {
+  font-family: Lato, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+#signup-main .signup-message {
+  font-family: Lato, sans-serif;
+  color: var(--accent-color-tertiary);
+  font-size: 1.1rem;
+  margin-top: 0.9rem;
+  margin-bottom: 1rem;
+}
+#signup-main .signup-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+#signup-main .wrapper {
+  height: auto;
+  min-height: 380px;
+  width: 350px;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.15);
+}
+#signup-main .signup-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+#signup-main .signup-section label {
+  color: grey;
+  font-size: 1.1rem;
+}
+#signup-main .signup-section input {
+  height: 2rem;
+  border: none;
+  border: 1px solid grey;
+  border-radius: 0.2rem;
+  outline: none;
+  font-size: 1.2rem;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}
+#signup-main .signup-button {
+  width: 100%;
+  height: 2.5rem;
+  border: 0.2rem var(--accent-color) solid;
+  border-radius: 0.5rem;
+  transition: 0.15s ease-out;
+  background-color: var(--accent-color);
+  color: white;
+  font-family: Lato, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+#signup-main .signup-button:hover {
+  background-color: var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
+}
+#signup-main .signup-section p {
+  font-size: 0.9rem;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 0.1rem;
+  color: var(--accent-color-tertiary);
+}
+#signup-main .signup-ref {
+  font-size: 1.1rem;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  margin-top: 2rem;
+  color: rgb(101, 101, 101);
 }
 
 /* Blog Home ----------------------------------- */

@@ -1,5 +1,6 @@
 import './style.css'
-import { shrinkNavbar } from './domInteraction'
+import { shrinkNavbar } from './navbarInteraction'
+import './validateSignup'
 
 window.addEventListener("scroll", () => {
   shrinkNavbar();

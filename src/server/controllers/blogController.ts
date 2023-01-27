@@ -170,7 +170,7 @@ export async function blogAPI_delete(req, res) {
 
 //Routes ------------------------------------------------
 export async function blog_homePage(req, res) {
-  const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', coverPath: '../martini.png'}
+  const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', coverPath: '../blog-images/martini.png'}
 
   res.render('blog', { featuredBlog }, (err, html) => {
     if (err) { return console.log(err); }

@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title>Login</title>
+  <title>Signup</title>
   <script type="module" crossorigin src="/assets/main-a4c0b111.js"></script>
-  <link rel="stylesheet" href="/assets/index-136c01f2.css">
+  <link rel="stylesheet" href="/assets/index-db7c0db4.css">
 </head>
 <body>
   <header>
@@ -25,31 +25,40 @@
         <ul class="nav-list">
           <li class="nav-item"><a href="/">Home</a></li>
           <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="#">Blog</a></li>
+          <li class="nav-item"><a href="/blog">Blog</a></li>
           <li class="nav-item"><a href="#">About</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
-    <section id="login-main">
+    <section id="signup-main">
       <div class="container">
-        <h1 class="login-title">Welcome Back!</h1>
-        <h3 class="login-subtitle">Login to your account</h3>
+        <h1 class="signup-title">Welcome!</h1>
+        <h3 class="signup-subtitle">Register an account below</h3>
+        <h3 class="signup-message"><%= message.text %></h3>
         <div class="wrapper">
-          <form class="login-form" action="/api/login" method="POST" id="login-form">
-            <div class="input-section">
+          <form class="signup-form" action="/signup" method="POST" id="signup-form">
+            <div class="signup-section">
+              <label for="name">Name</label>
+              <input class="input" type="text" name="name" placeholder="Name" required>
+            </div>
+            <div class="signup-section">
               <label for="email">Email</label>
               <input class="input" type="email" name="email" placeholder="example@email.com" required>
             </div>
-            <div class="input-section">
+            <div class="signup-section">
               <label for="password">Password</label>
               <input class="input" type="password" name="password" placeholder="Password" required>
             </div>
-            <input class="login-button" type="submit" value="Login">
+            <div class="signup-section">
+              <label for="password">Repeat Password</label>
+              <input class="input" type="repeat-password" name="password" placeholder="Password" required>
+            </div>
+            <input class="signup-button" type="submit" value="Signup">
           </form>
         </div>
-        <p class="signup-ref">Don't have an account? <a href="/signup">Register</a></p>
+        <p class="signup-ref">Already have an account? <a href="/login">Login</a></p>
       </div>
     </section>
   </main>
