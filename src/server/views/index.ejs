@@ -10,12 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title>Ochre & Ivy</title>
-  <script type="module" crossorigin src="/assets/main-a32a3c89.js"></script>
-  <link rel="stylesheet" href="/assets/index-136c01f2.css">
+  <script type="module" crossorigin src="/assets/main-8232ebba.js"></script>
+  <link rel="stylesheet" href="/assets/index-6bacb779.css">
 </head>
 <body>
   <header>
-    <div class="navbar" style="padding-bottom: 1.6rem">
+    <div class="navbar">
       <div class="wrapper">
         <h3 class="nav-text">Ochre & Ivy</h3>
         <div class="nav-text-spacer"></div>
@@ -23,35 +23,40 @@
       <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
       <nav class="nav-menu">
         <ul class="nav-list">
-          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="">Home</a></li>
           <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="">Blog</a></li>
+          <li class="nav-item"><a href="#">Blog</a></li>
           <li class="nav-item"><a href="#">About</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
-    <section id="blog-hero">
+    <section id="landing">
       <div class="container">
-        <div class="blog-hero-content">
-          <h1>Blog</h1>
-          <p>Browse my collection of blogs</p>
-        </div>
+        <h1 class="hero-text">WELCOME BACK, <%= userData.name.toUpperCase() %></h1>
+        <p class="hero-description">Recipes & blogs for wholistic living</p>
+        <a class="hero-learnmore-btn">Learn More</a>
+        <img id="hero-illustration" class="" src="./painters-palette.png" alt="A painting paintbrush">
       </div>
+      <div class="landing-bgBox"></div> 
     </section>
-    <section id="blog-featured">
+    <section id="blog-section">
       <div class="container">
-        <div class="blog-featured-content">
-          <div class="wrapper">
-            <h3 class="blog-featured-title"><%= featuredBlog.title %></h3>
-            <h6 class="blog-featured-subtitle"><%= featuredBlog.title %></h6>
-            <p class="blog-featured-description"><%= featuredBlog.description %></p>
-          </div>
-          <div class="wrapper">
-            <img src='<%- featuredBlog.coverPath %>' alt="<%= featuredBlog.title %>" class="blog-featured-image">
-          </div>
-        </div>
+        <h3 class="blog-text">A naturally simple blog.</h3>
+        <p class="blog-description">Your body deserves to be nourished, but where do you start? Being <span class="color-highlight">healthy</span> can be an overwhelming topic but our blog makes it simple; without the clutter.</p>
+        <a class="blog-btn">Read now</a>
+        <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
+      </div>
+      <div id="blog-bgBox"></div>
+    </section>
+    <section id="recipes-section">
+      <div class="container">
+        <h3 class="recipes-text">Delicious, <span class="accent-color">plant-based</span> recipes.</h3>
+        <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
+        <a class="recipes-btn">Read now</a>
+        <div class="recipe-bgBox"></div>
+        <div class="recipe-bgBox"></div>
       </div>
     </section>
   </main>
@@ -60,9 +65,9 @@
       <section class="footer-links">
         <nav>
           <ul class="footer-nav-menu">
-            <li class="footer-nav-item"><a href="/">Home</a></li>
+            <li class="footer-nav-item"><a href="">Home</a></li>
             <li class="footer-nav-item"><a href="#">Recipes</a></li>
-            <li class="footer-nav-item"><a href="">Blog</a></li>
+            <li class="footer-nav-item"><a href="#">Blog</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>
         </nav>
@@ -82,4 +87,7 @@
     </div>
   </footer>
 </body>
+  <footer>
+    
+  </footer>
 </html>

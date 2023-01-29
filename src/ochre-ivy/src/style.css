@@ -189,6 +189,7 @@ main {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
+  text-decoration: none;
   background-color: transparent;
   transition: 0.15s ease-out;
   border: solid 0.2rem var(--dark);
@@ -521,36 +522,53 @@ main {
   box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.15);
 }
 #login-main .input-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  margin-bottom:1rem
 }
 #login-main .input-section label {
   color: grey;
   font-size: 1.1rem;
 }
 #login-main .input-section input {
-  height: 2rem;
-  border: none;
-  border-bottom: 1px solid grey;
-  outline: none;
-  font-size: 1.2rem;
-  font-family: Lato, sans-serif;
-  font-weight: 400;
-  margin-top: 0.5rem;
+  height:2rem;
+  border:none;
+  border:1px solid grey;
+  border-radius: 0.2rem;
+  outline:none;font-size:1.2rem;
+  font-family:Lato,sans-serif;
+  font-weight:400;
+  margin-top:.5rem;
+  padding:.5rem .8rem
 }
 #login-main .login-button {
-  width: 100%;
-  height: 2.5rem;
-  border: 0.2rem var(--accent-color) solid;
-  border-radius: 0.5rem;
-  transition: 0.15s ease-out;
-  background-color: var(--accent-color);
-  color: white;
-  font-family: Lato, sans-serif;
-  font-size: 1.2rem;
-  font-weight: 400;
-  cursor: pointer;
+  width:100%;
+  height:3.2rem;
+  border:.2rem var(--accent-color) solid;
+  border-radius:.5rem;
+  transition:.15s ease-out;
+  background-color:var(--accent-color);
+  color:#fff;
+  font-family:Lato,sans-serif;
+  font-size:1.2rem;
+  font-weight:400;
+  cursor:pointer
+}
+#login-main .input-section p{
+  font-size:.9rem;
+  font-family:Lato,
+  sans-serif;
+  font-weight:400;
+  margin:.1rem 0rem 0rem;
+  color:var(--accent-color-secondary)
+}
+#login-main #login-password-visibility-toggle {
+    position: relative;
+    font-size: 1.2rem;
+    left: 90%;
+    bottom: 2rem;
+    cursor: pointer;
 }
 #login-main .login-button:hover {
   background-color: var(--accent-color-secondary);
@@ -612,8 +630,7 @@ main {
 }
 #signup-main .wrapper {
   height: auto;
-  min-height: 380px;
-  width: 350px;
+  width: 400px;
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.15);
@@ -638,19 +655,21 @@ main {
   font-family: Lato, sans-serif;
   font-weight: 400;
   margin-top: 0.5rem;
+  padding: 0.5rem 0.8rem;
 }
 #signup-main .signup-button {
   width: 100%;
-  height: 2.5rem;
+  min-height: 3.2rem;
   border: 0.2rem var(--accent-color) solid;
   border-radius: 0.5rem;
   transition: 0.15s ease-out;
   background-color: var(--accent-color);
-  color: white;
+  color: black;
   font-family: Lato, sans-serif;
   font-size: 1.2rem;
   font-weight: 400;
   cursor: pointer;
+  margin-top: 0.5rem;
 }
 #signup-main .signup-button:hover {
   background-color: var(--accent-color-secondary);
@@ -662,7 +681,7 @@ main {
   font-weight: 400;
   margin: 0rem;
   margin-top: 0.1rem;
-  color: var(--accent-color-tertiary);
+  color: var(--accent-color-secondary);
 }
 #signup-main .signup-ref {
   font-size: 1.1rem;

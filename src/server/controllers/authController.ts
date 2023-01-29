@@ -8,6 +8,7 @@ const saltRounds = 12;
 
 // Models ------------------------------------------------
 const userSchema = new mongoose.Schema({
+  name: String,
   email: {
     type: String,
     trim: true,
@@ -31,115 +32,8 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// API Routes ---------------------------------------------
-export async function login_post(req, res) {
-  //Check session
-  if (req.session.userid) {
-    console.log("Already logged in");
-    res.status(200).redirect("/");
-    return;
-  }
-
-  //Validate inputs
-  if (req.body.email == null || req.body.password == null) {
-    res.status(400).send("Missing email or password");
-    return;
-  }
-  
-  //Check if user exists
-  User.find({ email: req.body.email }, async (err, user) => {
-    if (user.length == 0) {
-      res.status(404).send("Incorrect email or password");
-      return;
-    }
-    else {
-      const match = await bcrypt.compare(req.body.password, user[0].password);
-
-      if (match) {
-        req.session.userid = user[0]._id;
-        req.session.email = user[0].email;
-        req.session.roles = user[0].roles;
-        req.session.save();
-
-        console.log("Logging in user");
-        res.status(200).redirect("/");
-        return;
-      }
-      else {
-        res.status(401).send("Incorrect email or password");
-        return;
-      }
-    }
-  });
-};
-
-export async function signup_post(req, res) {
-  const email = JSON.stringify(req.body.email);
-  const password = JSON.stringify(req.body.password);
-
-  User.find({ email: req.body.email }, async (err, user) => {
-    if (err) {
-      res.status(500).send(err);
-      return
-    }
-
-    if (user.length > 0) {
-      const message = { text: "Account already registered with that email!" };
-      res.status(409).render('signup', { message }, (err, html) => {
-        if (err) { return console.log(err); }
-
-        res.status(409).send(html);
-        return;
-      });
-    }
-    else {
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      
-      User.create({ email: req.body.email, password: hashedPassword }, (err, user) => {
-        if (err) {
-          res.status(500).send(err);
-          return;
-        }
-
-        res.status(200).send("Sucessfully signed up user");
-      });
-    }
-  });
-};
-
-export async function makeAdmin_get(req, res) {
-  User.findOneAndUpdate({ email: req.params.email }, { roles: 'admin' }, { new: true }, (err, user) => {
-    if (err) {
-      res.send(err);
-    } else {
-      console.log(user.roles);
-      res.send("Sucessfully made user admin");
-    }
-  });
-};
-
-// Routes -------------------------------------------------
-export function signup_page(req, res) {
-  const message = { text: "" };
-  res.status(200).render('signup', { message });
-};
-
-export async function login_page(req, res) {
-  if (req.session.userid != null) {
-    console.log("Already logged in");
-    res.redirect("/");
-    return;
-  }
-
-  res.render('login');
-}
-
-export function logout_get(req, res) {
-  req.session.destroy();
-  res.redirect("/");
-};
-
-//Authentication middleware
+// Middleware --------------------------------------------
+//Authentication
 export function isAuthorised(req, res, next) {
   if (req.session.userid == null) {
     console.log("Not logged in");
@@ -157,3 +51,136 @@ export function isAuthorised(req, res, next) {
   console.log("Authenticated");
   return next();
 }
+
+// API Routes ---------------------------------------------
+export function logout_get(req, res) {
+  req.session.destroy();
+  res.redirect("/");
+};
+
+export function makeAdmin_get(req, res) {
+  User.findOneAndUpdate({ email: req.params.email }, { roles: 'admin' }, { new: true }, (err, user) => {
+    if (err) {
+      res.send(err);
+      return;
+    }
+
+    res.send("SERVER: Sucessfully made user admin");
+  });
+};
+
+// Routes -------------------------------------------------
+// Sign up
+export function signup_get(req, res) {
+  const data = { message: "", completed: false };
+  res.status(200).render('signup', { data });
+};
+
+export function signup_post(req, res) {
+  User.find({ email: req.body.email }, async (err, user) => {
+    if (err) {
+      res.status(500).send(err);
+      return
+    }
+
+    if (user.length > 0) {
+      const data = { message: "Account already registered with that email!", completed: false };
+      res.render('signup', { data }, (err, html) => {
+        if (err) { return console.log(err); }
+
+        res.status(409).send(html);
+        return;
+      });
+    }
+    else {
+      bcrypt.hash(JSON.stringify(req.body.password), saltRounds, (err, hash) => {
+        User.create({ name: req.body.name, email: req.body.email, password: hash }, (err, user) => {
+          if (err) {
+            res.status(500).send(err);
+            return;
+          }
+
+          const data = { message: "", completed: true };
+          res.render('signup', { data }, (err, html) => {
+            if (err) { return console.log(err); }
+
+            res.status(200).send(html);
+            return;
+          });
+        });
+      });
+    }
+  });
+};
+
+// Log in
+export function login_get(req, res) {
+  if (req.session.userid) {
+    res.redirect("/");
+    return;
+  }
+
+  const data = { message: "" };
+  res.render('login', { data }, (err, html) => {
+    if (err) { return console.log(err); }
+
+    res.status(200).send(html);
+    return;
+  });
+}
+
+export async function login_post(req, res) {
+  //Check session
+  if (req.session.userid) {
+    res.redirect("/");
+    return;
+  }
+
+  //Validate inputs
+  if (req.body.email == null || req.body.password == null) {
+    const data = { message: "Email or password is empty." };
+    res.render('login', { data }, (err, html) => {
+      if (err) { return console.log(err); }
+
+      res.status(400).send(html);
+      return;
+    });
+  }
+  
+  //Check if user exists
+  User.find({ email: req.body.email }, async (err, user) => {
+    if (user.length == 0) {
+      const data = { message: "User dont exist" };
+      res.render('login', { data }, (err, html) => {
+        if (err) { return console.log(err); }
+
+        res.status(401).send(html);
+        return;
+      });
+    }
+    else {
+      bcrypt.compare(JSON.stringify(req.body.password), user[0].password, (err, match) => {
+        if (match) {
+          req.session.userid = user[0]._id;
+          req.session.email = user[0].email;
+          req.session.name = user[0].name;
+          req.session.roles = user[0].roles;
+          req.session.save();
+
+          console.log("Logging in user");
+          res.status(200).redirect("/");
+          return;
+        }
+        else {
+          const data = { message: "Incorrect password" };
+          res.render('login', { data }, (err, html) => {
+            if (err) { return console.log(err); }
+
+            res.status(401).send(html);
+            return;
+          });
+        }
+      });
+    }
+  });
+};

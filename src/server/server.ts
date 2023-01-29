@@ -12,7 +12,6 @@ const blogRoutes = require('./routes/blogRoutes');
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(express.static('./'));
 app.set('view engine', 'ejs');
 
 //Sessions
@@ -42,8 +41,24 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
 
 //Routes
 app.get('/', (req, res) => {
-  res.sendFile('index.html');
+  if (req.session.userid) {
+    const userData = { name: req.session.name }
+
+    if (req.session.roles == 'admin') {
+      const siteData = { blogCount: 0, recipeCount: 0 };
+    
+      res.status(200).render('admin-index', { userData, siteData });
+      return;
+    } 
+    else {
+      res.status(200).render('index', { userData });
+      return;
+    }
+  }
+
+  res.status(200).sendFile(__dirname + '/index.html');
 });
 
 app.use(authRoutes);
 app.use(blogRoutes);
+app.use(express.static('./'));
