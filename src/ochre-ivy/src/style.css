@@ -102,13 +102,16 @@ main {
   color: var(--light);
 }
 .navbar .nav-menu-btn:hover {
-  transition: color 0.1s ease-out;
-  color: var(--accent-color-dark);
+  transition: color 0.05s ease-out;
+  color: var(--accent-color-darker);
 }
 .navbar button {
   display: none;
   background: none;
   border: none;
+}
+.navbar .nav-btn-bg {
+  transition: background-color 0.15s ease-out;
 }
 .navbar .nav-menu {
   display: block;
@@ -507,6 +510,13 @@ main {
   margin-top: 1rem;
   margin-bottom: 3rem;
 }
+#login-main .login-message {
+  font-family: Lato, sans-serif;
+  color: var(--accent-color-tertiary);
+  font-size: 1.1rem;
+  margin-top: 0.9rem;
+  margin-bottom: 1rem;
+}
 #login-main .login-form {
   height: 100%;
   display: flex;
@@ -567,7 +577,7 @@ main {
     position: relative;
     font-size: 1.2rem;
     left: 90%;
-    bottom: 2rem;
+    bottom: 2.1rem;
     cursor: pointer;
 }
 #login-main .login-button:hover {
@@ -866,13 +876,58 @@ main {
 }
 
 @media (max-width: 980px) {
-  .navbar button {
-    display: block;
+  .navbar {
+    padding: 0.8rem 2rem;
+    height: 4.5rem;
   }
-  .navbar .nav-menu {
+  .navbar .nav-text {
+    font-size: 1.6rem;
+    width: 10rem;
+  }
+  .navbar .nav-text-spacer {
     display: none;
   }
-
+  .navbar button {
+    position: relative;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .navbar .nav-menu-btn {
+    transition: 0.15s ease-out;
+  }
+  .navbar .nav-menu {
+    position: absolute;
+    top: 7rem;
+    right: 1.95rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    transition: opacity, top 0.15s ease-out
+  }
+  .navbar .nav-list {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 0rem;
+  }
+  .navbar .nav-list .nav-item {
+    margin: 0rem;
+    align-items: center;
+    height: 3.8rem;
+    width: 60vw;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  .navbar .nav-item:hover  {
+    background-color: #fef1ed;
+    font-size: 1.1rem;
+  }
+  .navbar .nav-item:hover > * {
+    color: black;
+    font-size: 1.1rem;
+  }
   #landing .hero-text {
     margin-top: 0rem;
   }
@@ -886,18 +941,6 @@ main {
 }
 
 @media (max-width: 900px) {
-  .navbar {
-    padding: 0.8rem 2rem;
-    height: 4.5rem;
-  }
-  .navbar .nav-text {
-    font-size: 1.6rem;
-    width: 10rem;
-  }
-  .navbar .nav-text-spacer {
-    display: none;
-  }
-
   #landing {
     height: 800px;
   }
@@ -963,6 +1006,13 @@ main {
 
   .navbar {
     padding: 0.8rem 7.5vw;
+  }
+  .navbar .nav-menu {
+    right: 7.5vw;
+    left: 7.5vw;
+  }
+  .navbar .nav-list .nav-item {
+    width: 100%;
   }
 
   #landing {

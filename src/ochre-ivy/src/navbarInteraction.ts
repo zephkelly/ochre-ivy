@@ -2,11 +2,77 @@ import { delay } from './helperFunctions'
 //-- ELEMENTS
 //-----------------------------------------------------------------------------
 const navbar: HTMLElement = document.querySelector(".navbar") as HTMLElement;
+const navMenu: HTMLElement = document.querySelector(".nav-menu") as HTMLElement;
+
 const navText: HTMLElement = document.querySelector(".nav-text") as HTMLElement;
 const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as HTMLElement;
-const navMenuBtn: HTMLElement= document.querySelector(".nav-menu-btn") as HTMLElement;
 
-// -- NAVIGATION BAR ----
+const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
+const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
+
+window.onload = () => {
+  if (screen.width <= 982) {
+    navMenu.style.display = 'none';
+    desktopNavbar = false;
+  } else {
+    desktopNavbar = true;
+  }
+
+  shrinkNavbar();
+};
+
+// -- Toggling navmenu/btn on click
+let navMenuBtnClicked: boolean = false;
+navMenuBtn.addEventListener('click', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
+});
+
+
+let desktopNavbar: boolean = true;
+window.addEventListener("resize", () => {
+  if (screen.width <= 982) {
+    if (!desktopNavbar) return;
+    desktopNavbar = false;
+
+    navMenu.style.display = 'none';
+
+    navMenuBtnClicked = false;
+    navMenuBtnToggle();
+  } else {
+    if (desktopNavbar) return;
+    desktopNavbar = true;
+
+    navMenu.style.display = 'block';
+    navMenu.style.opacity = '1';
+    navBtnBg.style.backgroundColor = 'transparent';
+
+    navMenu.style.boxShadow = '';
+
+    navMenuBtnClicked = false;
+  }
+});
+
+function navMenuBtnToggle() {
+  if (navMenuBtnClicked) {
+    navMenu.style.display = 'block';
+    navMenu.style.boxShadow = '0rem 2rem 2rem 0rem rgba(0, 0, 0, 0.15)';
+    navMenu.style.opacity = '1';
+
+    navBtnBg.style.backgroundColor = 'white';
+    navBtnBg.style.boxShadow = '0rem -0.5rem 1.5rem 0rem rgba(0, 0, 0, 0.2)';
+
+  } else {
+    navMenu.style.opacity = '0';
+    navMenu.style.boxShadow = '';
+
+    navBtnBg.style.backgroundColor = 'transparent';
+    navBtnBg.style.boxShadow = '';
+  
+    delay(150).then(() => navMenu.style.display = 'none');
+  }
+}
+
 // -- Shrinking navbar on scroll
 let shrunkNavbar: boolean = false;
 
@@ -17,7 +83,7 @@ export function shrinkNavbar() {
     .then(() => {
       if (scrollY > 20) {
         if (shrunkNavbar) return;
-        
+
         manipulateNavDOM(
           '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
           '3rem', '1.4rem', '1.8rem', true
@@ -45,6 +111,11 @@ export function shrinkNavbar() {
           navTextSpacer.style.left = '0.5rem';
           navTextSpacer.style.height = '0';
 
+          navMenuBtn.style.top = '0.5rem';
+
+          navMenu.style.top = '4.5rem';
+          navMenu.style.borderRadius = '0 0 0.5rem 0.5rem';
+
         } else {
           navbar.style.backgroundColor = '#f8c6b7';
           navText.style.marginBottom = '';
@@ -52,7 +123,12 @@ export function shrinkNavbar() {
           navTextSpacer.style.bottom = '';
           navTextSpacer.style.left = '';
           navTextSpacer.style.height = '';
+
+          navMenuBtn.style.top = '';
+
+          navMenu.style.top = '7rem';
+          navMenu.style.borderRadius = '';
         }
       }
-  });  
+    });
 }
