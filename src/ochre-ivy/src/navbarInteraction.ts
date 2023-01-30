@@ -10,13 +10,29 @@ const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as
 const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
 const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
 
+const loggedNotification: HTMLElement = document.getElementById("logged-notification") as HTMLElement;
+let loggedNotificationPresent: boolean = false;
+
 window.addEventListener('load', () => {
   shrinkNavbar();
 
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
     desktopNavbar = false;
-    console.log('Desktop navbar: ' + desktopNavbar)
+  }
+
+  if (loggedNotification) {
+    loggedNotificationPresent = true;
+    
+    loggedNotification.style.left = '2rem';
+
+    delay(4500).then(() => {
+      loggedNotification.style.opacity = '0';
+
+      delay(300).then(() => {
+        loggedNotification.remove();
+      });
+    });
   }
 });
 
@@ -27,8 +43,6 @@ navMenuBtn.addEventListener('click', () => {
   navMenuBtnToggle();
 });
 
-
-let desktopNavbar: boolean = true;
 window.addEventListener("resize", () => {
   if (navMenuBtnClicked == true) {
     navMenuBtnClicked = false;
@@ -49,7 +63,7 @@ function navMenuBtnToggle() {
     navMenu.style.opacity = '1';
 
     navBtnBg.style.backgroundColor = 'white';
-    navBtnBg.style.boxShadow = '0rem -0.7rem 1.5rem 0rem rgba(0, 0, 0, 0.2)';
+    navBtnBg.style.boxShadow = '0rem -1rem 1.3rem 0rem rgba(0, 0, 0, 0.2)';
 
   } else {
     navMenu.style.opacity = '0';
@@ -80,9 +94,17 @@ export function shrinkNavbar() {
           '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
           '3rem', '1.4rem', '1.8rem', true
         );
+
+        if (loggedNotificationPresent) {
+          loggedNotification.style.top = '6rem';
+        }
        } else {
         if (!shrunkNavbar) return;
         manipulateNavDOM('', '', '', '', false);
+
+        if (loggedNotificationPresent) {
+          loggedNotification.style.top = '';
+        }
       }
 
       function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {

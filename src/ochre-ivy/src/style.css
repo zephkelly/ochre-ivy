@@ -150,17 +150,49 @@ main {
   font-size: 1.1rem;
 }
 
+/* find in navbarInteraction */
 #logged-notification {
   position: fixed;
-  left: 2rem;
-  top: 7rem;
-  z-index: 2;
+  left: 4rem;
+  top: 7.2rem;
+  z-index: 3;
+  transition: 0.3s ease-out;
+  opacity: 1;
 }
 #logged-notification .container {
+  padding: 1rem;
   background-color: white;
-  box-shadow: 0 0 2rem 0rem rgba(0,0,0,0.2);
-  height: 8rem;
-  width: 8rem;
+  box-shadow: 0 0 2rem 0rem rgba(0,0,0,0.15);
+  border-radius: 0.5rem;
+  height: 3.5rem;
+  width: 12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#logged-notification .container .wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#logged-notification .check-symbol {
+  font-size: 1.5rem;
+  color: var(--accent-color-tertiary);
+}
+#logged-notification .logged-in {
+  padding: 0rem;
+  margin: 0rem;
+  font-size: 1.3;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+}
+#logged-notification .logged-in-notification {
+  padding: 0rem;
+  margin: 0rem;
+  font-size: 2;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
 }
 
 #landing {
