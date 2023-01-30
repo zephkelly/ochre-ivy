@@ -118,7 +118,7 @@ main {
 }
 .navbar .nav-list {
   position: relative;
-  top: 0.5rem;
+  top: 1rem;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -127,6 +127,8 @@ main {
 .navbar .nav-list .nav-item {
   top: 0rem;
   list-style: none;
+  width: 9rem;
+  height: 3.5rem;
 }
 .navbar .nav-item a {
   color: var(--dark);
@@ -144,8 +146,21 @@ main {
   cursor: pointer;
 }
 .navbar .nav-item:hover > * {
-  color: var(--accent-color-secondary);
+  color: var(--accent-color-darker);
   font-size: 1.1rem;
+}
+
+#logged-notification {
+  position: fixed;
+  left: 2rem;
+  top: 7rem;
+  z-index: 2;
+}
+#logged-notification .container {
+  background-color: white;
+  box-shadow: 0 0 2rem 0rem rgba(0,0,0,0.2);
+  height: 8rem;
+  width: 8rem;
 }
 
 #landing {
@@ -900,6 +915,7 @@ main {
     transition: 0.15s ease-out;
   }
   .navbar .nav-menu {
+    display: none;
     position: absolute;
     top: 7rem;
     right: 1.95rem;
@@ -913,6 +929,7 @@ main {
     align-items: center;
     justify-content: flex-end;
     gap: 1rem;
+    top: 0rem;
     padding: 0rem;
   }
   .navbar .nav-list .nav-item {

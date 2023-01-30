@@ -10,16 +10,15 @@ const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as
 const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
 const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
 
-window.onload = () => {
+window.addEventListener('load', () => {
+  shrinkNavbar();
+
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
     desktopNavbar = false;
-  } else {
-    desktopNavbar = true;
+    console.log('Desktop navbar: ' + desktopNavbar)
   }
-
-  shrinkNavbar();
-};
+});
 
 // -- Toggling navmenu/btn on click
 let navMenuBtnClicked: boolean = false;
@@ -31,25 +30,15 @@ navMenuBtn.addEventListener('click', () => {
 
 let desktopNavbar: boolean = true;
 window.addEventListener("resize", () => {
-  if (screen.width <= 982) {
-    if (!desktopNavbar) return;
-    desktopNavbar = false;
-
-    navMenu.style.display = 'none';
-
+  if (navMenuBtnClicked == true) {
     navMenuBtnClicked = false;
     navMenuBtnToggle();
+  }
+  
+  if (screen.width <= 982) {
+    navMenu.style.display = 'none';
   } else {
-    if (desktopNavbar) return;
-    desktopNavbar = true;
-
-    navMenu.style.display = 'block';
-    navMenu.style.opacity = '1';
-    navBtnBg.style.backgroundColor = 'transparent';
-
-    navMenu.style.boxShadow = '';
-
-    navMenuBtnClicked = false;
+    navMenu.style.display = '';
   }
 });
 
@@ -60,7 +49,7 @@ function navMenuBtnToggle() {
     navMenu.style.opacity = '1';
 
     navBtnBg.style.backgroundColor = 'white';
-    navBtnBg.style.boxShadow = '0rem -0.5rem 1.5rem 0rem rgba(0, 0, 0, 0.2)';
+    navBtnBg.style.boxShadow = '0rem -0.7rem 1.5rem 0rem rgba(0, 0, 0, 0.2)';
 
   } else {
     navMenu.style.opacity = '0';
@@ -69,7 +58,10 @@ function navMenuBtnToggle() {
     navBtnBg.style.backgroundColor = 'transparent';
     navBtnBg.style.boxShadow = '';
   
-    delay(150).then(() => navMenu.style.display = 'none');
+    delay(150).then(() => {
+      navMenu.style.display = '';
+      navMenu.style.opacity = '';
+    });
   }
 }
 
