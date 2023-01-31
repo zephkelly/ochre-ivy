@@ -18,7 +18,6 @@ window.addEventListener('load', () => {
 
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
-    desktopNavbar = false;
   }
 
   if (loggedNotification) {
@@ -36,13 +35,6 @@ window.addEventListener('load', () => {
   }
 });
 
-// -- Toggling navmenu/btn on click
-let navMenuBtnClicked: boolean = false;
-navMenuBtn.addEventListener('click', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
-});
-
 window.addEventListener("resize", () => {
   if (navMenuBtnClicked == true) {
     navMenuBtnClicked = false;
@@ -54,6 +46,13 @@ window.addEventListener("resize", () => {
   } else {
     navMenu.style.display = '';
   }
+});
+
+// -- Toggling navmenu/btn on click
+let navMenuBtnClicked: boolean = false;
+navMenuBtn.addEventListener('click', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
 });
 
 function navMenuBtnToggle() {

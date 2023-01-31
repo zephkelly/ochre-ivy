@@ -6,10 +6,12 @@
   "scripts": {
     "build_blogController": "tsc ./controllers/blogController.ts",
     "build_authController": "tsc ./controllers/authController.ts",
+    "build_adminController": "tsc ./controllers/adminController.ts",
     "build_blogRoutes": "tsc ./routes/blogRoutes.ts",
     "build_authRoutes": "tsc ./routes/authRoutes.ts",
+    "build_adminRoutes": "tsc ./routes/adminRoutes.ts",
     "build_server": "tsc ./server.ts",
-    "build": "npm run build_blogController && npm run build_authController && npm run build_blogRoutes && npm run build_authRoutes && npm run build_server"
+    "build": "npm run build_blogController && npm run build_authController && npm run build_blogRoutes && npm run build_authRoutes && npm run build_server && npm run build_adminController && npm run build_adminRoutes"
   },
   "author": "",
   "license": "ISC",

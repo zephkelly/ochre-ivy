@@ -2,7 +2,6 @@ import { sanitizeFilter } from "mongoose";
 
 const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
-const ejs = require('ejs').ejs;
 
 // Model ----------------------------------------------------
 const blogSchema = new mongoose.Schema({
@@ -15,6 +14,9 @@ const blogSchema = new mongoose.Schema({
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
+
+module.exports = blogSchema;
+module.exports = Blog;
 
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {

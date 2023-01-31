@@ -8,6 +8,7 @@ const MongoStore = require('connect-mongo');
 
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -47,7 +48,7 @@ app.get('/', (req, res) => {
     if (req.session.roles == 'admin') {
       const siteData = { blogCount: 0, recipeCount: 0 };
     
-      res.status(200).render('admin-index', { userData, siteData });
+      res.status(200).render('admin/admin-index', { userData, siteData });
       return;
     } 
     else {
