@@ -4,6 +4,8 @@ const { isAuthorised } = require('../controllers/authController');
 
 const router = Router();
 
+console.log(blogController + 'blog controller');
+
 //API Routes ------------------------------------------------
 router.get('/api/blog', (req, res) => { blogController.blogAPI_get(req, res) });
 

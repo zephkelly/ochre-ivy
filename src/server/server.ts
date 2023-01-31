@@ -62,4 +62,5 @@ app.get('/', (req, res) => {
 
 app.use(authRoutes);
 app.use(blogRoutes);
+app.use(adminRoutes);
 app.use(express.static('./'));

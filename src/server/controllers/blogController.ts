@@ -15,9 +15,6 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema);
 
-module.exports = blogSchema;
-module.exports = Blog;
-
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
   Blog.find({}, (err, blogs) => {
