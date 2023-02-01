@@ -10,8 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title>Login</title>
-  <script type="module" crossorigin src="/assets/main-8232ebba.js"></script>
-  <link rel="stylesheet" href="/assets/index-6bacb779.css">
+  <script type="module" crossorigin src="/assets/main-1d623bc5.js"></script>
+  <link rel="stylesheet" href="/assets/index-9d552eae.css">
 </head>
 <body>
   <header>
@@ -36,8 +36,9 @@
       <div class="container">
         <h1 class="login-title">Welcome Back!</h1>
         <h3 class="login-subtitle">Login to your account</h3>
+        <h3 class="login-message"><%= data.message %></h3>
         <div class="wrapper">
-          <form class="login-form" action="/api/login" method="POST" id="login-form">
+          <form class="login-form" action="/login" method="POST" id="login-form">
             <div class="input-section">
               <label for="email">Email</label>
               <input id="login-email" class="input" type="email" name="email" placeholder="example@email.com" required>
@@ -45,9 +46,9 @@
             </div>
             <div class="input-section">
               <label for="password">Password</label>
-                <input id="login-password" class="input" type="password" name="password" placeholder="Password" required>
-                <span id="login-password-visibility-toggle" class="material-symbols-outlined">visibility_off</span>
-                <p id="login-password-validation" for="password"></p>
+              <input id="login-password" class="input" type="password" name="password" placeholder="Password" required>
+              <span id="login-password-visibility-toggle" class="material-symbols-outlined">visibility_off</span>
+              <p id="login-password-validation" for="password"></p>
               </div>
             <input class="login-button" type="submit" value="Login">
           </form>

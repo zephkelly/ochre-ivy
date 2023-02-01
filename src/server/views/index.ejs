@@ -10,8 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title>Ochre & Ivy</title>
-  <script type="module" crossorigin src="/assets/main-8232ebba.js"></script>
-  <link rel="stylesheet" href="/assets/index-6bacb779.css">
+  <script type="module" crossorigin src="/assets/main-1d623bc5.js"></script>
+  <link rel="stylesheet" href="/assets/index-9d552eae.css">
 </head>
 <body>
   <header>
@@ -20,22 +20,31 @@
         <h3 class="nav-text">Ochre & Ivy</h3>
         <div class="nav-text-spacer"></div>
       </div>
-      <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+      <button type="button" class="nav-btn-bg"><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
       <nav class="nav-menu">
         <ul class="nav-list">
-          <li class="nav-item"><a href="">Home</a></li>
-          <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="#">Blog</a></li>
-          <li class="nav-item"><a href="#">About</a></li>
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="/recpies">Recipes</a></li>
+          <li class="nav-item"><a href="/blog">Blog</a></li>
+          <li class="nav-item"><a href="/about">About</a></li>
         </ul>
       </nav>
     </div>
   </header>
   <main>
+    <section id="logged-notification">
+      <div class="container">
+        <div class="wrapper">
+          <h6 class="logged-in">Signed in successfully!</h6>
+          <span class="check-symbol material-symbols-outlined">done</span>
+        </div>
+        <p class="logged-in-notification">Welcome back, Evan.</p>
+      </div>
+    </section>
     <section id="landing">
       <div class="container">
-        <h1 class="hero-text">WELCOME BACK, <%= userData.name.toUpperCase() %></h1>
-        <p class="hero-description">Recipes & blogs for wholistic living</p>
+        <h1 class="hero-text">NOURISH, CREATE MOTIVATE</h1>
+        <p class="hero-description">Recipes & blogs for holistic living</p>
         <a class="hero-learnmore-btn">Learn More</a>
         <img id="hero-illustration" class="" src="./painters-palette.png" alt="A painting paintbrush">
       </div>
@@ -87,7 +96,7 @@
     </div>
   </footer>
 </body>
-  <footer>
-    
-  </footer>
+  <script>
+
+  </script>
 </html>
