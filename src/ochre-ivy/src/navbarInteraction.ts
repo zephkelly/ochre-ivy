@@ -6,6 +6,7 @@ const navMenu: HTMLElement = document.querySelector(".nav-menu") as HTMLElement;
 
 const navText: HTMLElement = document.querySelector(".nav-text") as HTMLElement;
 const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as HTMLElement;
+let spacerPresent: boolean = false;
 
 const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
 const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
@@ -14,6 +15,10 @@ const loggedNotification: HTMLElement = document.getElementById("logged-notifica
 let loggedNotificationPresent: boolean = false;
 
 window.addEventListener('load', () => {
+  if (navTextSpacer) {
+    spacerPresent = true;
+  }
+
   shrinkNavbar();
 
   if (screen.width <= 982) {
@@ -97,7 +102,8 @@ export function shrinkNavbar() {
         if (loggedNotificationPresent) {
           loggedNotification.style.top = '6rem';
         }
-       } else {
+      }
+      else {
         if (!shrunkNavbar) return;
         manipulateNavDOM('', '', '', '', false);
 
@@ -119,28 +125,30 @@ export function shrinkNavbar() {
         if (shrunkNavbar) {
           navbar.style.backgroundColor = 'white';
           navText.style.marginBottom = '0';
+          
+          navMenuBtn.style.top = '0.5rem';
+          navMenu.style.top = '4.5rem';
+          navMenu.style.borderRadius = '0 0 0.5rem 0.5rem';
+          
+          if (!spacerPresent) return;
           navTextSpacer.style.opacity = '0';
           navTextSpacer.style.bottom = '-0.5rem';
           navTextSpacer.style.left = '0.5rem';
           navTextSpacer.style.height = '0';
-
-          navMenuBtn.style.top = '0.5rem';
-
-          navMenu.style.top = '4.5rem';
-          navMenu.style.borderRadius = '0 0 0.5rem 0.5rem';
-
-        } else {
+        }
+        else {
           navbar.style.backgroundColor = '#f8c6b7';
           navText.style.marginBottom = '';
+
+          navMenuBtn.style.top = '';
+          navMenu.style.top = '7rem';
+          navMenu.style.borderRadius = '';
+
+          if (!spacerPresent) return;
           navTextSpacer.style.opacity = '';
           navTextSpacer.style.bottom = '';
           navTextSpacer.style.left = '';
           navTextSpacer.style.height = '';
-
-          navMenuBtn.style.top = '';
-
-          navMenu.style.top = '7rem';
-          navMenu.style.borderRadius = '';
         }
       }
     });
