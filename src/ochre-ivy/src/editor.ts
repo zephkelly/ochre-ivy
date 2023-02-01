@@ -11,7 +11,14 @@ const editor = new EditorJS({
     header: Header,
     quote: Quote,
     list: List,
-    image: Image,
+    image: {
+      class: Image,
+      config: {
+        endpoints: {
+          byFile: 'http://localhost:62264/api/blog/imageupload', // Your backend file uploader endpoint
+        }
+      }
+    }
   },
 });
 

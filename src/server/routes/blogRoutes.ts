@@ -17,9 +17,11 @@ router.put('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController.bl
 
 router.delete('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController.blogAPI_delete(req, res) });
 
-//Routes ------------------------------------------------
-router.get('/blog/:blogURI', (req, res) => { blogController.blog_getURI(req, res); });
+router.post('/api/blog/imageupload', isAuthorised, (req, res) => { blogController.blogAPI_imageUpload(req, res) });
 
+//Routes ------------------------------------------------
 router.get('/blog', (req, res) => { blogController.blog_homePage(req, res); });
+
+router.get('/blog/:blogURI', (req, res) => { blogController.blog_getURI(req, res); });
 
 module.exports = router;

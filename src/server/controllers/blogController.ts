@@ -1,5 +1,4 @@
-import { sanitizeFilter } from "mongoose";
-
+require('dotenv').config()
 const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
 
@@ -166,6 +165,27 @@ export async function blogAPI_delete(req, res) {
   });
 }
 
+export function blogAPI_imageUpload(req, res) {
+  const { image } = req.files;
+
+  const imageData = {
+    success: 0,
+    file: {
+      url: ''
+    }
+  }
+
+  if (!image) {
+    return res.status(400).send(JSON.stringify(imageData));
+  }
+  
+  image.mv(__dirname + '/uploaded/' + image.name);
+
+  imageData.success = 1;
+  imageData.file.url = '/uploaded/' + image.name;
+
+  res.status(200).send(JSON.stringify(imageData));
+}
 
 //Routes ------------------------------------------------
 export async function blog_homePage(req, res) {

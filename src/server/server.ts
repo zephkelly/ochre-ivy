@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
 const MongoStore = require('connect-mongo');
 
 const authRoutes = require('./routes/authRoutes');
@@ -32,6 +33,7 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(fileUpload());
 
 //Database
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })

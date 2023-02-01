@@ -36,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.blog_getURI = exports.blog_homePage = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
+exports.blog_getURI = exports.blog_homePage = exports.blogAPI_imageUpload = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
+require('dotenv').config();
 var fetch = require("node-fetch-commonjs");
 var mongoose = require('mongoose').mongoose;
 // Model ----------------------------------------------------
@@ -231,6 +232,27 @@ function blogAPI_delete(req, res) {
     });
 }
 exports.blogAPI_delete = blogAPI_delete;
+function blogAPI_imageUpload(req, res) {
+    var image = req.files.image;
+    var imageData = {
+        success: 0,
+        file: {
+            url: ''
+        }
+    };
+    if (!image) {
+        return res.status(400).send(JSON.stringify(imageData));
+    }
+    // Sanitize the file
+    if (/^image/.test(image.mimetype)) {
+        return res.status(400).send(JSON.stringify(imageData));
+    }
+    image.mv(__dirname + '/uploaded/' + image.name);
+    imageData.success = 1;
+    imageData.file.url = '/uploaded/' + image.name;
+    res.status(200).send(JSON.stringify(imageData));
+}
+exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
 function blog_homePage(req, res) {
     return __awaiter(this, void 0, void 0, function () {
