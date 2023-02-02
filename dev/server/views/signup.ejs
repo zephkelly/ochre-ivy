@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
+  <title>Sign Up</title>
+  <script type="module" crossorigin src="/main.js"></script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <header>
+    <div class="navbar" style="padding-bottom: 1.6rem">
+      <div class="wrapper">
+        <h3 class="nav-text">Ochre & Ivy</h3>
+        <div class="nav-text-spacer"></div>
+      </div>
+      <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="#">Recipes</a></li>
+          <li class="nav-item"><a href="/blog">Blog</a></li>
+          <li class="nav-item"><a href="#">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="signup-main">
+      <% if (data.completed) { %>
+        <div class="container">
+          <h1 class="signup-title">Signed up successfully!</h1>
+          <h3 class="signup-subtitle">Follow the link below to log in</h3>
+          <p class="signup-ref"><a href="/login">Login Now</a></p>
+        </div>
+      <% } else { %>
+        <div class="container">
+          <h1 class="signup-title">Welcome!</h1>
+          <h3 class="signup-subtitle">Register an account below</h3>
+          <h3 class="signup-message"><%= data.message %></h3>
+          <div class="wrapper">
+            <form class="signup-form" action="/signup" method="POST" id="signup-form">
+              <div class="signup-section">
+                <label for="name">First Name</label>
+                <input id="signup-name" class="input" type="text" name="name" placeholder="First Name" required>
+              </div>
+              <div class="signup-section">
+                <label for="email">Email</label>
+                <input id="signup-email" class="input" type="email" name="email" placeholder="Email" required>
+                <p id="signup-email-validation" for="email"></p>
+              </div>
+              <div class="signup-section">
+                <label for="password">Password</label>
+                <input id="signup-password" class="input" type="password" name="password" placeholder="Password" required>
+                <p id="signup-password-validation" for="password"></p>
+              </div>
+              <div class="signup-section">
+                <label for="passwordConfirm">Repeat Password</label>
+                <input id="signup-password-confirm" class="input" type="password" name="passwordConfirm" placeholder="Repeat Password" required>
+                <p id="signup-password-confirm-validation" for="passwordConfirm"></p>
+              </div>
+              <input class="signup-button" type="submit" value="Sign Up">
+            </form>
+          </div>
+          <p class="signup-ref">Already have an account? <a href="/login">Login</a></p>
+        </div>
+      <% } %>
+    </section>
+  </main>
+</body>
+<script>
+const emailInputSignup = document.getElementById('signup-email');
+const passwordInput = document.getElementById('signup-password');
+const passwordConfirmInput = document.getElementById('signup-password-confirm');
+
+const emailValidationMessage = document.getElementById('signup-email-validation');
+const passwordValidationMessage = document.getElementById('signup-password-validation');
+const passwordConfirmValidationMessage = document.getElementById('signup-password-confirm-validation');
+
+emailInputSignup.addEventListener("input", checkEmail);
+passwordInput.addEventListener("input", checkPassword);
+passwordConfirmInput.addEventListener("input", checkPassword);
+
+export function checkEmail() {
+  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+  if (emailInputSignup.value.match(validRegex)) {
+    emailValidationMessage.style.display = "";
+    emailValidationMessage.innerHTML = "";
+
+    emailInputSignup.setCustomValidity("");
+  }
+  else {
+    emailInputSignup.setCustomValidity("Please enter a valid email address.");
+    emailValidationMessage.innerHTML = "Please enter a valid email address.";
+
+    emailValidationMessage.style.display = "block";
+  }
+}
+
+export function checkPassword() {
+  if (passwordInput.value !== passwordConfirmInput.value) {
+    passwordInput.setCustomValidity("Passwords do not match.");
+    passwordConfirmInput.setCustomValidity("Passwords do not match.");
+
+    passwordConfirmValidationMessage.innerHTML = "Passwords do not match.";
+    passwordValidationMessage.style.borderColor = 'var(--accent-color-tertiary)';
+    passwordConfirmValidationMessage.style.borderColor = 'var(--accent-color-tertiary)';
+
+    passwordValidationMessage.style.display = "block";
+    passwordConfirmValidationMessage.style.display = "block";
+  }
+  else {
+    passwordInput.setCustomValidity("");
+    passwordConfirmInput.setCustomValidity("");
+
+    passwordConfirmValidationMessage.innerHTML = "";
+    passwordValidationMessage.style.borderColor = 'grey';
+    passwordConfirmValidationMessage.style.borderColor = 'grey';
+
+    passwordValidationMessage.style.display = "none";
+    passwordConfirmValidationMessage.style.display = "none";
+  }
+}
+</script>
+</html>

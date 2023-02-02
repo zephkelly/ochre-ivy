@@ -1,8 +1,4 @@
-/node_modules
-/src/node_modules
-/src/server/node_modules
-/src/ochre-ivy/node_modules
-
-/dist
+node_modules
+dist
 
 .env
