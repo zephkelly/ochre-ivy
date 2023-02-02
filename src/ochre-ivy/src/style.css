@@ -875,7 +875,6 @@ main {
   border-top: 1px solid grey;
   margin-top: 0.2rem;
   min-height: 200px;
-  max-height: 75vh;
   padding-bottom: 4rem;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -894,11 +893,72 @@ main {
   overflow-wrap: break-word;
 }
 #editorjs .cdx-block {
-  max-width: 100% !important;
+    max-width:100%!important 
 }
-#editorjs .ce-paragraph {
+#editorjs .ce-paragraph{
+  font-size:1.2rem;
+  line-height:1.5;
+  text-align: justify;
+  font-family: 'Lato', sans-serif;
+  padding: 0rem;
+  padding-bottom: 2rem;
+}
+/* NEW */
+#editorjs .ce-header {
+  font-family: 'Poppins', sans-serif;
+  padding: 0rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+#editorjs .image-tool {
+  padding: 0rem;
+  margin: 3rem 0rem;
+}
+#editorjs .image-tool__caption {
+  font-family: 'Lato', sans-serif;
+  text-align: right;
+  padding-right: 2rem;
+  font-style: oblique;
+  border: none;
+  padding-bottom: 2rem;
+}
+#editorjs .image-tool__caption:focus {
+  border: 1px solid grey;
+}
+#editorjs .cdx-quote__text {
+  font-family:'Times New Roman', Times, serif;
+  color: rgb(84, 84, 84);
+  text-align: center;
+  height: auto;
+  min-height: 0rem;
+  font-size: 1.4rem;
+  margin: auto;
+  max-width: 75%;
+  font-style: oblique;
+  line-height: 1.6;
+  border: none;
+}
+#editorjs .cdx-quote__text:focus {
+  border: 1px solid grey;
+}
+#editorjs .cdx-quote__caption {
+  font-family:'Times New Roman', Times, serif;
+  color: rgb(84, 84, 84);
+  margin: auto;
+  width: 75%;
+  text-align: right;
+  font-size: 1.4rem;
+  font-style: oblique;
+  border: none;
+}
+#editorjs .cdx-quote__caption:focus {
+  border: 1px solid grey;
+}
+#editorjs .cdx-list__item {
+  font-family: 'Lato', sans-serif;
   font-size: 1.2rem;
   line-height: 1.5;
+  text-align: left;
 }
 
 @media (max-width: 3250px) {
