@@ -39,31 +39,82 @@
         <h6 id="post-date">
           <%= blogData.createdDate %>
         </h6>
-
         <div id="blog-body">
           <% blogData.content.blocks.forEach((block) => { %>
-
-            <% if (block.type === 'header') { %>
-              <h3><%= block.data.text %></h3>
-            <% } %>
-
-            <% if (block.type === 'paragraph') { %>
-              <p><%= block.data.text %></p>
-            <% } %>
-
-            <% if (block.type === 'image') { %>
-              <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
-            <% } %>
-
-          <% }) %>
+            <div class="ce-block__content">
+              <% if (block.type === 'header') { %>
+                <% if (block.data.level === 3) { %>
+                  <h3 class="ce-header"><%= block.data.text %></h3>
+                <% } %>
+                <% if (block.data.level === 4) { %>
+                  <h4 class="ce-header"><%= block.data.text %></h4>
+                <% } %>
+              <% } %>
+              <% if (block.type === 'paragraph') { %>
+                <p class="ce-paragraph"><%= block.data.text %></p>
+              <% } %>
+              <% if (block.type === 'image') { %>
+                <div class="image-tool">
+                  <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
+                  if (block.data.caption != null) <p class="image-tool__caption"><%= block.data.caption %></p>
+                </div>
+              <% } %>
+              <% if (block.type === 'quote') { %>
+                <p class="cdx-quote__text"><%= block.data.text %></p>
+                <p class="cdx-quote__caption"><%= block.data.caption %></p>
+              <% } %>
+              <% if (block.type === 'list') { %>
+                <% if (block.data.style === 'ordered') { %>
+                  <ol class="cdx-list">
+                    <% block.data.items.forEach((item) => { %>
+                      <li class="cdx-list__item"><%= item %></li>
+                    <% }); %>
+                  </ol>
+                <% } %>
+                <% if (block.data.style === 'unordered') { %>
+                  <ul class="cdx-list">
+                    <% block.data.items.forEach((item) => { %>
+                      <li class="cdx-list__item"><%= item %></li>
+                    <% }); %>
+                  </ul>
+                <% } %>
+              <% } %>
+            </div>
+          <% }); %>
         </div>
-
         <script>
-          //Remove html tags in content
-          //const blogContentDiv = document.getElementById('blog-body');
-          //const blogContent = blogContentDiv.innerText;
+          //Remove br from text
+          const imageCaptions = document.querySelectorAll('.image-tool__caption');
+          const paragraphText = document.querySelectorAll('.ce-paragraph');
+          const quotesText = document.querySelectorAll('.cdx-quote__text');
+          const quotesCaption = document.querySelectorAll('.cdx-quote__caption');
+          const listItems = document.querySelectorAll('.cdx-list__item');
+          
+          imageCaptions.forEach((caption) => {
+            caption.innerHTML = caption.textContent.replace(/<br>/g, '');
+            caption.innerHTML = caption.textContent.replace(/<script>.*<\/script>/g, '');
+          });
 
-         // blogContentDiv.innerHTML = blogContent;
+          paragraphText.forEach((paragraph) => {
+            paragraph.innerHTML = paragraph.textContent.replace(/<br>/g, '');
+            paragraph.innerHTML = paragraph.textContent.replace(/<script>.*<\/script>/g, '');
+          });
+
+          quotesText.forEach((quote) => {
+            quote.innerHTML = quote.textContent.replace(/<br>/g, '');
+            quote.innerHTML = quote.textContent.replace(/<script>.*<\/script>/g, '');
+          });
+
+          quotesCaption.forEach((quote) => {
+            quote.innerHTML = quote.textContent.replace(/<br>/g, '');
+            quote.innerHTML = quote.textContent.replace(/<script>.*<\/script>/g, '');
+          });
+
+          listItems.forEach((listItem) => {
+            listItem.innerHTML = listItem.textContent.replace(/<br>/g, '');
+            listItem.innerHTML = listItem.textContent.replace(/&nbsp;/g, '');
+            listItem.innerHTML = listItem.textContent.replace(/<script>.*<\/script>/g, '');
+          });
 
           // Format date
           const blogCreatedDate = document.getElementById('post-date');
@@ -88,7 +139,7 @@
     </section>
   </main>
   <footer id="footer-main">
-    <div class="container">
+    <div class="container" id="footer-container">
       <section class="footer-links">
         <nav>
           <ul class="footer-nav-menu">

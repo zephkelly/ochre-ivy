@@ -39,41 +39,48 @@ const subtitle: HTMLInputElement = document.getElementById('subtitle-input') as 
 const createdDate: HTMLInputElement = document.getElementById('createdDate-input') as HTMLInputElement;
 
 (async function sanitiseInputs() {
-  uriInput.style.borderColor = 'red';
-  title.style.borderColor = 'red';
+  validateDate();
+  validateSubtitle();
+  validateTitle();
+  validateUri();
 
-  uriInput.addEventListener('input', () => {
+  subtitle.addEventListener('input', validateSubtitle);
+  createdDate.addEventListener('input', validateDate);
+  uriInput.addEventListener('input', validateUri);
+  title.addEventListener('input', validateTitle);
+
+  function validateUri() {
     if (uriInput.value.length < 3 || uriInput.value.length > 50) {
       uriInput.style.borderColor = 'red';
     }
     else {
       uriInput.style.borderColor = 'green';
     }
-  });
+  }
 
-  title.addEventListener('input', () => {
+  function validateTitle() {
     if (title.value.length <= 0) {
       title.style.borderColor = 'red';
     }
     else {
       title.style.borderColor = 'green';
     }
-  });
+  }
 
-  subtitle.addEventListener('input', () => {
+  function validateSubtitle() {
     if (subtitle.value.length <= 0) {
       subtitle.style.borderColor = '';
     }
     else {
       subtitle.style.borderColor = 'green';
     }
-  });
+  }
 
-  createdDate.addEventListener('input', () => {
+  function validateDate() {
     if (createdDate.value.length == 0) {
       createdDate.style.borderColor = '';
     }
-    if (createdDate.value.length < 10) {
+    else if (createdDate.value.length < 10) {
       createdDate.style.borderColor = 'red';
     }
     else if (!dateRegex.test(createdDate.value)) {
@@ -82,11 +89,10 @@ const createdDate: HTMLInputElement = document.getElementById('createdDate-input
     else {
       createdDate.style.borderColor = 'green';
     }
-  });
+  }
 
   //create a regex to check for date in formate yyyy-mm-dd
   const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
-
 })();
 
 const button = document.getElementById('save-button');
@@ -95,7 +101,6 @@ if (button != null) button.addEventListener('click', saveBlog);
 async function saveBlog() {
   editor.save().then(async (outputData) => {
 
-    
     const blogData = {
       uri: uriInput.value,
       title: title.value,
