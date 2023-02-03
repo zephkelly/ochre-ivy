@@ -37,11 +37,20 @@
     </section>
     <section id="editor-section">
       <div class="container">
-        <h3 class="editor-title">Create new blog</h3>
+        <div class="wrapper">
+          <h3 class="editor-title">Create new blog</h3>
+          <button id="save-button">Post blog</button>
+        </div>
         <form id="blog-new-form">
-          <div class="input-section">
-            <label for="uri">URI</label>
-            <input type="text" name="uri" id="uri-input" placeholder="my-first-blog">
+          <div class="wrapper">
+            <div class="input-section">
+              <label for="uri">URI</label>
+              <input type="text" name="uri" id="uri-input" placeholder="my-first-blog">
+            </div>
+            <div class="input-section">
+              <label for="createdDate">Created Date (yyyy/mm/dd)</label>
+              <input type="text" placeholder="Bank for current date" name="createdDate" id="createdDate-input">
+            </div>
           </div>
           <div class="input-section">
             <label for="title">Title</label>
@@ -51,10 +60,7 @@
             <label for="subtitle">Subtitle</label>
             <input type="text" name="subtitle" id="subtitle-input"  placeholder="Subtitle">
           </div>
-          <div class="input-section">
-            <label for="createdDate">Created Date</label>
-            <input type="text" placeholder="YYYY/MM/DD. Leave blank for current date" name="createdDate" id="createdDate-input">
-          </div>
+          
           <label class="editor-label" for="editorjs">Content</label>
           <div class="editor-input">
             <div id="editorjs"></div>

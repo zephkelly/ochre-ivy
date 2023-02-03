@@ -41,61 +41,62 @@ export function blogAPI_getURI(req, res) {
 }
 
 export async function blogAPI_post(req, res) {
-  //Validate blog post ------------------------------------------------
-  const validateBlogPost = () => {
+  
+  function validateData() {
     //Does contain URI?
-    if (req.body.uri == null) { return { failedValidation: true, message: uriEmptyMsg }; }
-
-    //Does post already exist?
-    let postCount = Blog.find({ uri: req.body.uri }).countDocuments();
-    if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
-
-    //Extra checks
-    if (req.body.uri.length > 50) { return { failedValidation: true, message: uriTooLongMsg }; }
-    else if (req.body.uri.length < 3) { return { failedValidation: true, message: uriTooShortMsg }; } 
-    else if (req.body.title == null) { return { failedValidation: true, message: titleEmptyMsg }; }
-    else if (req.body.content == null) { return { failedValidation: true, message: contentEmptyMsg }; }
-
-    return { failedValidation: false };
-  }
-
-  if (validateBlogPost().failedValidation) {
-    res.send(validateBlogPost().message);
-    return;
-  }
-
-  //Construct blog object ---------------------------------------------
-  const uri: string = req.body.uri
-  const title: string = req.body.title;
-  const subtitle: string = req.body.subtitle;
-  let createdDate: string;
-  const content: object = req.body.content;
-
-  if (req.body.date == null) {
-    createdDate = new Date().toISOString();
-  } else {
-    createdDate = new Date(req.body.date).toISOString();
-  }
-
-  const blog = new Blog({
-    uri: uri,
-    title: title,
-    subtitle: subtitle,
-    createdDate: createdDate,
-    updatedDate: createdDate,
-    content: content,
-  });
-
-  //Save blog object --------------------------------------------------
-  blog.save((err) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      console.log("Successfully added a new blog post. " + blog)
-      res.status(200).send('Successfully added a new blog post. ' + blog);
+    if (req.body.uri == null || req.body.uri == '') {
+      return { status: 400, message: uriEmptyMsg };
     }
-  });
+    else if (req.body.uri.length > 50) {
+      return { status: 400, message: uriTooLongMsg };
+    }
+    else if (req.body.uri.length < 3) {
+      return { status: 400, message: uriTooShortMsg };
+    }
+    else if (req.body.title == null || req.body.title == '') {
+      return { status: 400, message: titleEmptyMsg };
+    }
+    else if (req.body.content == null || req.body.content == '') {
+      return { status: 400, message: contentEmptyMsg };
+    }
+
+    return { status: 200, message: '' };
+  }
+
+  const validated = validateData();
+  
+  if (validated.status === 200) {
+    Blog.countDocuments({ uri: req.body.uri }, (err, count) => {
+      if (err) { return console.log(err); }
+
+      if (count > 0) {
+        return res.status(400).send(postExistsMsg);
+      }
+      else {
+        let createdDate = (req.body.date == null || req.body.date == '')
+          ? new Date().toISOString()
+          : new Date(req.body.date).toISOString();
+
+        const blog = new Blog({
+          uri: req.body.uri,
+          title: req.body.title,
+          subtitle: req.body.subtitle,
+          createdDate: createdDate,
+          updatedDate: createdDate,
+          content: req.body.content
+        });
+
+        blog.save((err, blog) => {
+          if (err) { return console.log(err); }
+
+          res.status(200).send("Blog post created");
+        });
+      }
+    });
+  }
+  else {
+    res.status(validated.status).send(validated.message);
+  }
 }
 
 export async function blogAPI_update(req, res) {

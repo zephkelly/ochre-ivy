@@ -77,66 +77,60 @@ function blogAPI_getURI(req, res) {
 exports.blogAPI_getURI = blogAPI_getURI;
 function blogAPI_post(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var validateBlogPost, uri, title, subtitle, createdDate, content, blog;
-        return __generator(this, function (_a) {
-            validateBlogPost = function () {
-                //Does contain URI?
-                if (req.body.uri == null) {
-                    return { failedValidation: true, message: uriEmptyMsg };
-                }
-                //Does post already exist?
-                var postCount = Blog.find({ uri: req.body.uri }).countDocuments();
-                if (postCount > 0) {
-                    return { failedValidation: true, message: postExistsMsg };
-                }
-                //Extra checks
-                if (req.body.uri.length > 50) {
-                    return { failedValidation: true, message: uriTooLongMsg };
-                }
-                else if (req.body.uri.length < 3) {
-                    return { failedValidation: true, message: uriTooShortMsg };
-                }
-                else if (req.body.title == null) {
-                    return { failedValidation: true, message: titleEmptyMsg };
-                }
-                else if (req.body.content == null) {
-                    return { failedValidation: true, message: contentEmptyMsg };
-                }
-                return { failedValidation: false };
-            };
-            if (validateBlogPost().failedValidation) {
-                res.send(validateBlogPost().message);
-                return [2 /*return*/];
+        function validateData() {
+            //Does contain URI?
+            if (req.body.uri == null || req.body.uri == '') {
+                return { status: 400, message: uriEmptyMsg };
             }
-            uri = req.body.uri;
-            title = req.body.title;
-            subtitle = req.body.subtitle;
-            content = req.body.content;
-            if (req.body.date == null) {
-                createdDate = new Date().toISOString();
+            else if (req.body.uri.length > 50) {
+                return { status: 400, message: uriTooLongMsg };
+            }
+            else if (req.body.uri.length < 3) {
+                return { status: 400, message: uriTooShortMsg };
+            }
+            else if (req.body.title == null || req.body.title == '') {
+                return { status: 400, message: titleEmptyMsg };
+            }
+            else if (req.body.content == null || req.body.content == '') {
+                return { status: 400, message: contentEmptyMsg };
+            }
+            return { status: 200, message: '' };
+        }
+        var validated;
+        return __generator(this, function (_a) {
+            validated = validateData();
+            if (validated.status === 200) {
+                Blog.countDocuments({ uri: req.body.uri }, function (err, count) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    if (count > 0) {
+                        return res.status(400).send(postExistsMsg);
+                    }
+                    else {
+                        var createdDate = (req.body.date == null || req.body.date == '')
+                            ? new Date().toISOString()
+                            : new Date(req.body.date).toISOString();
+                        var blog = new Blog({
+                            uri: req.body.uri,
+                            title: req.body.title,
+                            subtitle: req.body.subtitle,
+                            createdDate: createdDate,
+                            updatedDate: createdDate,
+                            content: req.body.content
+                        });
+                        blog.save(function (err, blog) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                            res.status(200).send("Blog post created");
+                        });
+                    }
+                });
             }
             else {
-                createdDate = new Date(req.body.date).toISOString();
+                res.status(validated.status).send(validated.message);
             }
-            blog = new Blog({
-                uri: uri,
-                title: title,
-                subtitle: subtitle,
-                createdDate: createdDate,
-                updatedDate: createdDate,
-                content: content,
-            });
-            //Save blog object --------------------------------------------------
-            blog.save(function (err) {
-                if (err) {
-                    console.log(err);
-                    res.send(err);
-                }
-                else {
-                    console.log("Successfully added a new blog post. " + blog);
-                    res.status(200).send('Successfully added a new blog post. ' + blog);
-                }
-            });
             return [2 /*return*/];
         });
     });

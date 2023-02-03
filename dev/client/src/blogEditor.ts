@@ -33,22 +33,74 @@ if (editor) {
   console.log('Editor is ready');
 }
 
+const uriInput: HTMLInputElement = document.getElementById('uri-input') as HTMLInputElement;
+const title: HTMLInputElement = document.getElementById('title-input') as HTMLInputElement;
+const subtitle: HTMLInputElement = document.getElementById('subtitle-input') as HTMLInputElement;
+const createdDate: HTMLInputElement = document.getElementById('createdDate-input') as HTMLInputElement;
+
+(async function sanitiseInputs() {
+  uriInput.style.borderColor = 'red';
+  title.style.borderColor = 'red';
+
+  uriInput.addEventListener('input', () => {
+    if (uriInput.value.length < 3 || uriInput.value.length > 50) {
+      uriInput.style.borderColor = 'red';
+    }
+    else {
+      uriInput.style.borderColor = 'green';
+    }
+  });
+
+  title.addEventListener('input', () => {
+    if (title.value.length <= 0) {
+      title.style.borderColor = 'red';
+    }
+    else {
+      title.style.borderColor = 'green';
+    }
+  });
+
+  subtitle.addEventListener('input', () => {
+    if (subtitle.value.length <= 0) {
+      subtitle.style.borderColor = '';
+    }
+    else {
+      subtitle.style.borderColor = 'green';
+    }
+  });
+
+  createdDate.addEventListener('input', () => {
+    if (createdDate.value.length == 0) {
+      createdDate.style.borderColor = '';
+    }
+    if (createdDate.value.length < 10) {
+      createdDate.style.borderColor = 'red';
+    }
+    else if (!dateRegex.test(createdDate.value)) {
+      createdDate.style.borderColor = 'red';
+    }
+    else {
+      createdDate.style.borderColor = 'green';
+    }
+  });
+
+  //create a regex to check for date in formate yyyy-mm-dd
+  const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
+
+})();
+
 const button = document.getElementById('save-button');
 if (button != null) button.addEventListener('click', saveBlog);
 
 async function saveBlog() {
   editor.save().then(async (outputData) => {
 
-    const uri = document.getElementById('uri-input');
-    const title = document.getElementById('title-input');
-    const subtitle = document.getElementById('subtitle-input');
-    const createdDate = document.getElementById('createdDate-input');
     
     const blogData = {
-      uri: uri?.textContent,
-      title: title?.textContent,
-      subtitle: subtitle?.textContent,
-      date: createdDate?.textContent,
+      uri: uriInput.value,
+      title: title.value,
+      subtitle: subtitle.value,
+      date: createdDate.value ? createdDate.value : '',
       content: outputData
     }
     
@@ -58,11 +110,11 @@ async function saveBlog() {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    if (await response.status === 200) {
-      console.log('Blog saved ' + response.status + ' ' + response.json());
-    } else {
-      console.log('Blog save failed ' + response.status + ' ' + response.json());
-    }
+    //read body from response ReadableStream
+    response.body?.getReader().read().then(({ value }) => { 
+      const statusMessage = new TextDecoder().decode(value);
+      console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
+    });
 
   }).catch((error) => {
     console.log('Saving failed: ', error);

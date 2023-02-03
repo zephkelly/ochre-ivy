@@ -831,11 +831,23 @@ main {
   box-sizing: border-box;
   margin: auto;
 }
+#editor-section .container .wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+#editor-section #blog-new-form .wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 2rem;
+  margin-bottom: 0rem;
+}
 #editor-section .editor-title {
   font-size: 2.2rem;
   font-weight: 700;
   margin: 0rem;
-  margin-bottom: 1rem;
   font-family: 'Poppins', sans-serif;
 }
 #editor-section #blog-new-form {
@@ -859,21 +871,38 @@ main {
   height: 2rem;
   padding: 0.5rem 0.8rem;
   border: 1px solid grey;
+  outline: none;
   border-radius: 0.2rem;
   font-size: 1.2rem;
   font-family: 'Lato', sans-serif;
   font-weight: 400;
   padding: 0.5rem 0.8rem;
 }
+#editor-section #save-button {
+  width: 7rem;
+  height: 3rem;
+  font-size: 1.1rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: var(--light);
+  background-color: var(--accent-color);
+  border: 0.2rem var(--accent-color) solid;
+  border-radius: 1.17rem;
+  transition: 0.15s ease-out;
+}
+#editor-section #save-button:hover {
+  background-color: var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
+}
 #editor-section .editor-label {
   width: 100%;
   margin-top: 1.5rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid grey;
 }
 #editor-section .editor-input {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid grey;
-  margin-top: 0.2rem;
   min-height: 200px;
   padding-bottom: 4rem;
   padding-left: 2rem;
@@ -891,6 +920,9 @@ main {
 #editorjs .ce-block__content * {
   text-overflow: clip;
   overflow-wrap: break-word;
+}
+#editorjs .ce-block__content:first-of-type * {
+  margin-top: 0rem;
 }
 #editorjs .cdx-block {
     max-width:100%!important 

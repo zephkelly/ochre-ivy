@@ -41,15 +41,29 @@
         </h6>
 
         <div id="blog-body">
-          <%= blogData.content %>
+          <% blogData.content.blocks.forEach((block) => { %>
+
+            <% if (block.type === 'header') { %>
+              <h3><%= block.data.text %></h3>
+            <% } %>
+
+            <% if (block.type === 'paragraph') { %>
+              <p><%= block.data.text %></p>
+            <% } %>
+
+            <% if (block.type === 'image') { %>
+              <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
+            <% } %>
+
+          <% }) %>
         </div>
 
         <script>
           //Remove html tags in content
-          const blogContentDiv = document.getElementById('blog-body');
-          const blogContent = blogContentDiv.innerText;
+          //const blogContentDiv = document.getElementById('blog-body');
+          //const blogContent = blogContentDiv.innerText;
 
-          blogContentDiv.innerHTML = blogContent;
+         // blogContentDiv.innerHTML = blogContent;
 
           // Format date
           const blogCreatedDate = document.getElementById('post-date');
