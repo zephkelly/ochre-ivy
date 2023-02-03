@@ -12,7 +12,7 @@ var adminRoutes = require('./server/routes/adminRoutes');
 var app = express();
 var PORT = process.env.PORT;
 app.set('view engine', 'ejs', 'html');
-app.set('views', __dirname, '/server/views');
+app.set('views', __dirname + '/server/views');
 //Sessions
 var oneDay = 1000 * 60 * 60 * 24;
 app.use(session({

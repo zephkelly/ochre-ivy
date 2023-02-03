@@ -181,10 +181,10 @@ export function blogAPI_imageUpload(req, res) {
     return res.status(400).send(JSON.stringify(imageData));
   }
   
-  image.mv(__dirname + '/uploaded/' + image.name);
+  image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
 
   imageData.success = 1;
-  imageData.file.url = '/uploaded/' + image.name;
+  imageData.file.url = '/uploaded-images/' + image.name;
 
   res.status(200).send(JSON.stringify(imageData));
 }
