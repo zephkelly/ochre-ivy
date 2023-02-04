@@ -736,7 +736,6 @@ main {
 }
 #signup-main .signup-section p {
   font-size: 0.9rem;
-  font-family: Lato, sans-serif;
   font-weight: 400;
   margin: 0rem;
   margin-top: 0.1rem;
@@ -839,6 +838,7 @@ main {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
   margin-bottom: 2rem;
 }
@@ -847,6 +847,13 @@ main {
   grid-template-columns: 2fr 1fr;
   grid-gap: 2rem;
   margin-bottom: 0rem;
+}
+#editor-section #blog-new-form p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 0.1rem;
+  color: var(--accent-color-secondary);
 }
 #editor-section .editor-title {
   font-size: 2.2rem;
@@ -897,6 +904,14 @@ main {
 #editor-section #save-button:hover {
   background-color: var(--accent-color-secondary);
   border-color: var(--accent-color-secondary);
+}
+#editor-section #post-response {
+  font-size: 1.2rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  margin: 0rem;
+  padding-bottom: 1.5rem;
+  color: var(--accent-color-secondary);
 }
 #editor-section .editor-label {
   width: 100%;

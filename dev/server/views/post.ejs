@@ -56,7 +56,7 @@
               <% if (block.type === 'image') { %>
                 <div class="image-tool">
                   <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
-                  if (block.data.caption != null) <p class="image-tool__caption"><%= block.data.caption %></p>
+                  <p class="image-tool__caption"><%= block.data.caption %></p>
                 </div>
               <% } %>
               <% if (block.type === 'quote') { %>

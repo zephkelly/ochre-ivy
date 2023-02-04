@@ -38,6 +38,13 @@ const title: HTMLInputElement = document.getElementById('title-input') as HTMLIn
 const subtitle: HTMLInputElement = document.getElementById('subtitle-input') as HTMLInputElement;
 const createdDate: HTMLInputElement = document.getElementById('createdDate-input') as HTMLInputElement;
 
+const uriInputValidation: HTMLElement = document.getElementById('uri-input-validation') as HTMLElement;
+const titleValidation: HTMLElement = document.getElementById('title-input-validation') as HTMLElement;
+const createdDateValidation: HTMLElement = document.getElementById('date-input-validation') as HTMLElement;
+
+const button = document.getElementById('save-button');
+if (button != null) button.addEventListener('click', saveBlog);
+
 (async function sanitiseInputs() {
   validateDate();
   validateSubtitle();
@@ -52,18 +59,22 @@ const createdDate: HTMLInputElement = document.getElementById('createdDate-input
   function validateUri() {
     if (uriInput.value.length < 3 || uriInput.value.length > 50) {
       uriInput.style.borderColor = 'red';
+      uriInputValidation.innerText = 'URI must be between 3 and 50 characters';
     }
     else {
       uriInput.style.borderColor = 'green';
+      uriInputValidation.innerText = '';
     }
   }
 
   function validateTitle() {
     if (title.value.length <= 0) {
       title.style.borderColor = 'red';
+      titleValidation.innerText = 'Title cannot be empty';
     }
     else {
       title.style.borderColor = 'green';
+      titleValidation.innerText = '';
     }
   }
 
@@ -82,12 +93,15 @@ const createdDate: HTMLInputElement = document.getElementById('createdDate-input
     }
     else if (createdDate.value.length < 10) {
       createdDate.style.borderColor = 'red';
+      createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
     }
     else if (!dateRegex.test(createdDate.value)) {
       createdDate.style.borderColor = 'red';
+      createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
     }
     else {
       createdDate.style.borderColor = 'green';
+      createdDateValidation.innerText = '';
     }
   }
 
@@ -95,8 +109,8 @@ const createdDate: HTMLInputElement = document.getElementById('createdDate-input
   const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
 })();
 
-const button = document.getElementById('save-button');
-if (button != null) button.addEventListener('click', saveBlog);
+
+const postResponse: HTMLElement = document.getElementById('post-response') as HTMLElement;
 
 async function saveBlog() {
   editor.save().then(async (outputData) => {
@@ -118,6 +132,25 @@ async function saveBlog() {
     //read body from response ReadableStream
     response.body?.getReader().read().then(({ value }) => { 
       const statusMessage = new TextDecoder().decode(value);
+
+      if (response.status == 200) {
+        postResponse.innerText = 'Blog posted successfully!';
+        postResponse.style.color = 'green';
+
+        //clear inputs
+        uriInput.value = '';
+        title.value = '';
+        subtitle.value = '';
+        createdDate.value = '';
+
+        //clear editor
+        editor.clear();
+      }
+      else {
+        postResponse.innerText = 'Blog posting failed: ' + statusMessage;
+        postResponse.style.color = 'var(--accent-color-secondary)';
+      }
+
       console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
     });
 
