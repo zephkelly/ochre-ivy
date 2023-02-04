@@ -96,11 +96,11 @@ export function shrinkNavbar() {
 
         manipulateNavDOM(
           '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
-          '3rem', '1.4rem', '1.8rem', true
+          '2.6rem', '1.4rem', '1.8rem', true
         );
 
         if (loggedNotificationPresent) {
-          loggedNotification.style.top = '6rem';
+          loggedNotification.style.top = '5.5rem';
         }
       }
       else {

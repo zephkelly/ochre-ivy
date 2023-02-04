@@ -195,8 +195,15 @@ function login_post(req, res) {
             User.find({ email: req.body.email }, function (err, user) { return __awaiter(_this, void 0, void 0, function () {
                 var data;
                 return __generator(this, function (_a) {
+                    data = {
+                        message: null,
+                        loggedIn: null,
+                        userName: null
+                    };
                     if (user.length == 0) {
-                        data = { message: "User dont exist" };
+                        data.loggedIn = false;
+                        data.userName = null;
+                        data.message = "Email or password is incorrect";
                         res.render('login', { data: data }, function (err, html) {
                             if (err) {
                                 return console.log(err);
@@ -214,11 +221,14 @@ function login_post(req, res) {
                                 req.session.roles = user[0].roles;
                                 req.session.save();
                                 console.log("Logging in user");
-                                res.status(200).redirect("/");
+                                var string = encodeURIComponent('true');
+                                res.status(200).redirect("/" + "?loggedIn=" + string);
                                 return;
                             }
                             else {
-                                var data = { message: "Incorrect password" };
+                                data.loggedIn = false;
+                                data.userName = null;
+                                data.message = "Email or password is incorrect";
                                 res.render('login', { data: data }, function (err, html) {
                                     if (err) {
                                         return console.log(err);

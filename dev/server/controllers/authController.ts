@@ -149,8 +149,17 @@ export async function login_post(req, res) {
   
   //Check if user exists
   User.find({ email: req.body.email }, async (err, user) => {
+    const data = {
+      message: null,
+      loggedIn: null,
+      userName: null
+    };
+
     if (user.length == 0) {
-      const data = { message: "User dont exist" };
+      data.loggedIn = false
+      data.userName = null;
+      data.message = "Email or password is incorrect";
+
       res.render('login', { data }, (err, html) => {
         if (err) { return console.log(err); }
 
@@ -168,11 +177,16 @@ export async function login_post(req, res) {
           req.session.save();
 
           console.log("Logging in user");
-          res.status(200).redirect("/");
+          const string = encodeURIComponent('true');
+
+          res.status(200).redirect("/" + "?loggedIn=" + string);
           return;
         }
         else {
-          const data = { message: "Incorrect password" };
+          data.loggedIn = false
+          data.userName = null;
+          data.message = "Email or password is incorrect";
+
           res.render('login', { data }, (err, html) => {
             if (err) { return console.log(err); }
 

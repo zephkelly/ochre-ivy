@@ -51,13 +51,14 @@ app.get('/', (req, res) => {
     if (req.session.roles == 'admin') {
       const siteData = { blogCount: 0, recipeCount: 0 };
     
-      res.status(200).render('admin/admin-index', { userData, siteData });
-      return;
+      if (req.query?.loggedIn == 'true') {
+        const loggedData = { loggedIn: true }
+        res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
+      } else {
+        const loggedData = { loggedIn: false }
+        res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
+      }
     } 
-    else {
-      res.status(200).render('index', { userData });
-      return;
-    }
   }
 
   res.status(200).sendFile(__dirname + '/index.html');

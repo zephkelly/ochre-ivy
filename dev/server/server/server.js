@@ -38,16 +38,19 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
     .catch(function (err) { return console.log(err); });
 //Routes
 app.get('/', function (req, res) {
+    var _a;
     if (req.session.userid) {
         var userData = { name: req.session.name };
         if (req.session.roles == 'admin') {
             var siteData = { blogCount: 0, recipeCount: 0 };
-            res.status(200).render('admin/admin-index', { userData: userData, siteData: siteData });
-            return;
-        }
-        else {
-            res.status(200).render('index', { userData: userData });
-            return;
+            if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggedIn) == 'true') {
+                var loggedData = { loggedIn: true };
+                res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
+            }
+            else {
+                var loggedData = { loggedIn: false };
+                res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
+            }
         }
     }
     res.status(200).sendFile(__dirname + '/index.html');

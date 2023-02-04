@@ -762,7 +762,7 @@ main {
 
 /* Post ---------------------------------------- */
 #blog-post {
-  margin-top: clamp(10rem,13vw,12rem);
+  margin-top: clamp(8rem,13vw,12rem);
   min-height: 80vh;
   margin-bottom: 6rem;
 }

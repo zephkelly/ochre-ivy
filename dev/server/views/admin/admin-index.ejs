@@ -32,15 +32,20 @@
     </div>
   </header>
   <main>
-    <section id="logged-notification">
-      <div class="container">
-        <div class="wrapper">
-          <h6 class="logged-in">Signed in successfully!</h6>
-          <span class="check-symbol material-symbols-outlined">done</span>
+    <% if (loggedData.loggedIn) { %>
+      <section id="logged-notification">
+        <div class="container">
+          <div class="wrapper">
+            <h6 class="logged-in">Signed in successfully!</h6>
+            <span class="check-symbol material-symbols-outlined">done</span>
+          </div>
+          <p class="logged-in-notification">Welcome back, <%= userData.name %>.</p>
         </div>
-        <p class="logged-in-notification">Welcome back, Evan.</p>
-      </div>
-    </section>
+        <script>
+          window.history.replaceState({}, document.title, "/");
+        </script>
+      </section>
+    <% } %>
     <section id="landing">
       <div class="container">
         <h1 class="hero-text">Welcome back, <%= userData.name %>!</h1>
