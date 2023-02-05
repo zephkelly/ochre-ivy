@@ -9,6 +9,7 @@ const blogSchema = new mongoose.Schema({
   subtitle: String,
   createdDate: String,
   updatedDate: String,
+  tags: Array,
   content: Object
 });
 
@@ -16,6 +17,122 @@ const Blog = mongoose.model('Blog', blogSchema);
 
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
+  if (req.query?.tag != null) {
+    if (req.query?.display == 'true') {
+      Blog.find({ tags: { $in: [req.query.tag] } }, (err, blogs) => {
+        if (err) { return console.log(err); }
+
+        let blogList = [];
+
+        for (let i = 0; i < blogs.length; i++) {
+          blogList.push({
+            uri: blogs[i].uri,
+            title: blogs[i].title,
+            subtitle: blogs[i].subtitle,
+            createdDate: blogs[i].createdDate,
+            updatedDate: blogs[i].updatedDate,
+            tags: blogs[i].tags,
+          });
+        }
+
+        res.send(blogList);
+      });
+      return;
+
+    } else {
+      Blog.find({ tags: { $in: [req.query.tag] } }, (err, blogs) => {
+        if (err) { return console.log(err); }
+
+        res.send(blogs);
+      });
+      return;
+    }
+  }
+
+  if (req.query?.searchTitle != null) {
+    Blog.find({ title: req.query.searchTitle }, (err, blogs) => {
+      if (err) { return console.log(err); }
+      
+      let blogList = [];
+
+      for (let i = 0; i < blogs.length; i++) {
+        blogList.push({
+          uri: blogs[i].uri,
+          title: blogs[i].title,
+          subtitle: blogs[i].subtitle,
+          createdDate: blogs[i].createdDate,
+          updatedDate: blogs[i].updatedDate,
+          tags: blogs[i].tags,
+        });
+      }
+
+      res.send(blogList);
+    });
+    return;
+  }
+
+  if (req.query?.all == true) {
+    if (req.query?.display == true) {
+      Blog.find({}, (err, blogs) => {
+        if (err) { return console.log(err); }
+        
+        let blogList = [];
+
+        for (let i = 0; i < blogs.length; i++) {
+          blogList.push({
+            uri: blogs[i].uri,
+            title: blogs[i].title,
+            subtitle: blogs[i].subtitle,
+            createdDate: blogs[i].createdDate,
+            updatedDate: blogs[i].updatedDate,
+            tags: blogs[i].tags,
+          });
+        }
+
+        res.send(blogList);
+      });
+      return;
+    } else {
+      Blog.find({}, (err, blogs) => {
+        if (err) { return console.log(err); }
+
+        res.send(blogs);
+      });
+      return;
+    }
+  }
+
+  if (req.query?.count == true) {
+    Blog.countDocuments({}, (err, count) => {
+      if (err) { return console.log(err); }
+
+      res.send({ count: count });
+    });
+    return;
+  }
+
+  if (req.query?.display == 'true') {
+    Blog.find({}, (err, blogs) => {
+      if (err) { return console.log(err); }
+      
+      let blogList = [];
+
+      for (let i = 0; i < blogs.length; i++) {
+        blogList.push({
+          uri: blogs[i].uri,
+          title: blogs[i].title,
+          subtitle: blogs[i].subtitle,
+          createdDate: blogs[i].createdDate,
+          updatedDate: blogs[i].updatedDate,
+          tags: blogs[i].tags,
+        });
+      }
+
+      res.send(blogList);
+    });
+    return;
+  }
+
   Blog.find({}, (err, blogs) => {
     if (err) { return console.log(err); }
 
@@ -83,6 +200,7 @@ export async function blogAPI_post(req, res) {
           subtitle: req.body.subtitle,
           createdDate: createdDate,
           updatedDate: createdDate,
+          tags: req.body.tags,
           content: req.body.content
         });
 
@@ -105,12 +223,13 @@ export async function blogAPI_update(req, res) {
   const subtitle: string = req.body.subtitle;
   const createdDate: string = req.body.date;
   const updatedDate: string = new Date().toISOString();
+  const tags: Array<string> = req.body.tags;
   const content: string = req.body.content;
 
   const filter = { uri: req.params.blogURI };
-  let update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, content: content }
+  let update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, tags: tags, content: content }
 
-  //Validate updated blog post ---------------------------------------
+  //Remove null or empty values
   for (let i = 0; i < Object.keys(update).length; i++) {
     if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
       delete update[Object.keys(update)[i]];

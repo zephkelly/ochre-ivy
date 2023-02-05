@@ -81,7 +81,6 @@ function isAuthorised(req, res, next) {
         res.status(403).redirect("/blog");
         return;
     }
-    console.log("Authenticated");
     return next();
 }
 exports.isAuthorised = isAuthorised;

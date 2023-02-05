@@ -48,7 +48,6 @@ export function isAuthorised(req, res, next) {
     return;
   }
 
-  console.log("Authenticated");
   return next();
 }
 
