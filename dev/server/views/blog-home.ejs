@@ -37,7 +37,7 @@
         <h2 class="featured-title">Featured</h2>
         <% for (i = 0; i < featuredBlogs.length; i++) { %>
           <% const blog = featuredBlogs[i]; %>
-          <div class="featured-blog"  style="display: none;">
+          <div class="featured-blog" style="opacity: 0;">
             <div class="content">
               <div class="wrapper">
                 <h3 class="blog-title"><%= blog.title %></h3>
@@ -117,7 +117,7 @@
     sanitisedDescription = sanitisedDescription.replace(/<script>.*<\/script>/g, '');
 
     if (sanitisedDescription.length > 300) {
-      sanitisedDescription = sanitisedDescription.slice(0, 300);
+      sanitisedDescription = sanitisedDescription.slice(0, 400);
       sanitisedDescription = sanitisedDescription + '...';
     }
 
@@ -148,35 +148,38 @@
   const featuredBlogs = document.querySelectorAll('.featured-blog');
   const featuredBlogLinks = document.querySelectorAll('.featured-blog-link');
 
+  let interval = setInterval(showFeaturedBlog, 6500);
+
   featuredBlogLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      featuredBlogs[currentFeaturedBlog].style.display = 'none';
+      featuredBlogs[currentFeaturedBlog].style.opacity = '0';
       featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
 
       currentFeaturedBlog = Array.from(featuredBlogLinks).indexOf(link);
 
-      featuredBlogs[currentFeaturedBlog].style.display = 'flex';
+      featuredBlogs[currentFeaturedBlog].style.opacity = '1';
       featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 
       clearInterval(interval);
-      setTimeout(() => { interval = setInterval(showFeaturedBlog, 5000); }, 5000);
+      setTimeout(() => { interval = setInterval(showFeaturedBlog, 6500); }, 3500, false);
     });
   });
 
+  let lastFeaturedBlog = featuredBlogs.length - 1;
   let currentFeaturedBlog = 0;
 
   function showFeaturedBlog() {
-    featuredBlogs[currentFeaturedBlog].style.display = 'none';
+    lastFeaturedBlog = currentFeaturedBlog;
+
     featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
+    featuredBlogs[currentFeaturedBlog].style.opacity = 0;
 
     currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
 
-    featuredBlogs[currentFeaturedBlog].style.display = 'flex';
+    featuredBlogs[currentFeaturedBlog].style.opacity = 1;
     featuredBlogLinks[currentFeaturedBlog].classList.add('active');
   }
 
   showFeaturedBlog();
-
-  let interval = setInterval(showFeaturedBlog, 5000);
 </script>
 </html>
