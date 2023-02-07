@@ -32,25 +32,42 @@
     </div>
   </header>
   <main>
+    <section id="blogs-featured">
+      <div class="container">
+        <h2 class="featured-title">Featured</h2>
+        <% for (i = 0; i < featuredBlogs.length; i++) { %>
+          <% const blog = featuredBlogs[i]; %>
+          <div class="featured-blog"  style="display: none;">
+            <div class="content">
+              <div class="wrapper">
+                <h3 class="blog-title"><%= blog.title %></h3>
+                <h6 class="blog-subtitle"><%= blog.subtitle %></h6>
+                <p class="blog-date"><%= blog.createdDate %></p>
+              </div>
+              <div class="wrapper">
+                <p class="blog-description"><%= blog.description %></p>
+                <a href="/blog/<%= blog.uri %>" class="blog-link">Read more</a>
+              </div>
+            </div>
+            <div class="cover-img">
+              <img src='<%- blog.cover %>' alt="<%= blog.title %>" class="blog-image">
+            </div>
+          </div>
+        <% }; %>   
+        <nav class="featured-nav">
+          <ul class="featured-nav-list">
+            <li class="featured-nav-item"><a class="featured-blog-link"></a></li>
+            <li class="featured-nav-item"><a class="featured-blog-link active"></a></li>
+            <li class="featured-nav-item"><a class="featured-blog-link"></a></li>
+          </ul>
+        </nav>  
+      </div>
+    </section>
     <section id="blog-hero">
       <div class="container">
         <div class="blog-hero-content">
           <h1>Blog</h1>
           <p>Browse my collection of blogs</p>
-        </div>
-      </div>
-    </section>
-    <section id="blog-featured">
-      <div class="container">
-        <div class="blog-featured-content">
-          <div class="wrapper">
-            <h3 class="blog-featured-title"><%= featuredBlog.title %></h3>
-            <h6 class="blog-featured-subtitle"><%= featuredBlog.title %></h6>
-            <p class="blog-featured-description"><%= featuredBlog.description %></p>
-          </div>
-          <div class="wrapper">
-            <img src='<%- featuredBlog.cover %>' alt="<%= featuredBlog.title %>" class="blog-featured-image">
-          </div>
         </div>
       </div>
     </section>
@@ -82,4 +99,83 @@
     </div>
   </footer>
 </body>
+<script>
+  // Format descriptions
+  const blogDescription = document.querySelectorAll('.blog-description');
+
+  for (i = 0; i < blogDescription.length; i++) {
+    const blogDescriptionText = blogDescription[i].innerText;
+    const description = formatDescription(blogDescriptionText);
+    blogDescription[i].innerText = description;
+  }
+
+  function formatDescription(description) {
+    let sanitisedDescription = null;
+
+    sanitisedDescription = description.replace(/<br>/g, '');
+    sanitisedDescription = sanitisedDescription.replace(/<script>.*<\/script>/g, '');
+
+    if (sanitisedDescription.length > 300) {
+      sanitisedDescription = sanitisedDescription.slice(0, 300);
+      sanitisedDescription = sanitisedDescription + '...';
+    }
+
+    return sanitisedDescription;
+  }
+
+  // Format date
+  const blogCreatedDate = document.querySelectorAll('.blog-date');
+
+  for (i = 0; i < blogCreatedDate.length; i++) {
+    const blogCreatedDateText = blogCreatedDate[i].innerText;
+    const date = formatDate(blogCreatedDateText);
+    blogCreatedDate[i].innerText = date;
+  }
+
+  function formatDate(date) {
+    var date = new Date(date);
+    date.toLocaleDateString('en-GB');
+    date = date.toDateString();
+
+    date = date.slice(4);
+    date = date.slice(0, 6) + "," + date.slice(6);
+
+    return date;
+  }
+
+  // Carousel featured blogs
+  const featuredBlogs = document.querySelectorAll('.featured-blog');
+  const featuredBlogLinks = document.querySelectorAll('.featured-blog-link');
+
+  featuredBlogLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      featuredBlogs[currentFeaturedBlog].style.display = 'none';
+      featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
+
+      currentFeaturedBlog = Array.from(featuredBlogLinks).indexOf(link);
+
+      featuredBlogs[currentFeaturedBlog].style.display = 'flex';
+      featuredBlogLinks[currentFeaturedBlog].classList.add('active');
+
+      clearInterval(interval);
+      setTimeout(() => { interval = setInterval(showFeaturedBlog, 5000); }, 5000);
+    });
+  });
+
+  let currentFeaturedBlog = 0;
+
+  function showFeaturedBlog() {
+    featuredBlogs[currentFeaturedBlog].style.display = 'none';
+    featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
+
+    currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
+
+    featuredBlogs[currentFeaturedBlog].style.display = 'flex';
+    featuredBlogLinks[currentFeaturedBlog].classList.add('active');
+  }
+
+  showFeaturedBlog();
+
+  let interval = setInterval(showFeaturedBlog, 5000);
+</script>
 </html>

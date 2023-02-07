@@ -49,16 +49,8 @@ let tags: string[] = [];
 const button = document.getElementById('save-button');
 if (button != null) button.addEventListener('click', saveBlog);
 
-(async function sanitiseInputs() {
-  const uriRegex = new RegExp('^[a-zA-Z0-9-]+$');
-  const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
-  const tagsRegex = new RegExp('^[a-zA-Z0-9-]+(, [a-zA-Z0-9-]+)*$');
-
-  validateUri();
-  validateTitle();
-  validateSubtitle();
-  validateDate();
-  validateTags();
+(async function sanitiseInputs() {  
+  runValidation();
 
   subtitle.addEventListener('input', validateSubtitle);
   createdDate.addEventListener('input', validateDate);
@@ -67,7 +59,19 @@ if (button != null) button.addEventListener('click', saveBlog);
   
   tagsInput.addEventListener('input', validateTags);
   
-  function validateUri() {
+})();
+
+function runValidation() {
+  validateUri();
+  validateTitle();
+  validateSubtitle();
+  validateDate();
+  validateTags();
+}
+
+function validateUri() {
+  const uriRegex = new RegExp('^[a-zA-Z0-9-]+$');
+
     if (uriInput.value.length < 3 || uriInput.value.length > 50) {
       uriInput.style.borderColor = 'red';
       uriInputValidation.innerText = 'URI must be between 3 and 50 characters';
@@ -76,8 +80,7 @@ if (button != null) button.addEventListener('click', saveBlog);
       uriInput.style.borderColor = 'green';
       uriInputValidation.innerText = '';
     }
-    
-
+     
     if (!uriRegex.test(uriInput.value)) {
       uriInput.style.borderColor = 'red';
       uriInputValidation.innerText = 'URI can only contain letters/numbers and hyphens (eg. my-first-post)';
@@ -86,68 +89,70 @@ if (button != null) button.addEventListener('click', saveBlog);
       uriInput.style.borderColor = 'green';
       uriInputValidation.innerText = '';
     }
-  }
+}
 
-  function validateTitle() {
-    if (title.value.length <= 0) {
-      title.style.borderColor = 'red';
-      titleValidation.innerText = 'Title cannot be empty';
-    }
-    else {
-      title.style.borderColor = 'green';
-      titleValidation.innerText = '';
-    }
+function validateTitle() {
+  if (title.value.length <= 0) {
+    title.style.borderColor = 'red';
+    titleValidation.innerText = 'Title cannot be empty';
   }
-
-  function validateSubtitle() {
-    if (subtitle.value.length <= 0) {
-      subtitle.style.borderColor = '';
-    }
-    else {
-      subtitle.style.borderColor = 'green';
-    }
+  else {
+    title.style.borderColor = 'green';
+    titleValidation.innerText = '';
   }
-  
-  function validateDate() {
-    if (createdDate.value.length == 0) {
-      createdDate.style.borderColor = '';
-      return;
-    }
-    else if (!dateRegex.test(createdDate.value) || createdDate.value.length > 10) {
-      createdDate.style.borderColor = 'red';
-      createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
-    }
-    else {
-      createdDate.style.borderColor = 'green';
-      createdDateValidation.innerText = '';
-    }
+}
+
+function validateSubtitle() {
+  if (subtitle.value.length <= 0) {
+    subtitle.style.borderColor = '';
   }
+  else {
+    subtitle.style.borderColor = 'green';
+  }
+}
 
-  function validateTags() {
+function validateDate() {
+  const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
 
-    if (!tagsRegex.test(tagsInput.value)) {
+  if (createdDate.value.length == 0) {
+    createdDate.style.borderColor = '';
+    return;
+  }
+  else if (!dateRegex.test(createdDate.value) || createdDate.value.length > 10) {
+    createdDate.style.borderColor = 'red';
+    createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
+  }
+  else {
+    createdDate.style.borderColor = 'green';
+    createdDateValidation.innerText = '';
+  }
+}
+
+function validateTags() {
+  const tagsRegex = new RegExp('^[a-zA-Z0-9-]+(, [a-zA-Z0-9-]+)*$');
+
+  if (!tagsRegex.test(tagsInput.value)) {
+    tagsInput.style.borderColor = 'red';
+    tagsValidation.innerText = 'Tags must be separated by a comma and space (eg. tag1, tag2)';
+  }
+  else {
+    tagsValidation.innerText = '';
+
+    tags = tagsInput.value.split(', ').filter(tag => tag.length > 0 && tag.length < 20);
+
+    if (tags.length > 5) {
       tagsInput.style.borderColor = 'red';
-      tagsValidation.innerText = 'Tags must be separated by a comma and space (eg. tag1, tag2)';
+      tagsValidation.innerText = 'You can only have a maximum of 5 tags';
     }
+    else if (tags.length == 0) {
+      tagsInput.style.borderColor = 'red';
+      tagsValidation.innerText = 'You must have at least one tag';
+    } 
     else {
-      tagsValidation.innerText = '';
-
-      tags = tagsInput.value.split(',').filter(tag => tag.length > 0 && tag.length < 20);
-
-      if (tags.length > 5) {
-        tagsInput.style.borderColor = 'red';
-        tagsValidation.innerText = 'You can only have a maximum of 5 tags';
-      }
-      else if (tags.length == 0) {
-        tagsInput.style.borderColor = 'red';
-        tagsValidation.innerText = 'You must have at least one tag';
-      } 
-      else {
-        tagsInput.style.borderColor = 'green';
-      }
+      tagsInput.style.borderColor = 'green';
     }
   }
-})();
+}
 
 const postResponse: HTMLElement = document.getElementById('post-response') as HTMLElement;
 
@@ -155,10 +160,19 @@ async function saveBlog() {
   editor.save().then(async (outputData) => {
 
     let coverImage = null;
+    let description = null;
 
     outputData.blocks.map(block => {
       if (block.type == 'image') {
         coverImage = block.data.file.url;
+        return;
+      }
+    });
+
+    outputData.blocks.map(block => {
+      if (block.type == 'paragraph') {
+        description = block.data.text;
+        return;
       }
     });
 
@@ -166,6 +180,7 @@ async function saveBlog() {
       uri: uriInput.value,
       title: title.value,
       subtitle: subtitle.value,
+      description: description,
       date: createdDate.value ? createdDate.value : '',
       tags: tags,
       cover: coverImage,
@@ -195,6 +210,8 @@ async function saveBlog() {
 
         //clear editor
         editor.clear();
+
+        runValidation();
       }
       else {
         postResponse.innerText = 'Blog posting failed: ' + statusMessage;

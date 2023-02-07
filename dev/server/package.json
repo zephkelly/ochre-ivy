@@ -6,7 +6,9 @@
   "scripts": {
     "copyControllers": "copyfiles -u 1 ./controllers/*.js ./../../dist/server/controllers",
     "copyRoutes": "copyfiles -u 1 ./routes/*.js ./../../dist/server/routes",
-    "copyViews": "copyfiles ./views/*/* ./../../dist/server",
+    "copyViews1": "copyfiles ./views/** ./../../dist/server",
+    "copyViews2": "copyfiles ./views/**/** ./../../dist/server",
+    "copyViews": "npm run copyViews1 && npm run copyViews2",
     "copyServer": "copyfiles -u 1 ./server/*.js ./../../dist",
     "compile": "tsc",
     "copy": "npm run copyControllers && npm run copyRoutes && npm run copyServer && npm run copyViews",

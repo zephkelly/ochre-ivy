@@ -45,6 +45,7 @@ var blogSchema = new mongoose.Schema({
     uri: String,
     title: String,
     subtitle: String,
+    description: String,
     createdDate: String,
     updatedDate: String,
     cover: String,
@@ -61,12 +62,22 @@ function blogAPI_get(req, res) {
                 if (err) {
                     return console.log(err);
                 }
+                var blogListLength = 0;
                 var blogList = [];
-                for (var i = 0; i < blogs.length; i++) {
+                if (req.query.tag == 'featured') {
+                    if (blogs.length > 3) {
+                        blogListLength = 3;
+                    }
+                    else {
+                        blogListLength = blogs.length;
+                    }
+                }
+                for (var i = 0; i < blogListLength; i++) {
                     blogList.push({
                         uri: blogs[i].uri,
                         title: blogs[i].title,
                         subtitle: blogs[i].subtitle,
+                        description: blogs[i].description,
                         createdDate: blogs[i].createdDate,
                         updatedDate: blogs[i].updatedDate,
                         cover: blogs[i].cover,
@@ -120,6 +131,7 @@ function blogAPI_get(req, res) {
                         uri: blogs[i].uri,
                         title: blogs[i].title,
                         subtitle: blogs[i].subtitle,
+                        description: blogs[i].description,
                         createdDate: blogs[i].createdDate,
                         updatedDate: blogs[i].updatedDate,
                         cover: blogs[i].cover,
@@ -160,6 +172,7 @@ function blogAPI_get(req, res) {
                     uri: blogs[i].uri,
                     title: blogs[i].title,
                     subtitle: blogs[i].subtitle,
+                    description: blogs[i].description,
                     createdDate: blogs[i].createdDate,
                     updatedDate: blogs[i].updatedDate,
                     cover: blogs[i].cover,
@@ -188,7 +201,6 @@ function blogAPI_getURI(req, res) {
             console.log("404 in api");
             return res.status(404).send("404");
         }
-        console.log("sending blog...");
         return res.status(200).send(blog[0]);
     });
 }
@@ -198,6 +210,12 @@ function blogAPI_post(req, res) {
         var validated;
         return __generator(this, function (_a) {
             validated = validateBlogData(req.body);
+            if (req.body.cover == null || req.body.cover == "") {
+                return [2 /*return*/, { failedValidation: true, message: coverEmptyMsg, status: 400 }];
+            }
+            else if (req.body.description == null || req.body.description == "") {
+                return [2 /*return*/, { failedValidation: true, message: descriptionEmptyMsg, status: 400 }];
+            }
             if (validated.status === 200) {
                 Blog.countDocuments({ uri: req.body.uri }, function (err, count) {
                     if (err) {
@@ -214,6 +232,7 @@ function blogAPI_post(req, res) {
                             uri: req.body.uri,
                             title: req.body.title,
                             subtitle: req.body.subtitle,
+                            description: req.body.description,
                             createdDate: createdDate,
                             updatedDate: createdDate,
                             cover: req.body.cover,
@@ -239,7 +258,7 @@ function blogAPI_post(req, res) {
 exports.blogAPI_post = blogAPI_post;
 function blogAPI_update(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var uri, title, subtitle, createdDate, updatedDate, cover, tags, content, filter, update, i, validateBlogPost, validationStatus;
+        var uri, title, subtitle, createdDate, updatedDate, tags, content, jsonContent, coverImage, description, filter, update, i, validateBlogPost, validationStatus;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -249,11 +268,25 @@ function blogAPI_update(req, res) {
                     subtitle = req.body.subtitle;
                     createdDate = req.body.date;
                     updatedDate = new Date().toISOString();
-                    cover = req.body.cover;
                     tags = req.body.tags;
                     content = req.body.content;
+                    jsonContent = JSON.parse(content);
+                    coverImage = null;
+                    description = null;
+                    jsonContent.blocks.map(function (block) {
+                        if (block.type == 'image') {
+                            coverImage = block.data.file.url;
+                            return;
+                        }
+                    });
+                    jsonContent.blocks.map(function (block) {
+                        if (block.type == 'paragraph') {
+                            description = block.data.text;
+                            return;
+                        }
+                    });
                     filter = { uri: req.params.blogURI };
-                    update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, cover: cover, tags: tags, content: content };
+                    update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: coverImage, tags: tags, content: content };
                     //Remove null or empty values
                     for (i = 0; i < Object.keys(update).length; i++) {
                         if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
@@ -276,6 +309,12 @@ function blogAPI_update(req, res) {
                                     postCount = _a.sent();
                                     if (postCount > 0) {
                                         return [2 /*return*/, { failedValidation: true, message: postExistsMsg }];
+                                    }
+                                    if (update.cover == null || update.cover == "") {
+                                        return [2 /*return*/, { failedValidation: true, message: coverEmptyMsg, status: 400 }];
+                                    }
+                                    if (update.description == null || update.description == "") {
+                                        return [2 /*return*/, { failedValidation: true, message: descriptionEmptyMsg, status: 400 }];
                                     }
                                     //Standard checks
                                     return [2 /*return*/, validateBlogData(req.body)];
@@ -343,17 +382,28 @@ exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
 function blog_homePage(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var featuredBlog;
+        var response, featuredBlogs, blogHome;
         return __generator(this, function (_a) {
-            featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', cover: '../blog-images/martini.png' };
-            res.render('blog', { featuredBlog: featuredBlog }, function (err, html) {
-                if (err) {
-                    return console.log(err);
-                }
-                res.status(200).send(html);
-                return;
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured')];
+                case 1:
+                    response = _a.sent();
+                    if (!(response.status == 200)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    featuredBlogs = _a.sent();
+                    return [4 /*yield*/, res.render('blog-home', { featuredBlogs: featuredBlogs }, function (err, html) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                            res.status(200).send(html);
+                            return;
+                        })];
+                case 3:
+                    blogHome = _a.sent();
+                    _a.label = 4;
+                case 4: return [2 /*return*/];
+            }
         });
     });
 }
@@ -372,7 +422,7 @@ function blog_getURI(req, res) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     blogData = _a.sent();
-                    return [4 /*yield*/, res.render('post', { blogData: blogData }, function (err, html) {
+                    return [4 /*yield*/, res.render('blog-post', { blogData: blogData }, function (err, html) {
                             if (err) {
                                 return console.log(err);
                             }
@@ -403,25 +453,22 @@ function validateBlogData(body) {
     if (body.uri == null || body.uri == "") {
         return { failedValidation: true, message: uriEmptyMsg, status: 400 };
     }
-    if (body.uri.length > 100) {
+    else if (body.uri.length > 100) {
         return { failedValidation: true, message: uriTooLongMsg, status: 400 };
     }
-    if (body.uri.length < 3) {
+    else if (body.uri.length < 3) {
         return { failedValidation: true, message: uriTooShortMsg, status: 400 };
     }
-    if (body.title == null || body.title == "") {
+    else if (body.title == null || body.title == "") {
         return { failedValidation: true, message: titleEmptyMsg, status: 400 };
     }
-    if (body.tags == null || body.tags.length == 0) {
+    else if (body.tags == null || body.tags.length == 0) {
         return { failedValidation: true, message: tagsEmptyMsg, status: 400 };
     }
-    if (body.tags.length > 5) {
+    else if (body.tags.length > 5) {
         return { failedValidation: true, message: tagsTooManyMsg, status: 400 };
     }
-    if (body.cover == null || body.cover == "") {
-        return { failedValidation: true, message: coverEmptyMsg, status: 400 };
-    }
-    if (body.content == null || body.content == "") {
+    else if (body.content == null || body.content == "") {
         return { failedValidation: true, message: contentEmptyMsg, status: 400 };
     }
     return { failedValidation: false, message: "", status: 200 };
@@ -434,4 +481,5 @@ var titleEmptyMsg = "Title is empty";
 var tagsEmptyMsg = "Post has no tags";
 var tagsTooManyMsg = "Post can only have 5 tags";
 var coverEmptyMsg = "Post contains no image for cover photo";
+var descriptionEmptyMsg = "Post contains no paragraph for description";
 var contentEmptyMsg = "Content is empty";

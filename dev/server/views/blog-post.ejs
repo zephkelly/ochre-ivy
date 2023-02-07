@@ -120,7 +120,7 @@
           const blogCreatedDate = document.getElementById('post-date');
           const blogCreatedDateText = blogCreatedDate.innerText;
 
-          function formateDate(date) {
+          function formatDate(date) {
             var date = new Date(date);
             date.toLocaleDateString('en-GB');
             date = date.toDateString();
@@ -131,7 +131,7 @@
             return date;
           }
 
-          const date = formateDate(blogCreatedDateText);
+          const date = formatDate(blogCreatedDateText);
 
           blogCreatedDate.innerText = date;
         </script>
