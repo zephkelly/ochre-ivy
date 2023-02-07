@@ -41,20 +41,24 @@
           <h3 class="editor-title">Create new blog</h3>
           <button id="save-button">Post blog</button>
         </div>
+        <p id="post-response"></p>
         <form id="blog-new-form">
           <div class="wrapper">
             <div class="input-section">
               <label for="uri">URI</label>
               <input type="text" name="uri" id="uri-input" placeholder="my-first-blog">
+              <p id="uri-input-validation"></p>
             </div>
             <div class="input-section">
               <label for="createdDate">Created Date (yyyy/mm/dd)</label>
               <input type="text" placeholder="Bank for current date" name="createdDate" id="createdDate-input">
+              <p id="date-input-validation"></p>
             </div>
           </div>
           <div class="input-section">
             <label for="title">Title</label>
             <input type="text" name="title" id="title-input" placeholder="Title">
+            <p id="title-input-validation"></p>
           </div>
           <div class="input-section">
             <label for="subtitle">Subtitle</label>
