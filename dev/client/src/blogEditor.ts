@@ -37,29 +37,50 @@ const uriInput: HTMLInputElement = document.getElementById('uri-input') as HTMLI
 const title: HTMLInputElement = document.getElementById('title-input') as HTMLInputElement;
 const subtitle: HTMLInputElement = document.getElementById('subtitle-input') as HTMLInputElement;
 const createdDate: HTMLInputElement = document.getElementById('createdDate-input') as HTMLInputElement;
+const tagsInput: HTMLInputElement = document.getElementById('tags-input') as HTMLInputElement;
 
 const uriInputValidation: HTMLElement = document.getElementById('uri-input-validation') as HTMLElement;
 const titleValidation: HTMLElement = document.getElementById('title-input-validation') as HTMLElement;
 const createdDateValidation: HTMLElement = document.getElementById('date-input-validation') as HTMLElement;
+const tagsValidation: HTMLElement = document.getElementById('tags-input-validation') as HTMLElement;
+
+let tags: string[] = [];
 
 const button = document.getElementById('save-button');
 if (button != null) button.addEventListener('click', saveBlog);
 
 (async function sanitiseInputs() {
-  validateDate();
-  validateSubtitle();
-  validateTitle();
+  const uriRegex = new RegExp('^[a-zA-Z0-9-]+$');
+  const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
+  const tagsRegex = new RegExp('^[a-zA-Z0-9-]+(, [a-zA-Z0-9-]+)*$');
+
   validateUri();
+  validateTitle();
+  validateSubtitle();
+  validateDate();
+  validateTags();
 
   subtitle.addEventListener('input', validateSubtitle);
   createdDate.addEventListener('input', validateDate);
   uriInput.addEventListener('input', validateUri);
   title.addEventListener('input', validateTitle);
-
+  
+  tagsInput.addEventListener('input', validateTags);
+  
   function validateUri() {
     if (uriInput.value.length < 3 || uriInput.value.length > 50) {
       uriInput.style.borderColor = 'red';
       uriInputValidation.innerText = 'URI must be between 3 and 50 characters';
+    }
+    else{
+      uriInput.style.borderColor = 'green';
+      uriInputValidation.innerText = '';
+    }
+    
+
+    if (!uriRegex.test(uriInput.value)) {
+      uriInput.style.borderColor = 'red';
+      uriInputValidation.innerText = 'URI can only contain letters/numbers and hyphens (eg. my-first-post)';
     }
     else {
       uriInput.style.borderColor = 'green';
@@ -86,16 +107,13 @@ if (button != null) button.addEventListener('click', saveBlog);
       subtitle.style.borderColor = 'green';
     }
   }
-
+  
   function validateDate() {
     if (createdDate.value.length == 0) {
       createdDate.style.borderColor = '';
+      return;
     }
-    else if (createdDate.value.length < 10) {
-      createdDate.style.borderColor = 'red';
-      createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
-    }
-    else if (!dateRegex.test(createdDate.value)) {
+    else if (!dateRegex.test(createdDate.value) || createdDate.value.length > 10) {
       createdDate.style.borderColor = 'red';
       createdDateValidation.innerText = 'Date must be in format yyyy/mm/dd';
     }
@@ -105,21 +123,52 @@ if (button != null) button.addEventListener('click', saveBlog);
     }
   }
 
-  //create a regex to check for date in formate yyyy-mm-dd
-  const dateRegex = new RegExp('^[0-9]{4}/[0-9]{2}/[0-9]{2}$');
-})();
+  function validateTags() {
 
+    if (!tagsRegex.test(tagsInput.value)) {
+      tagsInput.style.borderColor = 'red';
+      tagsValidation.innerText = 'Tags must be separated by a comma and space (eg. tag1, tag2)';
+    }
+    else {
+      tagsValidation.innerText = '';
+
+      tags = tagsInput.value.split(',').filter(tag => tag.length > 0 && tag.length < 20);
+
+      if (tags.length > 5) {
+        tagsInput.style.borderColor = 'red';
+        tagsValidation.innerText = 'You can only have a maximum of 5 tags';
+      }
+      else if (tags.length == 0) {
+        tagsInput.style.borderColor = 'red';
+        tagsValidation.innerText = 'You must have at least one tag';
+      } 
+      else {
+        tagsInput.style.borderColor = 'green';
+      }
+    }
+  }
+})();
 
 const postResponse: HTMLElement = document.getElementById('post-response') as HTMLElement;
 
 async function saveBlog() {
   editor.save().then(async (outputData) => {
 
+    let coverImage = null;
+
+    outputData.blocks.map(block => {
+      if (block.type == 'image') {
+        coverImage = block.data.file.url;
+      }
+    });
+
     const blogData = {
       uri: uriInput.value,
       title: title.value,
       subtitle: subtitle.value,
       date: createdDate.value ? createdDate.value : '',
+      tags: tags,
+      cover: coverImage,
       content: outputData
     }
     
@@ -142,6 +191,7 @@ async function saveBlog() {
         title.value = '';
         subtitle.value = '';
         createdDate.value = '';
+        tagsInput.value = '';
 
         //clear editor
         editor.clear();
