@@ -65,6 +65,7 @@ main {
   padding: 1rem 2rem;
   padding-top: 0rem;
   height: 5.5rem;
+  padding-bottom: 1rem;
 }
 .navbar .nav-text {
   transition: 0.15s ease-out;

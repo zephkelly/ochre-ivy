@@ -96,7 +96,7 @@ export function shrinkNavbar() {
 
         manipulateNavDOM(
           '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
-          '2.6rem', '1.4rem', '1.8rem', true
+          '2.8rem', '1.4rem', '1.8rem', true
         );
 
         if (loggedNotificationPresent) {
