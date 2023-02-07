@@ -157,7 +157,6 @@ export function blogAPI_getURI(req, res) {
       return res.status(404).send("404");
     }
 
-    console.log("sending blog...");
     return res.status(200).send(blog[0]);
   });
 }
@@ -294,7 +293,7 @@ export function blogAPI_imageUpload(req, res) {
 export async function blog_homePage(req, res) {
   const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', cover: '../blog-images/martini.png'}
 
-  res.render('blog', { featuredBlog }, (err, html) => {
+  res.render('blog-home', { featuredBlog }, (err, html) => {
     if (err) { return console.log(err); }
 
     res.status(200).send(html);
@@ -310,7 +309,7 @@ export async function blog_getURI(req, res) {
   if (response.status == 200) {
     const blogData = await response.json();
   
-    const blogPage = await res.render('post', { blogData }, (err, html) => {
+    const blogPage = await res.render('blog-post', { blogData }, (err, html) => {
       if (err) { return console.log(err); }
   
       res.status(200).send(html);
