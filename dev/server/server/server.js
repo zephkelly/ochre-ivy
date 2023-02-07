@@ -44,11 +44,11 @@ app.get('/', function (req, res) {
         if (req.session.roles == 'admin') {
             var siteData = { blogCount: 0, recipeCount: 0 };
             if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggedIn) == 'true') {
-                var loggedData = { loggedIn: true };
+                var loggedData = { loggedMessage: true };
                 res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
             }
             else {
-                var loggedData = { loggedIn: false };
+                var loggedData = { loggedMessage: false };
                 res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
             }
         }

@@ -52,10 +52,10 @@ app.get('/', (req, res) => {
       const siteData = { blogCount: 0, recipeCount: 0 };
     
       if (req.query?.loggedIn == 'true') {
-        const loggedData = { loggedIn: true }
+        const loggedData = { loggedMessage: true }
         res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
       } else {
-        const loggedData = { loggedIn: false }
+        const loggedData = { loggedMessage: false }
         res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
       }
     } 
