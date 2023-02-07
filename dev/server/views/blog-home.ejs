@@ -113,6 +113,7 @@
     let sanitisedDescription = null;
 
     sanitisedDescription = description.replace(/<br>/g, '');
+    sanitisedDescription = sanitisedDescription.replace(/(\r\n|\n|\r)/gm, '');
     sanitisedDescription = sanitisedDescription.replace(/<script>.*<\/script>/g, '');
 
     if (sanitisedDescription.length > 300) {
