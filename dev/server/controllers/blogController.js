@@ -47,6 +47,7 @@ var blogSchema = new mongoose.Schema({
     subtitle: String,
     createdDate: String,
     updatedDate: String,
+    cover: String,
     tags: Array,
     content: Object
 });
@@ -68,6 +69,7 @@ function blogAPI_get(req, res) {
                         subtitle: blogs[i].subtitle,
                         createdDate: blogs[i].createdDate,
                         updatedDate: blogs[i].updatedDate,
+                        cover: blogs[i].cover,
                         tags: blogs[i].tags,
                     });
                 }
@@ -98,6 +100,7 @@ function blogAPI_get(req, res) {
                     subtitle: blogs[i].subtitle,
                     createdDate: blogs[i].createdDate,
                     updatedDate: blogs[i].updatedDate,
+                    cover: blogs[i].cover,
                     tags: blogs[i].tags,
                 });
             }
@@ -119,6 +122,7 @@ function blogAPI_get(req, res) {
                         subtitle: blogs[i].subtitle,
                         createdDate: blogs[i].createdDate,
                         updatedDate: blogs[i].updatedDate,
+                        cover: blogs[i].cover,
                         tags: blogs[i].tags,
                     });
                 }
@@ -158,6 +162,7 @@ function blogAPI_get(req, res) {
                     subtitle: blogs[i].subtitle,
                     createdDate: blogs[i].createdDate,
                     updatedDate: blogs[i].updatedDate,
+                    cover: blogs[i].cover,
                     tags: blogs[i].tags,
                 });
             }
@@ -190,28 +195,9 @@ function blogAPI_getURI(req, res) {
 exports.blogAPI_getURI = blogAPI_getURI;
 function blogAPI_post(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        function validateData() {
-            //Does contain URI?
-            if (req.body.uri == null || req.body.uri == '') {
-                return { status: 400, message: uriEmptyMsg };
-            }
-            else if (req.body.uri.length > 50) {
-                return { status: 400, message: uriTooLongMsg };
-            }
-            else if (req.body.uri.length < 3) {
-                return { status: 400, message: uriTooShortMsg };
-            }
-            else if (req.body.title == null || req.body.title == '') {
-                return { status: 400, message: titleEmptyMsg };
-            }
-            else if (req.body.content == null || req.body.content == '') {
-                return { status: 400, message: contentEmptyMsg };
-            }
-            return { status: 200, message: '' };
-        }
         var validated;
         return __generator(this, function (_a) {
-            validated = validateData();
+            validated = validateBlogData(req.body);
             if (validated.status === 200) {
                 Blog.countDocuments({ uri: req.body.uri }, function (err, count) {
                     if (err) {
@@ -230,6 +216,7 @@ function blogAPI_post(req, res) {
                             subtitle: req.body.subtitle,
                             createdDate: createdDate,
                             updatedDate: createdDate,
+                            cover: req.body.cover,
                             tags: req.body.tags,
                             content: req.body.content
                         });
@@ -252,7 +239,7 @@ function blogAPI_post(req, res) {
 exports.blogAPI_post = blogAPI_post;
 function blogAPI_update(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var uri, title, subtitle, createdDate, updatedDate, tags, content, filter, update, i, validateBlogPost, validationStatus;
+        var uri, title, subtitle, createdDate, updatedDate, cover, tags, content, filter, update, i, validateBlogPost, validationStatus;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -262,10 +249,11 @@ function blogAPI_update(req, res) {
                     subtitle = req.body.subtitle;
                     createdDate = req.body.date;
                     updatedDate = new Date().toISOString();
+                    cover = req.body.cover;
                     tags = req.body.tags;
                     content = req.body.content;
                     filter = { uri: req.params.blogURI };
-                    update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, tags: tags, content: content };
+                    update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, cover: cover, tags: tags, content: content };
                     //Remove null or empty values
                     for (i = 0; i < Object.keys(update).length; i++) {
                         if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
@@ -289,16 +277,8 @@ function blogAPI_update(req, res) {
                                     if (postCount > 0) {
                                         return [2 /*return*/, { failedValidation: true, message: postExistsMsg }];
                                     }
-                                    //Extra checks
-                                    if (req.body.uri != null) {
-                                        if (req.body.uri.length > 50) {
-                                            return [2 /*return*/, { failedValidation: true, message: uriTooLongMsg }];
-                                        }
-                                        if (req.body.uri.length < 3) {
-                                            return [2 /*return*/, { failedValidation: true, message: uriTooShortMsg }];
-                                        }
-                                    }
-                                    return [2 /*return*/, { failedValidation: false }];
+                                    //Standard checks
+                                    return [2 /*return*/, validateBlogData(req.body)];
                             }
                         });
                     }); };
@@ -365,7 +345,7 @@ function blog_homePage(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var featuredBlog;
         return __generator(this, function (_a) {
-            featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', coverPath: '../blog-images/martini.png' };
+            featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', cover: '../blog-images/martini.png' };
             res.render('blog', { featuredBlog: featuredBlog }, function (err, html) {
                 if (err) {
                     return console.log(err);
@@ -419,9 +399,39 @@ function blog_getURI(req, res) {
 }
 exports.blog_getURI = blog_getURI;
 //Helper functions ---------------------------------------
+function validateBlogData(body) {
+    if (body.uri == null || body.uri == "") {
+        return { failedValidation: true, message: uriEmptyMsg, status: 400 };
+    }
+    if (body.uri.length > 100) {
+        return { failedValidation: true, message: uriTooLongMsg, status: 400 };
+    }
+    if (body.uri.length < 3) {
+        return { failedValidation: true, message: uriTooShortMsg, status: 400 };
+    }
+    if (body.title == null || body.title == "") {
+        return { failedValidation: true, message: titleEmptyMsg, status: 400 };
+    }
+    if (body.tags == null || body.tags.length == 0) {
+        return { failedValidation: true, message: tagsEmptyMsg, status: 400 };
+    }
+    if (body.tags.length > 5) {
+        return { failedValidation: true, message: tagsTooManyMsg, status: 400 };
+    }
+    if (body.cover == null || body.cover == "") {
+        return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+    }
+    if (body.content == null || body.content == "") {
+        return { failedValidation: true, message: contentEmptyMsg, status: 400 };
+    }
+    return { failedValidation: false, message: "", status: 200 };
+}
 var uriEmptyMsg = "URI is empty";
 var postExistsMsg = "Post with that URI already exists";
 var uriTooLongMsg = "URI is too long";
 var uriTooShortMsg = "URI is too short";
 var titleEmptyMsg = "Title is empty";
+var tagsEmptyMsg = "Post has no tags";
+var tagsTooManyMsg = "Post can only have 5 tags";
+var coverEmptyMsg = "Post contains no image for cover photo";
 var contentEmptyMsg = "Content is empty";

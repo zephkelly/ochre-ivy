@@ -9,6 +9,7 @@ const blogSchema = new mongoose.Schema({
   subtitle: String,
   createdDate: String,
   updatedDate: String,
+  cover: String,
   tags: Array,
   content: Object
 });
@@ -31,6 +32,7 @@ export function blogAPI_get(req, res) {
             subtitle: blogs[i].subtitle,
             createdDate: blogs[i].createdDate,
             updatedDate: blogs[i].updatedDate,
+            cover: blogs[i].cover,
             tags: blogs[i].tags,
           });
         }
@@ -62,6 +64,7 @@ export function blogAPI_get(req, res) {
           subtitle: blogs[i].subtitle,
           createdDate: blogs[i].createdDate,
           updatedDate: blogs[i].updatedDate,
+          cover: blogs[i].cover,
           tags: blogs[i].tags,
         });
       }
@@ -85,6 +88,7 @@ export function blogAPI_get(req, res) {
             subtitle: blogs[i].subtitle,
             createdDate: blogs[i].createdDate,
             updatedDate: blogs[i].updatedDate,
+            cover: blogs[i].cover,
             tags: blogs[i].tags,
           });
         }
@@ -124,6 +128,7 @@ export function blogAPI_get(req, res) {
           subtitle: blogs[i].subtitle,
           createdDate: blogs[i].createdDate,
           updatedDate: blogs[i].updatedDate,
+          cover: blogs[i].cover,
           tags: blogs[i].tags,
         });
       }
@@ -158,29 +163,8 @@ export function blogAPI_getURI(req, res) {
 }
 
 export async function blogAPI_post(req, res) {
-  
-  function validateData() {
-    //Does contain URI?
-    if (req.body.uri == null || req.body.uri == '') {
-      return { status: 400, message: uriEmptyMsg };
-    }
-    else if (req.body.uri.length > 50) {
-      return { status: 400, message: uriTooLongMsg };
-    }
-    else if (req.body.uri.length < 3) {
-      return { status: 400, message: uriTooShortMsg };
-    }
-    else if (req.body.title == null || req.body.title == '') {
-      return { status: 400, message: titleEmptyMsg };
-    }
-    else if (req.body.content == null || req.body.content == '') {
-      return { status: 400, message: contentEmptyMsg };
-    }
 
-    return { status: 200, message: '' };
-  }
-
-  const validated = validateData();
+  const validated = validateBlogData(req.body);
   
   if (validated.status === 200) {
     Blog.countDocuments({ uri: req.body.uri }, (err, count) => {
@@ -200,6 +184,7 @@ export async function blogAPI_post(req, res) {
           subtitle: req.body.subtitle,
           createdDate: createdDate,
           updatedDate: createdDate,
+          cover: req.body.cover,
           tags: req.body.tags,
           content: req.body.content
         });
@@ -223,11 +208,12 @@ export async function blogAPI_update(req, res) {
   const subtitle: string = req.body.subtitle;
   const createdDate: string = req.body.date;
   const updatedDate: string = new Date().toISOString();
+  const cover: string = req.body.cover;
   const tags: Array<string> = req.body.tags;
   const content: string = req.body.content;
 
   const filter = { uri: req.params.blogURI };
-  let update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, tags: tags, content: content }
+  let update = { uri: uri, title: title, subtitle: subtitle, createdDate: createdDate, updatedDate: updatedDate, cover: cover, tags: tags, content: content }
 
   //Remove null or empty values
   for (let i = 0; i < Object.keys(update).length; i++) {
@@ -250,13 +236,8 @@ export async function blogAPI_update(req, res) {
     let postCount = await Blog.find({ uri: req.body.uri }).countDocuments();
     if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
     
-    //Extra checks
-    if (req.body.uri != null) {
-      if (req.body.uri.length > 50) { return { failedValidation: true, message: uriTooLongMsg }; }
-      if (req.body.uri.length < 3) { return { failedValidation: true, message: uriTooShortMsg }; }
-    }
-
-    return { failedValidation: false };
+    //Standard checks
+    return validateBlogData(req.body);
   }
 
   //If validation fails, bad request. Send error message
@@ -311,7 +292,7 @@ export function blogAPI_imageUpload(req, res) {
 
 //Routes ------------------------------------------------
 export async function blog_homePage(req, res) {
-  const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', coverPath: '../blog-images/martini.png'}
+  const featuredBlog = { title: 'Featured Blog', subtitle: 'A blog about stuff', cover: '../blog-images/martini.png'}
 
   res.render('blog', { featuredBlog }, (err, html) => {
     if (err) { return console.log(err); }
@@ -345,9 +326,42 @@ export async function blog_getURI(req, res) {
 }
 
 //Helper functions ---------------------------------------
+function validateBlogData(body) {
+  if (body.uri == null || body.uri == "") {
+    return { failedValidation: true, message: uriEmptyMsg, status: 400 };
+  }
+  if (body.uri.length > 100) {
+    return { failedValidation: true, message: uriTooLongMsg, status: 400 };
+  }
+  if (body.uri.length < 3) {
+    return { failedValidation: true, message: uriTooShortMsg, status: 400 };
+  }
+  if (body.title == null || body.title == "") {
+    return { failedValidation: true, message: titleEmptyMsg, status: 400 };
+  }
+  if (body.tags == null || body.tags.length == 0) {
+    return { failedValidation: true, message: tagsEmptyMsg, status: 400 };
+  }
+  if (body.tags.length > 5) {
+    return { failedValidation: true, message: tagsTooManyMsg, status: 400 };
+  }
+  if (body.cover == null || body.cover == "") {
+    return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+  }
+  if (body.content == null || body.content == "") {
+    return { failedValidation: true, message: contentEmptyMsg, status: 400 };
+  }
+
+  return { failedValidation: false, message: "", status: 200 };
+}
+
+
 const uriEmptyMsg = "URI is empty";
 const postExistsMsg = "Post with that URI already exists";
 const uriTooLongMsg = "URI is too long";
 const uriTooShortMsg = "URI is too short";
 const titleEmptyMsg = "Title is empty";
+const tagsEmptyMsg = "Post has no tags";
+const tagsTooManyMsg = "Post can only have 5 tags";
+const coverEmptyMsg = "Post contains no image for cover photo";
 const contentEmptyMsg = "Content is empty";
