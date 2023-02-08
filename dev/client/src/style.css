@@ -766,19 +766,16 @@ main {
 }
 #blogs-featured .featured-title {
   font-family: 'Poppins', sans-serif;
-  font-size: 4.5rem;
+  font-size: 23rem;
   font-weight: 500;
-  letter-spacing: 0.8rem;
+  letter-spacing: 0.4rem;
   margin: 0rem;
-  color: var(--light);
-  position: absolute;
-  top: 0rem;
-  left: 3.65rem;
+  color: var(--dark);
 }
 #blogs-featured .featured-blog {
   height: 65%;
   width: calc(100% - 4rem);
-  transition: 0.5s ease-in-out;
+  transition: 0.5s ease-out;
   bottom: 7rem;
   left: 2rem;
   box-sizing: border-box;
@@ -882,7 +879,7 @@ main {
   object-position: left bottom;
 }
 #blogs-featured .featured-nav {
-  bottom: 3rem;
+  bottom: 3.5rem;
   left: 0rem;
   width: 100%;
   position: absolute;
@@ -956,6 +953,14 @@ main {
   justify-content: flex-start;
   gap: 2rem;
   margin-top: 2rem;
+}
+#blogs-recent .recent-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  letter-spacing: 0.4rem;
+  margin: 0rem;
+  color: var(--dark);
 }
 
 #blogs-popular {

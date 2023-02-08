@@ -149,14 +149,10 @@ export async function login_post(req, res) {
   //Check if user exists
   User.find({ email: req.body.email }, async (err, user) => {
     const data = {
-      message: null,
-      loggedIn: null,
-      userName: null
+      message: null
     };
 
     if (user.length == 0) {
-      data.loggedIn = false
-      data.userName = null;
       data.message = "Email or password is incorrect";
 
       res.render('login', { data }, (err, html) => {
@@ -175,15 +171,12 @@ export async function login_post(req, res) {
           req.session.roles = user[0].roles;
           req.session.save();
 
-          console.log("Logging in user");
-          const string = encodeURIComponent('true');
-
-          res.status(200).redirect("/" + "?loggedIn=" + string);
+          let string = encodeURIComponent('true');
+          
+          res.status(200).redirect("/?loggingIn=" + string);
           return;
         }
         else {
-          data.loggedIn = false
-          data.userName = null;
           data.message = "Email or password is incorrect";
 
           res.render('login', { data }, (err, html) => {

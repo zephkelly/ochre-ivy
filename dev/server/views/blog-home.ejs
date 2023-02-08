@@ -37,7 +37,7 @@
         <h2 class="featured-title">FEATURED</h2>
         <% for (i = 0; i < featuredBlogs.length; i++) { %>
           <% const blog = featuredBlogs[i]; %>
-          <div class="featured-blog" style="opacity: 0;">
+          <div class="featured-blog" style="opacity: 0; display: none;">
             <div class="content">
               <div class="wrapper">
                 <h3 class="blog-title"><%= blog.title %></h3>
@@ -188,12 +188,21 @@
   function showFeaturedBlog() {
     lastFeaturedBlog = currentFeaturedBlog;
 
-    featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
-    featuredBlogs[currentFeaturedBlog].style.opacity = 0;
+    featuredBlogLinks[lastFeaturedBlog].classList.remove('active');
+    featuredBlogs[lastFeaturedBlog].style.opacity = 0;
 
+    setTimeout(() => {
+      featuredBlogs[lastFeaturedBlog].style.display = 'none';
+    }, 500)
+    
     currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
+    
+    featuredBlogs[currentFeaturedBlog].style.display = 'flex';
 
-    featuredBlogs[currentFeaturedBlog].style.opacity = 1;
+    setTimeout(() => {
+      featuredBlogs[currentFeaturedBlog].style.opacity = 1;
+    }, 5)
+
     featuredBlogLinks[currentFeaturedBlog].classList.add('active');
   }
 

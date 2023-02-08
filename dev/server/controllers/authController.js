@@ -195,13 +195,9 @@ function login_post(req, res) {
                 var data;
                 return __generator(this, function (_a) {
                     data = {
-                        message: null,
-                        loggedIn: null,
-                        userName: null
+                        message: null
                     };
                     if (user.length == 0) {
-                        data.loggedIn = false;
-                        data.userName = null;
                         data.message = "Email or password is incorrect";
                         res.render('login', { data: data }, function (err, html) {
                             if (err) {
@@ -219,14 +215,11 @@ function login_post(req, res) {
                                 req.session.name = user[0].name;
                                 req.session.roles = user[0].roles;
                                 req.session.save();
-                                console.log("Logging in user");
                                 var string = encodeURIComponent('true');
-                                res.status(200).redirect("/" + "?loggedIn=" + string);
+                                res.status(200).redirect("/?loggingIn=" + string);
                                 return;
                             }
                             else {
-                                data.loggedIn = false;
-                                data.userName = null;
                                 data.message = "Email or password is incorrect";
                                 res.render('login', { data: data }, function (err, html) {
                                     if (err) {

@@ -43,15 +43,18 @@ app.get('/', function (req, res) {
         var userData = { name: req.session.name };
         if (req.session.roles == 'admin') {
             var siteData = { blogCount: 0, recipeCount: 0 };
-            if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggedIn) == 'true') {
+            if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
+                console.log('logging in notif');
                 var loggedData = { loggedMessage: true };
                 res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
             }
             else {
+                console.log('not logging in notif');
                 var loggedData = { loggedMessage: false };
                 res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
             }
         }
+        return;
     }
     res.status(200).sendFile(__dirname + '/index.html');
 });
