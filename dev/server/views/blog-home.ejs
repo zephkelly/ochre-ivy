@@ -34,7 +34,7 @@
   <main>
     <section id="blogs-featured">
       <div class="container">
-        <h2 class="featured-title">Featured</h2>
+        <h2 class="featured-title">FEATURED</h2>
         <% for (i = 0; i < featuredBlogs.length; i++) { %>
           <% const blog = featuredBlogs[i]; %>
           <div class="featured-blog" style="opacity: 0;">
@@ -62,13 +62,20 @@
           </ul>
         </nav>  
       </div>
+      <div class="blogs-featured-bgBox"></div>
     </section>
-    <section id="blog-hero">
+    <section id="blogs-recent-popular">
       <div class="container">
-        <div class="blog-hero-content">
-          <h1>Blog</h1>
-          <p>Browse my collection of blogs</p>
-        </div>
+        <section id="blogs-recent">
+          <div class="blog-hero-content">
+            <h2 class="recent-title">Recent</h2>
+          </div>
+        </section>
+        <section id="blogs-popular">
+          <div class="blog-hero-content">
+            <h2 class="recent-title">Popular</h2>
+          </div>
+        </section>
       </div>
     </section>
   </main>
@@ -118,6 +125,12 @@
 
     if (sanitisedDescription.length > 300) {
       sanitisedDescription = sanitisedDescription.slice(0, 400);
+
+      //Remove last word if cut in the middle
+      if (sanitisedDescription.charAt(sanitisedDescription.length - 1) != ' ') {
+        sanitisedDescription = sanitisedDescription.slice(0, sanitisedDescription.lastIndexOf(' '));
+      }
+
       sanitisedDescription = sanitisedDescription + '...';
     }
 
@@ -161,7 +174,11 @@
       featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 
       clearInterval(interval);
-      setTimeout(() => { interval = setInterval(showFeaturedBlog, 6500); }, 3500, false);
+
+      setTimeout(() => { 
+        clearInterval(interval);
+        interval = setInterval(showFeaturedBlog, 6500);
+      }, 3500);
     });
   });
 

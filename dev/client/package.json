@@ -11,7 +11,8 @@
     "copyAssetsJs": "copyfiles -u 1 ./dist/*.js ./../../dist/assets",
     "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./../../dist/assets",
     "copy": "npm run copyHTML && npm run copyImages && npm run copyAssetsJs && npm run copyAssetsCss",
-    "build": "tsc && vite build && npm run copy"
+    "build": "tsc && vite build && npm run copy",
+    "buildCSS": "vite build && npm run copyAssetsCss"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.26.4",
