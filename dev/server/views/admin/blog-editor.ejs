@@ -11,19 +11,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title>New Blog</title>
   <script type="module" crossorigin src="/main.js"></script>
-  <script type="module" crossorigin src="/editor.js"></script>
+  <script type="module" crossorigin src="/blogEditor.js"></script>
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
   <%- include('../partials/navbar.ejs') %>
   <main>
-    <section id="editor-link-section">
-      <div class="container">
-        <a href="/dashboard">Dashboard</a> > <a href="/dashboard/blog">Blog</a> > <a>New</a>
+    <section id="link-section">
+      <div class="section-container">
+        <a href="/dashboard">Dashboard</a> > <a href="/dashboard/blog">Blog</a> > <a class="active">New</a>
       </div>
     </section>
     <section id="editor-section">
-      <div class="container">
+      <div class="section-container">
         <div class="wrapper">
           <h3 class="editor-title">Create new blog</h3>
           <button id="save-button">Post blog</button>

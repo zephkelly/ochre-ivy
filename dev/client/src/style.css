@@ -17,6 +17,17 @@ section {
   width: 1280px;
   max-width: 1280px;
 }
+section:first-of-type {
+  margin-top: clamp(10rem, 18vh, 14rem);
+}
+section .section-container {
+  margin: auto;
+  padding: 1rem;
+  width: 85%;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
 
 .hidden {
   display: none;
@@ -60,13 +71,27 @@ main {
 
 .navbar {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 5.5rem;
+}
+.navbar .section {
+  margin: auto;
+  width: 100%;
+  max-width: 1280px;
+  height: 100%;
+}
+.navbar .container {
+  width: 85%;
+  height: 100%;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 1rem 2rem;
+  margin: 0rem;
+  padding: 1rem;
   padding-top: 0rem;
-  height: 5.5rem;
-  padding-bottom: 1rem;
+  box-sizing: border-box;
 }
 .navbar .nav-text {
   transition: 0.15s ease-out;
@@ -152,8 +177,55 @@ main {
   font-size: 1.1rem;
 }
 
+/* reusable components */
+.accent-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+  height: 3rem;
+  margin-top: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 1.15rem;
+  border: solid 0.2rem;
+  transition: 0.15s ease-out;
+}
+
+.button-outlined-black {
+  color: var(--dark);
+  border-color: var(--dark);
+  background-color: transparent;
+}
+.button-outlined-black:hover {
+  color: var(--accent-color);
+  border-color: var(--dark);
+  background-color: var(--dark);
+}
+
+.button-solid-accent {
+  color: var(--light);
+  border-color: var(--accent-color);
+  background-color: var(--accent-color);
+}
+.button-solid-accent:hover {
+  color: var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
+  background-color: transparent;
+}
+
+.button-light-shadow {
+  box-shadow: 0 0 1rem 0rem rgba(0,0,0,0.05);
+  color: var(--dark);
+  border-color: var(--light);
+  background-color: var(--light);
+}
+
 /* find in navbarInteraction */
 #notification {
+  margin-top: 0rem;
   position: fixed;
   left: 4rem;
   top: 7.2rem;
@@ -198,25 +270,17 @@ main {
 }
 
 #landing {
-  height: 1000px;
+  height: 850px;
   position: relative;
-  margin-bottom: 5rem;
-}
-#landing .container {
-  position: relative;
-  box-sizing: border-box;
-  width: 85%;
-  min-height: 320px;
-  margin: auto;
-  margin-top: 9rem;
   margin-bottom: 14rem;
-  padding: 1rem;
+}
+#landing .section-container {
+  min-height: 320px;
 }
 #landing .hero-text {
   font-size: 4rem;
   padding-right: 30%;
   margin: 0rem;
-  margin-top: 4rem;
   line-height: 5rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
@@ -233,33 +297,11 @@ main {
   font-family: "Lato", sans-serif;
   color: var(--dark);
 }
-#landing .hero-learnmore-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1.5rem;
-  width: 8rem;
-  height: 3rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-decoration: none;
-  background-color: transparent;
-  transition: 0.15s ease-out;
-  border: solid 0.2rem var(--dark);
-  border-radius: 1.17rem;
-  color: var(--dark);
-}
-#landing .hero-learnmore-btn:hover {
-  color: var(--accent-color);
-  background-color: var(--dark);
-  border-color: var(--dark);
-}
 #landing #hero-illustration {
   position: absolute;
-  margin-top: -10rem;
-  transition: margin-top, right 0.3s ease-out;
+  bottom: 10rem;
   right: 0rem;
+  transition: margin-top, right 0.3s ease-out;
   width: 80%;
   min-width: 5rem;
   max-width: 38rem;
@@ -269,29 +311,38 @@ main {
 }
 #landing .landing-bgBox {
   position: absolute;
-  bottom: 8rem;
-  right: -36rem;
-  z-index: -1;
+  left: -40rem;
+  right: -25rem;
+  bottom: clamp(2rem, 20%, 6rem);
+  width: auto;
+  height: auto;
+  min-height: 100rem;
   border-radius: 40rem;
   transform: rotate(10deg);
   background-color: var(--accent-color);
-  width: 150vw;
-  height: 120vh;
-  min-height: 100rem;
+  z-index: -1;
 }
 
 #blog-section {
-  height: 900px;
-  margin-top: 10rem;
-}
-#blog-section .container {
-  position: relative;
-  width: 85%;
-  min-height: 320px;
-  margin: auto;
-  margin-top: 2rem;
+  height: 850px;
   margin-bottom: 14rem;
-  padding: 1rem;
+}
+#blog-section .section-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+#blog-section .blog.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+#blog-section .latest-post.container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 #blog-section .blog-text {
   font-size: 4.1rem;
@@ -310,53 +361,29 @@ main {
   text-align: end;
   padding-left: 25rem;
 }
-#blog-section .blog-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: 1rem;
-  width: 7rem;
-  height: 3rem;
-  margin-top: 1.5rem;
-  margin-right: -2rem;
-  font-size: 1.1rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: var(--light);
-  background-color: var(--accent-color);
-  border: 0.2rem var(--accent-color) solid;
-  border-radius: 1.17rem;
-  transition: 0.15s ease-out;
-}
-#blog-section .blog-btn:hover {
-  background-color: transparent;
-  border-color: var(--accent-color-secondary);
-  color: var(--accent-color-secondary);
-}
 #blog-section #blog-illustration {
   position: absolute;
-  margin-top: -7rem;
   transition: margin-top, right 0.3s ease-out;
   left: -3rem;
-  width: 80%;
+  bottom: 6rem;
+  width: 70%;
+  height: auto;
   min-width: 5rem;
   max-width: 35rem;
-  height: auto;
   z-index: 0;
-  transform: rotate(35deg);
+  transform: rotate(8deg);
 }
 #blog-section #blog-bgBox {
   position: relative;
-  bottom: 32rem;
-  left: -13rem;
+  bottom: 42rem;
+  left: -8rem;
   border-radius: 15rem;
   background-color: var(--accent-color);
-  width: 36rem;
+  width: 40rem;
   height: 40rem;
   transform: rotate(38deg);
   animation-name: softRotate;
-  animation-duration: 45s;
+  animation-duration: 40s;
   animation-timing-function: ease;
   animation-direction: alternate;
   animation-iteration-count: infinite;
@@ -377,7 +404,6 @@ main {
     50% {
       transform: rotate(42deg);
       border-radius: 15rem;
-  
     }
     75% {
       transform: rotate(95deg);
@@ -395,16 +421,11 @@ main {
 
 #recipes-section {
   height: 1000px;
-  margin-top: 2rem;
-}
-#recipes-section .container {
-  position: relative;
-  width: 85%;
-  min-height: 320px;
-  margin: auto;
-  margin-top: 5rem;
+  margin-top: 7rem;
   margin-bottom: 14rem;
-  padding: 1rem;
+}
+#recipes-section .section-container {
+  min-height: 320px;
 }
 #recipes-section .recipes-text {
   margin: 0rem;
@@ -420,30 +441,6 @@ main {
   font-size: 1.5rem;
   font-family: "Lato", sans-serif;
   text-align: start;
-}
-#recipes-section .recipes-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0rem;
-  margin-top: 1.5rem;
-  position: absolute;
-  left: 1rem;
-  width: 7rem;
-  height: 3rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  background-color: transparent;
-  transition: 0.15s ease-out;
-  border: solid 0.2rem var(--dark);
-  border-radius: 1.17rem;
-  color: var(--dark);
-}
-#recipes-section .recipes-btn:hover {
-  color: var(--accent-color);
-  background-color: var(--dark);
-  border-color: var(--dark);
 }
 #recipes-section #recipes-illustration {
   position: absolute;
@@ -752,19 +749,25 @@ main {
 }
 
 /* Blog Home ----------------------------------- */
-#blogs-featured {
-  height: 800px;
-  margin-top: clamp(8rem,13vw,12rem);
+#blogs-nav .section-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: auto;
+  min-height: 0rem;
 }
-#blogs-featured .container {
-  position: relative;
-  height: 100%;
-  width: 85%;
-  padding: 2rem;
-  margin: auto;
-  box-sizing: border-box;
+#blogs-nav .blogs-home-nav ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  padding: 0rem;
+  margin: 0rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
-#blogs-featured .featured-title {
+#blogs-nav .blog-title {
   font-family: 'Poppins', sans-serif;
   font-size: 3rem;
   font-weight: 500;
@@ -773,18 +776,35 @@ main {
   color: var(--dark);
   padding-left: 1.75rem;
 }
+#blogs-nav .blog-nav-link {
+  color: var(--accent-color-tertiary);
+  transition: 0.15s ease-out;
+  cursor: pointer;
+  padding-left: 1.75rem;
+}
+#blogs-nav .blog-nav-link:hover {
+  color: var(--accent-color-darker);
+}
+#blogs-nav .blog-nav-link.active {
+  color: var(--dark);
+}
+
+#blogs-featured {
+  height: 700px;
+  margin-top: 0rem;
+}
 #blogs-featured .featured-blog {
   height: 32rem;
-  width: calc(100% - 4rem);
+  width: calc(100% - 2rem);
   transition: 0.5s ease-out;
-  top: 10rem;
-  left: 2rem;
+  top: 1rem;
+  left: 1rem;
   box-sizing: border-box;
   position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.10);
   border-radius: 0.5rem;
   background-color: var(--light);
 }
@@ -800,7 +820,7 @@ main {
   justify-content: flex-start;
   gap: 3.5rem;
 }
-#blogs-featured .featured-blog .blog-title {
+#blogs-featured .featured-blog .blog-title-featured {
   font-family: Poppins, sans-serif;
   font-size: 2rem;
   font-weight: 400;
@@ -880,7 +900,7 @@ main {
   height: 100%;
 }
 #blogs-featured .featured-nav {
-  bottom: 3.5rem;
+  bottom: 6.5rem;
   left: 0rem;
   width: 100%;
   position: absolute;
@@ -926,7 +946,7 @@ main {
   width: auto;
   height: auto;
   min-height: 100rem;
-  top: -60rem;
+  top: -52rem;
   left: -15rem;
   right: -18rem;
   z-index: -1;
@@ -934,17 +954,11 @@ main {
 
 #blogs-recipes-popular {
   height: auto;
-  margin-top: 10rem;
+  margin-top: 7rem;
 }
-#blogs-recipes-popular .container {
-  position: relative;
-  height: 100%;
-  width: 85%;
-  padding: 2rem;
-  margin: auto;
-  box-sizing: border-box;
+#blogs-recipes-popular .section-container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 4rem;
 }
 #blogs-recipes-popular .title {
@@ -963,16 +977,20 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-top: 3.5rem;
 }
 #blogs-recipes .recipe-blog {
   width: 100%;
   margin-bottom: 4rem;
+  border-radius: 0.5rem;
+  background-color: var(--light);
+  box-shadow: 0rem 2rem 2rem rgba(0, 0, 0, 0.035);
 }
 #blogs-recipes .recipe-blog .cover-img {
   width: 100%;
-  height: 0%;
+  height: auto;
   overflow: hidden;
-  border-radius: 0.5rem 0.5rem 0rem 0rem;
+  border-radius: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -986,9 +1004,6 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   padding: 2rem;
-  background-color: var(--light);
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  box-shadow: 0rem 2rem 2rem rgba(0, 0, 0, 0.035);
 }
 #blogs-recipes .recipe-blog .blog-title {
   font-family: 'Poppins', sans-serif;
@@ -1051,14 +1066,95 @@ main {
 }
 
 
-#blogs-popular {
+#blogs-recent {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 2rem;
-  margin-top: 2rem;
-  padding: 2rem;
+  align-items: center;
+  margin-top: 3.5rem;
+  background-color: var(--light);
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+}
+#blogs-recent .recent-blog {
+  width: 100%;
+  height: 12rem;
+}
+#blogs-recent .recent-blog .content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+#blogs-recent .recent-blog-spacer {
+  border-top: 1px solid grey;
+  opacity: 0.5;
+  height: 1px;
+  width: 80%;
+}
+#blogs-recent .content .wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+#blogs-recent .content .wrapper .group {
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#blogs-recent .content .wrapper .group .container:last-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+}
+#blogs-recent .group .blog-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0rem;
+  color: var(--dark);
+}
+#blogs-recent .group .blog-subtitle {
+  font-family: Lato,sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: .5rem 0rem;
+  color: var(--dark);
+}
+#blogs-recent .group .blog-date {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: grey;
+}
+#blogs-recent .group .recent-blog-btn {
+  width: 2rem;
+  height: 2rem;
+  margin-top: 1rem;
+}
+#blogs-recent .group .recent-blog-btn span {
+  font-size: 2rem;
+  padding-left: 0.2rem;
+}
+#blogs-recent .cover-img {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#blogs-recent .cover-img img {
+  height: 100%;
+  width: auto;
 }
 
 /* Post ---------------------------------------- */
@@ -1067,16 +1163,9 @@ main {
   min-height: 80vh;
   margin-bottom: 6rem;
 }
-
 #blog-post .container {
-  position: relative;
-  width: 85%;
   min-height: 320px;
-  margin-top: 2rem;
-  padding: 2rem;
-  margin: auto;
 }
-
 #blog-post .post-title {
   font-size: clamp(2.5rem, 4vw, 3.5rem);
   font-weight: 500;
@@ -1087,7 +1176,6 @@ main {
   margin-bottom: 1rem;
   margin-left: -0.1rem;
 }
-
 #blog-post .post-subtitle {
   font-size: 1.5rem;
   font-weight: 400;
@@ -1095,7 +1183,6 @@ main {
   text-align: start;
   margin-bottom: 0.2rem;
 }
-
 #blog-post #post-date {
   font-size: 1rem;
   font-weight: 400;
@@ -1104,6 +1191,9 @@ main {
   margin: 0rem;
   margin-bottom: 3rem;
   color: grey;
+}
+#blog-post .admin-controls {
+  margin-bottom: 1.5rem;
 }
 #blog-post .admin-controls a {
   font-size: 1rem;
@@ -1125,31 +1215,34 @@ main {
 }
 
 /* Editor -------------------------------------- */
-#editor-link-section {
-  padding-top: 8rem;
-}
-#editor-link-section a {
+#link-section a {
   font-family: 'Poppins', sans-serif;
   color: grey;
   text-decoration: none;
   margin: 0rem;
+  padding-right: 0.6rem;
 }
-#editor-section {
-  padding-bottom: 3rem;
+#link-section a:not(:first-child) {
+  padding-left: 0.6rem;
 }
+#link-section a:hover {
+  color: var(--dark);
+}
+#link-section a.active {
+  color: var(--dark);
+}
+
 #editor-link-section .container {
   width: 85%;
   padding: 1rem;
   box-sizing: border-box;
   margin: auto;
 }
-#editor-section .container {
-  width: 85%;
-  padding: 1rem;
-  box-sizing: border-box;
-  margin: auto;
+
+#editor-section {
+  padding-bottom: 3rem;
 }
-#editor-section .container .wrapper {
+#editor-section .section-container .wrapper {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -1372,6 +1465,13 @@ main {
   text-align: left;
 }
 
+@media (max-width: 3840px) {
+  .navbar .container {
+    max-width: 1920px;
+    margin: auto;
+  }
+}
+
 @media (max-width: 3250px) {
   #landing #hero-illustration {
     margin-top: -4rem;
@@ -1383,14 +1483,6 @@ main {
     width: 100%;
   }
 
-  #landing {
-    height: 900px;
-  }
-  #landing .landing-bgBox {
-    width: 200rem;
-    right: -24rem;
-    bottom: 8rem;
-  }
   #landing .hero-text {
     font-size: 3.2rem;
   }
@@ -1401,12 +1493,8 @@ main {
   #landing #hero-illustration {
     width: 60%;
     margin-top: -6rem;
-    margin-right: -2rem;
   }
 
-  #blog-section {
-    margin-top: 10vw;
-  }
   #blog-section .blog-text {
     font-size: 3rem;
   }
@@ -1437,18 +1525,6 @@ main {
 }
 
 @media (max-width: 1480px) {
-  section {
-    width: 100%;
-  }
-
-  #landing {
-    height: 700px;
-  }
-  #landing .landing-bgBox {
-    width: 200rem;
-    right: -24rem;
-    bottom: 7rem;
-  }
   #landing .hero-text {
     font-size: 3.2rem;
   }
@@ -1461,9 +1537,6 @@ main {
     margin-top: -6rem;
   }
 
-  #blog-section {
-    margin-top: 20vw;
-  }
   #blog-section .blog-text {
     font-size: 3rem;
   }
@@ -1493,10 +1566,6 @@ main {
 }
 
 @media (max-width: 980px) {
-  .navbar {
-    padding: 0.8rem 2rem;
-    height: 4.5rem;
-  }
   .navbar .nav-text {
     font-size: 1.6rem;
     width: 10rem;
@@ -1551,19 +1620,16 @@ main {
   #landing .hero-text {
     margin-top: 0rem;
   }
-
-  #blog-section {
-    margin-top: 27vw;
+  #landing .landing-bgBox {
+    bottom: clamp(0rem,16vh,14rem);
   }
+
   #blog-section .blog-description {
     padding-left: 32%;
   }
 }
 
 @media (max-width: 900px) {
-  #landing {
-    height: 800px;
-  }
   #landing .hero-text {
     padding-right: 12%;
   }
@@ -1605,10 +1671,6 @@ main {
     width: 75%;
     margin-top: -2rem;
   }
-  
-  #blog-section {
-    margin-top: 30vw;
-  }
 
   #recipes-section {
     margin-top: 18vw;
@@ -1620,13 +1682,6 @@ main {
 }
 
 @media (max-width: 630px) {
-  section {
-    width: 100%;
-  }
-
-  .navbar {
-    padding: 0.8rem 7.5vw;
-  }
   .navbar .nav-menu {
     right: 7.5vw;
     left: 7.5vw;
@@ -1635,9 +1690,6 @@ main {
     width: 100%;
   }
 
-  #landing {
-    height: 750px;
-  }
   #landing .container {
     padding: 0rem;
   }
@@ -1660,20 +1712,8 @@ main {
   #landing #hero-illustration {
     width: 85%;
     margin-top: 0rem;
-    margin-right: -1rem;
-  }
-  #landing .landing-bgBox {
-    right: -8rem;
-    bottom: 2;
-    width: 80rem;
-    height: 40rem;
-    border-radius: 10rem;
   }
 
-  #blog-section {
-    margin-top: 15vw;
-    height: 800px;
-  }
   #blog-section .blog-text {
     font-size: 2rem;
     line-height: 2.4rem;
@@ -1693,8 +1733,6 @@ main {
     margin-left: 1rem;
   }
   #blog-section #blog-bgBox {
-    right: auto;
-    bottom: auto;
     left: -20rem;
     top: -28rem;
     width: 30rem;
@@ -1741,13 +1779,6 @@ main {
     display: none;
   }
 
-  section {
-    width: 100%;
-  }
-
-  #landing {
-    height: 700px;
-  }
   #landing .container {
     padding: 0rem;
   }
@@ -1769,18 +1800,7 @@ main {
     width: 90%;
     margin-top: 0vw;
   }
-  #landing .landing-bgBox {
-    right: -8rem;
-    bottom: 4.5rem;
-    width: 40rem;
-    height: 30rem;
-    border-radius: 10rem;
-  }
 
-  #blog-section {
-    margin-top: 10vw;
-    height: 900px;
-  }
   #blog-section .blog-text {
     font-size: 1.8rem;
     line-height: 2.4rem;
@@ -1825,11 +1845,5 @@ main {
 
   #footer-main .footer-links{
     grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 430px) {
-  #blog-section {
-    margin-top: 0vw;
   }
 }

@@ -55,9 +55,41 @@ var blogSchema = new mongoose.Schema({
 var Blog = mongoose.model('Blog', blogSchema);
 //API Routes ------------------------------------------------
 function blogAPI_get(req, res) {
-    var _a, _b, _c, _d, _e, _f, _g;
-    if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.tag) != null) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.recent) != null) {
         if (((_b = req.query) === null || _b === void 0 ? void 0 : _b.display) == 'true') {
+            var blogList_1 = [];
+            var blogListLength_1 = 0;
+            //find blogs by created date, then sort by created date most recent
+            Blog.find({}).sort({ createdDate: -1 }).exec(function (err, blogs) {
+                if (err) {
+                    return console.log(err);
+                }
+                if (blogs.length > 10) {
+                    blogListLength_1 = 10;
+                }
+                else {
+                    blogListLength_1 = blogs.length;
+                }
+                for (var i = 0; i < blogListLength_1; i++) {
+                    blogList_1.push({
+                        uri: blogs[i].uri,
+                        title: blogs[i].title,
+                        subtitle: blogs[i].subtitle,
+                        description: blogs[i].description,
+                        createdDate: blogs[i].createdDate,
+                        updatedDate: blogs[i].updatedDate,
+                        cover: blogs[i].cover,
+                        tags: blogs[i].tags,
+                    });
+                }
+                res.send(blogList_1);
+            });
+            return;
+        }
+    }
+    if (((_c = req.query) === null || _c === void 0 ? void 0 : _c.tag) != null) {
+        if (((_d = req.query) === null || _d === void 0 ? void 0 : _d.display) == 'true') {
             Blog.find({ tags: { $in: [req.query.tag] } }, function (err, blogs) {
                 if (err) {
                     return console.log(err);
@@ -101,7 +133,7 @@ function blogAPI_get(req, res) {
             return;
         }
     }
-    if (((_c = req.query) === null || _c === void 0 ? void 0 : _c.searchTitle) != null) {
+    if (((_e = req.query) === null || _e === void 0 ? void 0 : _e.searchTitle) != null) {
         Blog.find({ title: req.query.searchTitle }, function (err, blogs) {
             if (err) {
                 return console.log(err);
@@ -122,8 +154,8 @@ function blogAPI_get(req, res) {
         });
         return;
     }
-    if (((_d = req.query) === null || _d === void 0 ? void 0 : _d.all) == true) {
-        if (((_e = req.query) === null || _e === void 0 ? void 0 : _e.display) == true) {
+    if (((_f = req.query) === null || _f === void 0 ? void 0 : _f.all) == true) {
+        if (((_g = req.query) === null || _g === void 0 ? void 0 : _g.display) == true) {
             Blog.find({}, function (err, blogs) {
                 if (err) {
                     return console.log(err);
@@ -155,7 +187,7 @@ function blogAPI_get(req, res) {
             return;
         }
     }
-    if (((_f = req.query) === null || _f === void 0 ? void 0 : _f.count) == true) {
+    if (((_h = req.query) === null || _h === void 0 ? void 0 : _h.count) == true) {
         Blog.countDocuments({}, function (err, count) {
             if (err) {
                 return console.log(err);
@@ -164,7 +196,7 @@ function blogAPI_get(req, res) {
         });
         return;
     }
-    if (((_g = req.query) === null || _g === void 0 ? void 0 : _g.display) == 'true') {
+    if (((_j = req.query) === null || _j === void 0 ? void 0 : _j.display) == 'true') {
         Blog.find({}, function (err, blogs) {
             if (err) {
                 return console.log(err);
@@ -389,7 +421,7 @@ exports.blogAPI_imageUpload = blogAPI_imageUpload;
 function blog_homePage(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var featuredResponse, recipesResponse, popularResponse, featuredBlogs, recipesBlogs, popularBlogs, adminData, blogHome;
+        var featuredResponse, recipesResponse, recentResponse, featuredBlogs, recipesBlogs, recentBlogs, adminData, blogHome;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured')];
@@ -398,9 +430,9 @@ function blog_homePage(req, res) {
                     return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe')];
                 case 2:
                     recipesResponse = _b.sent();
-                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=popular')];
+                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&recent')];
                 case 3:
-                    popularResponse = _b.sent();
+                    recentResponse = _b.sent();
                     featuredBlogs = null;
                     if (!(featuredResponse.status == 200)) return [3 /*break*/, 5];
                     return [4 /*yield*/, featuredResponse.json()];
@@ -415,11 +447,11 @@ function blog_homePage(req, res) {
                     recipesBlogs = _b.sent();
                     _b.label = 7;
                 case 7:
-                    popularBlogs = null;
-                    if (!(popularResponse.status == 200)) return [3 /*break*/, 9];
-                    return [4 /*yield*/, popularResponse.json()];
+                    recentBlogs = null;
+                    if (!(recentResponse.status == 200)) return [3 /*break*/, 9];
+                    return [4 /*yield*/, recentResponse.json()];
                 case 8:
-                    popularBlogs = _b.sent();
+                    recentBlogs = _b.sent();
                     _b.label = 9;
                 case 9:
                     adminData = { notification: false };
@@ -429,7 +461,7 @@ function blog_homePage(req, res) {
                                 adminData.notification = true;
                         }
                     }
-                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, popularBlogs: popularBlogs }, function (err, html) {
+                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, recentBlogs: recentBlogs }, function (err, html) {
                             if (err) {
                                 return console.log(err);
                             }

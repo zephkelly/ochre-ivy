@@ -19,6 +19,42 @@ const Blog = mongoose.model('Blog', blogSchema);
 
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
+  if (req.query?.recent != null) {
+    if (req.query?.display == 'true') {
+
+      let blogList = [];
+      let blogListLength = 0;
+
+      //find blogs by created date, then sort by created date most recent
+      Blog.find({}).sort({ createdDate: -1 }).exec((err, blogs) => {
+        if (err) { return console.log(err); }
+
+
+        if (blogs.length > 10) {
+          blogListLength = 10;
+        } else {
+          blogListLength = blogs.length;
+        }
+
+        for (let i = 0; i < blogListLength; i++) {
+          blogList.push({
+            uri: blogs[i].uri,
+            title: blogs[i].title,
+            subtitle: blogs[i].subtitle,
+            description: blogs[i].description,
+            createdDate: blogs[i].createdDate,
+            updatedDate: blogs[i].updatedDate,
+            cover: blogs[i].cover,
+            tags: blogs[i].tags,
+          });
+        }
+
+        res.send(blogList);
+      });
+      return;
+    }
+  }
+
   if (req.query?.tag != null) {
     if (req.query?.display == 'true') {
       Blog.find({ tags: { $in: [req.query.tag] } }, (err, blogs) => {
@@ -348,7 +384,7 @@ export function blogAPI_imageUpload(req, res) {
 export async function blog_homePage(req, res) {
   const featuredResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured');
   const recipesResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe');
-  const popularResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=popular');
+  const recentResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&recent');
 
   let featuredBlogs = null;
   if (featuredResponse.status == 200) {
@@ -360,9 +396,9 @@ export async function blog_homePage(req, res) {
     recipesBlogs = await recipesResponse.json();
   }
 
-  let popularBlogs = null;
-  if (popularResponse.status == 200) {
-    popularBlogs = await popularResponse.json();
+  let recentBlogs = null;
+  if (recentResponse.status == 200) {
+    recentBlogs = await recentResponse.json();
   }
 
   //create object to store admin controls
@@ -376,7 +412,7 @@ export async function blog_homePage(req, res) {
     }
   }
 
-  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, popularBlogs }, (err, html) => {
+  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, recentBlogs }, (err, html) => {
     if (err) { return console.log(err); }
 
     res.status(200).send(html);
