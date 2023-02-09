@@ -14,26 +14,10 @@
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <div class="wrapper">
-        <h3 class="nav-text">Ochre & Ivy</h3>
-        <div class="nav-text-spacer"></div>
-      </div>
-      <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-      <nav class="nav-menu">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="">Home</a></li>
-          <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="/blog">Blog</a></li>
-          <li class="nav-item"><a href="#">About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <%- include('../partials/navbar.ejs') %>
   <main>
     <% if (loggedData.loggedMessage) { %>
-      <section id="logged-notification">
+      <section id="notification">
         <div class="container">
           <div class="wrapper">
             <h6 class="logged-in">Signed in successfully!</h6>

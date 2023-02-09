@@ -157,71 +157,67 @@ function validateTags() {
 const postResponse: HTMLElement = document.getElementById('post-response') as HTMLElement;
 
 async function saveBlog() {
-  editor.save().then(async (outputData) => {
+  const outputData = await editor.save();
 
-    let coverImage = null;
-    let description = null;
+  let coverImage = null;
+  let description = null;
 
-    outputData.blocks.map(block => {
-      if (block.type == 'image') {
-        coverImage = block.data.file.url;
-        return;
-      }
-    });
-
-    outputData.blocks.map(block => {
-      if (block.type == 'paragraph') {
-        description = block.data.text;
-        return;
-      }
-    });
-
-    const blogData = {
-      uri: uriInput.value,
-      title: title.value,
-      subtitle: subtitle.value,
-      description: description,
-      date: createdDate.value ? createdDate.value : '',
-      tags: tags,
-      cover: coverImage,
-      content: outputData
+  outputData.blocks.map(block => {
+    if (block.type == 'image') {
+      coverImage = block.data.file.url;
+      return;
     }
-    
-    const response = await fetch('http://localhost:62264/api/blog', {
-      method: 'POST',
-      body: JSON.stringify(blogData),
-      headers: { 'Content-Type': 'application/json' }
-    });
+  });
 
-    //read body from response ReadableStream
-    response.body?.getReader().read().then(({ value }) => { 
-      const statusMessage = new TextDecoder().decode(value);
+  outputData.blocks.map(block => {
+    if (block.type == 'paragraph') {
+      description = block.data.text;
+      return;
+    }
+  });
 
-      if (response.status == 200) {
-        postResponse.innerText = 'Blog posted successfully!';
-        postResponse.style.color = 'green';
+  const blogData = {
+    uri: uriInput.value,
+    title: title.value,
+    subtitle: subtitle.value,
+    description: description,
+    date: createdDate.value ? createdDate.value : '',
+    tags: tags,
+    cover: coverImage,
+    content: outputData
+  }
+  
+  const response = await fetch('/api/blog', {
+    method: 'POST',
+    body: JSON.stringify(blogData),
+    headers: { 'Content-Type': 'application/json' }
+  });
 
-        //clear inputs
-        uriInput.value = '';
-        title.value = '';
-        subtitle.value = '';
-        createdDate.value = '';
-        tagsInput.value = '';
+  //read body from response ReadableStream
+  response.body?.getReader().read().then(({ value }) => { 
+    const statusMessage = new TextDecoder().decode(value);
 
-        //clear editor
-        editor.clear();
+    if (response.status == 200) {
+      postResponse.innerText = 'Blog posted successfully!';
+      postResponse.style.color = 'green';
 
-        runValidation();
-      }
-      else {
-        postResponse.innerText = 'Blog posting failed: ' + statusMessage;
-        postResponse.style.color = 'var(--accent-color-secondary)';
-      }
+      //clear inputs
+      uriInput.value = '';
+      title.value = '';
+      subtitle.value = '';
+      createdDate.value = '';
+      tagsInput.value = '';
 
-      console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
-    });
+      //clear editor
+      editor.clear();
 
-  }).catch((error) => {
-    console.log('Saving failed: ', error);
+      runValidation();
+    }
+    else {
+      postResponse.innerText = 'Blog posting failed: ' + statusMessage;
+      postResponse.style.color = 'var(--accent-color-secondary)';
+    }
+
+    console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
   });
 }

@@ -14,27 +14,25 @@
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <div class="wrapper">
-        <h3 class="nav-text">Ochre & Ivy</h3>
-        <div class="nav-text-spacer"></div>
-      </div>
-      <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-      <nav class="nav-menu">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="">Blog</a></li>
-          <li class="nav-item"><a href="#">About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <%- include('partials/navbar.ejs') %>
   <main>
+    <% if (adminData.notification == true) { %>
+      <section id="notification">
+        <div class="container">
+          <div class="wrapper">
+            <h6 class="logged-in">Post deleted</h6>
+            <span class="check-symbol material-symbols-outlined">delete</span>
+          </div>
+          <p class="logged-in-notification">Successfully deleted blog post!</p>
+        </div>
+        <script>
+          window.history.replaceState({}, document.title, "/blog");
+        </script>
+      </section>
+    <% } %>
     <section id="blogs-featured">
       <div class="container">
-        <h2 class="featured-title">FEATURED</h2>
+        <h2 class="featured-title">FEATURED BLOGS</h2>
         <% for (i = 0; i < featuredBlogs.length; i++) { %>
           <% const blog = featuredBlogs[i]; %>
           <div class="featured-blog" style="opacity: 0; display: none;">
@@ -64,18 +62,41 @@
       </div>
       <div class="blogs-featured-bgBox"></div>
     </section>
-    <section id="blogs-recent-popular">
+    <section id="blogs-recipes-popular">
       <div class="container">
-        <section id="blogs-recent">
-          <div class="blog-hero-content">
-            <h2 class="recent-title">Recent</h2>
-          </div>
-        </section>
-        <section id="blogs-popular">
-          <div class="blog-hero-content">
-            <h2 class="recent-title">Popular</h2>
-          </div>
-        </section>
+        <div class="wrapper">
+          <h2 class="title">RECIPES</h2>
+          <section id="blogs-recipes">
+            <% for (i = 0; i < recipesBlogs.length; i++) { %>
+              <% const blog = recipesBlogs[i]; %>
+                <div class="recipe-blog">
+                  <div class="cover-img">
+                    <img src="<%- blog.cover %>" alt="<%= blog.title %>" class="recipe-image">
+                  </div>
+                  <div class="content">
+                    <div class="wrapper">
+                      <h3 class="blog-title"><%= blog.title %></h3>
+                      <h6 class="blog-subtitle"><%= blog.subtitle %></h6>
+                      <p class="blog-date"><%= blog.createdDate %></p>
+                    </div>
+                    <div class="wrapper">
+                      <p class="recipe-description"><%= blog.description %></p>
+                      <a href="/blog/<%= blog.uri %>" class="blog-link">Read more</a>
+                    </div>
+                  </div>
+                </div>
+             <% }; %> 
+          </section>
+        </div>
+        <div class="wrapper">
+          <h2 class="title">POPULAR</h2>
+          <section id="blogs-popular">
+            <% for (i = 0; i < popularBlogs.length; i++) { %>
+              <% const blog = popularBlogs[i]; %>
+
+             <% }; %> 
+          </section>
+        </div>
       </div>
     </section>
   </main>
@@ -109,22 +130,29 @@
 <script>
   // Format descriptions
   const blogDescription = document.querySelectorAll('.blog-description');
+  const recipeDescription = document.querySelectorAll('.recipe-description');
 
   for (i = 0; i < blogDescription.length; i++) {
     const blogDescriptionText = blogDescription[i].innerText;
-    const description = formatDescription(blogDescriptionText);
+    const description = formatDescription(blogDescriptionText, 400);
     blogDescription[i].innerText = description;
   }
 
-  function formatDescription(description) {
+  for (i = 0; i < recipeDescription.length; i++) {
+    const recipeDescriptionText = recipeDescription[i].innerText;
+    const description = formatDescription(recipeDescriptionText, 250);
+    recipeDescription[i].innerText = description;
+  }
+
+  function formatDescription(description, charCount) {
     let sanitisedDescription = null;
 
     sanitisedDescription = description.replace(/<br>/g, '');
     sanitisedDescription = sanitisedDescription.replace(/(\r\n|\n|\r)/gm, '');
     sanitisedDescription = sanitisedDescription.replace(/<script>.*<\/script>/g, '');
 
-    if (sanitisedDescription.length > 300) {
-      sanitisedDescription = sanitisedDescription.slice(0, 400);
+    if (sanitisedDescription.length > charCount) {
+      sanitisedDescription = sanitisedDescription.slice(0, charCount);
 
       //Remove last word if cut in the middle
       if (sanitisedDescription.charAt(sanitisedDescription.length - 1) != ' ') {
@@ -165,20 +193,35 @@
 
   featuredBlogLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      featuredBlogs[currentFeaturedBlog].style.opacity = '0';
-      featuredBlogLinks[currentFeaturedBlog].classList.remove('active');
+      if (link.classList.contains('active')) {
+        return;
+      }
 
-      currentFeaturedBlog = Array.from(featuredBlogLinks).indexOf(link);
+      const linkIndex = Array.from(featuredBlogLinks).indexOf(link);
 
-      featuredBlogs[currentFeaturedBlog].style.opacity = '1';
+      if (linkIndex > featuredBlogs.length - 1) {
+        return;
+      }
+
+      lastFeaturedBlog = currentFeaturedBlog;
+      currentFeaturedBlog = linkIndex;
+      
+      featuredBlogLinks[lastFeaturedBlog].classList.remove('active');
+      featuredBlogs[lastFeaturedBlog].style.opacity = 0;
+      
+      featuredBlogs[currentFeaturedBlog].style.display = 'flex';
       featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 
-      clearInterval(interval);
+      setTimeout(() => {
+        featuredBlogs[lastFeaturedBlog].style.display = 'none';
+      }, 500)
 
-      setTimeout(() => { 
-        clearInterval(interval);
-        interval = setInterval(showFeaturedBlog, 6500);
-      }, 3500);
+      setTimeout(() => {
+        featuredBlogs[currentFeaturedBlog].style.opacity = 1;
+      }, 5)
+
+      clearInterval(interval);
+      interval = setInterval(showFeaturedBlog, 10000);
     });
   });
 
@@ -197,12 +240,11 @@
     
     currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
     
-    featuredBlogs[currentFeaturedBlog].style.display = 'flex';
-
     setTimeout(() => {
       featuredBlogs[currentFeaturedBlog].style.opacity = 1;
     }, 5)
-
+    
+    featuredBlogs[currentFeaturedBlog].style.display = 'flex';
     featuredBlogLinks[currentFeaturedBlog].classList.add('active');
   }
 

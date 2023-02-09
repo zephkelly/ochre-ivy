@@ -72,6 +72,9 @@ function blogAPI_get(req, res) {
                         blogListLength = blogs.length;
                     }
                 }
+                else {
+                    blogListLength = blogs.length;
+                }
                 for (var i = 0; i < blogListLength; i++) {
                     blogList.push({
                         uri: blogs[i].uri,
@@ -210,11 +213,14 @@ function blogAPI_post(req, res) {
         var validated;
         return __generator(this, function (_a) {
             validated = validateBlogData(req.body);
-            if (req.body.cover == null || req.body.cover == "") {
-                return [2 /*return*/, { failedValidation: true, message: coverEmptyMsg, status: 400 }];
+            if (req.body == null) {
+                validated = { failedValidation: true, message: noDataMsg, status: 400 };
+            }
+            else if (req.body.cover == null || req.body.cover == "") {
+                validated = { failedValidation: true, message: coverEmptyMsg, status: 400 };
             }
             else if (req.body.description == null || req.body.description == "") {
-                return [2 /*return*/, { failedValidation: true, message: descriptionEmptyMsg, status: 400 }];
+                validated = { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
             }
             if (validated.status === 200) {
                 Blog.countDocuments({ uri: req.body.uri }, function (err, count) {
@@ -381,28 +387,58 @@ function blogAPI_imageUpload(req, res) {
 exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
 function blog_homePage(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var response, featuredBlogs, blogHome;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var featuredResponse, recipesResponse, popularResponse, featuredBlogs, recipesBlogs, popularBlogs, adminData, blogHome;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0: return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured')];
                 case 1:
-                    response = _a.sent();
-                    if (!(response.status == 200)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, response.json()];
+                    featuredResponse = _b.sent();
+                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe')];
                 case 2:
-                    featuredBlogs = _a.sent();
-                    return [4 /*yield*/, res.render('blog-home', { featuredBlogs: featuredBlogs }, function (err, html) {
+                    recipesResponse = _b.sent();
+                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=popular')];
+                case 3:
+                    popularResponse = _b.sent();
+                    featuredBlogs = null;
+                    if (!(featuredResponse.status == 200)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, featuredResponse.json()];
+                case 4:
+                    featuredBlogs = _b.sent();
+                    _b.label = 5;
+                case 5:
+                    recipesBlogs = null;
+                    if (!(recipesResponse.status == 200)) return [3 /*break*/, 7];
+                    return [4 /*yield*/, recipesResponse.json()];
+                case 6:
+                    recipesBlogs = _b.sent();
+                    _b.label = 7;
+                case 7:
+                    popularBlogs = null;
+                    if (!(popularResponse.status == 200)) return [3 /*break*/, 9];
+                    return [4 /*yield*/, popularResponse.json()];
+                case 8:
+                    popularBlogs = _b.sent();
+                    _b.label = 9;
+                case 9:
+                    adminData = { notification: false };
+                    if (req.session.userid != null) {
+                        if (req.session.roles == 'admin') {
+                            if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.deleted) == 'true')
+                                adminData.notification = true;
+                        }
+                    }
+                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, popularBlogs: popularBlogs }, function (err, html) {
                             if (err) {
                                 return console.log(err);
                             }
                             res.status(200).send(html);
                             return;
                         })];
-                case 3:
-                    blogHome = _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/];
+                case 10:
+                    blogHome = _b.sent();
+                    return [2 /*return*/];
             }
         });
     });
@@ -410,7 +446,7 @@ function blog_homePage(req, res) {
 exports.blog_homePage = blog_homePage;
 function blog_getURI(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var blogId, response, blogData, blogPage;
+        var blogId, response, blogData, adminControls, blogPage;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -422,7 +458,13 @@ function blog_getURI(req, res) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     blogData = _a.sent();
-                    return [4 /*yield*/, res.render('blog-post', { blogData: blogData }, function (err, html) {
+                    adminControls = false;
+                    if (req.session.userid != null) {
+                        if (req.session.roles == 'admin') {
+                            adminControls = true;
+                        }
+                    }
+                    return [4 /*yield*/, res.render('blog-post', { blogData: blogData, adminControls: adminControls }, function (err, html) {
                             if (err) {
                                 return console.log(err);
                             }
@@ -483,3 +525,4 @@ var tagsTooManyMsg = "Post can only have 5 tags";
 var coverEmptyMsg = "Post contains no image for cover photo";
 var descriptionEmptyMsg = "Post contains no paragraph for description";
 var contentEmptyMsg = "Content is empty";
+var noDataMsg = "No data was sent";

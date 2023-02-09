@@ -14,25 +14,44 @@
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <div class="wrapper">
-        <h3 class="nav-text">Ochre & Ivy</h3>
-        <div class="nav-text-spacer"></div>
-      </div>
-      <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-      <nav class="nav-menu hidden">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="#">Recipes</a></li>
-          <li class="nav-item"><a href="#">Blog</a></li>
-          <li class="nav-item"><a href="#">About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <%- include('partials/navbar.ejs') %>
   <main>
     <section id="blog-post">
+      <% if (adminControls == true) { %>
+        <div class="container" style="min-height: 0rem;">
+          <div class="admin-controls">
+            <a href="/admin/blog/edit/<%= blogData.uri %>">Edit</a>
+            <a class="delete-button" style="cursor: pointer;">Delete</a>
+          </div>
+        </div>
+        <script>
+          const deleteButton = document.querySelector('.delete-button');
+          
+          //Delete blog post from database 
+          deleteButton.addEventListener('click', () => {
+            const confirmDelete = confirm('Are you sure you want to delete this blog post?');
+           
+            if (confirmDelete === false) {
+              return;
+            }
+   
+            fetch('/api/blog/<%= blogData.uri %>', {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            })
+            .then((response) => {
+              if (response.status === 200) {
+                window.location.href = '/blog?deleted=true';
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          });
+        </script>
+      <% } %>
       <div class="container">
         <h1 class="post-title"><%= blogData.title %></h1>
         <h3 class="post-subtitle"><%= blogData.subtitle %></h3>
@@ -86,36 +105,44 @@
           //Remove br from text
           const imageCaptions = document.querySelectorAll('.image-tool__caption');
           const paragraphText = document.querySelectorAll('.ce-paragraph');
+          const headerText = document.querySelectorAll('.ce-header');
           const quotesText = document.querySelectorAll('.cdx-quote__text');
           const quotesCaption = document.querySelectorAll('.cdx-quote__caption');
           const listItems = document.querySelectorAll('.cdx-list__item');
           
           imageCaptions.forEach((caption) => {
-            caption.innerHTML = caption.textContent.replace(/<br>/g, '');
-            caption.innerHTML = caption.textContent.replace(/<script>.*<\/script>/g, '');
+            caption.innerHTML = validateString(caption.textContent);
           });
 
           paragraphText.forEach((paragraph) => {
-            paragraph.innerHTML = paragraph.textContent.replace(/<br>/g, '');
-            paragraph.innerHTML = paragraph.textContent.replace(/<script>.*<\/script>/g, '');
+            paragraph.innerHTML = validateString(paragraph.textContent);
+          });
+
+          headerText.forEach((header) => {
+            header.innerHTML = validateString(header.textContent);
           });
 
           quotesText.forEach((quote) => {
-            quote.innerHTML = quote.textContent.replace(/<br>/g, '');
-            quote.innerHTML = quote.textContent.replace(/<script>.*<\/script>/g, '');
+            quote.innerHTML = validateString(quote.textContent);
           });
 
           quotesCaption.forEach((quote) => {
-            quote.innerHTML = quote.textContent.replace(/<br>/g, '');
-            quote.innerHTML = quote.textContent.replace(/<script>.*<\/script>/g, '');
+            quote.innerHTML = validateString(quote.textContent);
           });
 
           listItems.forEach((listItem) => {
-            listItem.innerHTML = listItem.textContent.replace(/<br>/g, '');
-            listItem.innerHTML = listItem.textContent.replace(/&nbsp;/g, '');
-            listItem.innerHTML = listItem.textContent.replace(/<script>.*<\/script>/g, '');
+            listItem.innerHTML = validateString(listItem.textContent);
           });
 
+          function validateString(string) {
+            let validateString = string.replace(/<br>/g, '');
+
+            validateString = string.replace(/<script>.*<\/script>/g, '');
+            validateString = validateString.replace(/&nbsp;/g, '');
+          
+            return validateString;
+          }
+          
           // Format date
           const blogCreatedDate = document.getElementById('post-date');
           const blogCreatedDateText = blogCreatedDate.innerText;

@@ -34,6 +34,9 @@ export function blogAPI_get(req, res) {
             blogListLength = blogs.length;
           }
         }
+        else {
+          blogListLength = blogs.length;   
+        }
 
         for (let i = 0; i < blogListLength; i++) {
           blogList.push({
@@ -176,13 +179,16 @@ export function blogAPI_getURI(req, res) {
 
 export async function blogAPI_post(req, res) {
 
-  const validated = validateBlogData(req.body);
+  let validated = validateBlogData(req.body);
 
-  if (req.body.cover == null || req.body.cover == "") {
-    return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+  if (req.body == null) {
+    validated = { failedValidation: true, message: noDataMsg, status: 400 };
+  }
+  else if (req.body.cover == null || req.body.cover == "") {
+    validated = { failedValidation: true, message: coverEmptyMsg, status: 400 };
   }
   else if (req.body.description == null || req.body.description == "") {
-    return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
+    validated = { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
   }
   
   if (validated.status === 200) {
@@ -340,18 +346,42 @@ export function blogAPI_imageUpload(req, res) {
 
 //Routes ------------------------------------------------
 export async function blog_homePage(req, res) {
-  const response = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured');
+  const featuredResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured');
+  const recipesResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe');
+  const popularResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=popular');
 
-  if (response.status == 200) {
-    const featuredBlogs = await response.json();
-
-    const blogHome = await res.render('blog-home', { featuredBlogs }, (err, html) => {
-      if (err) { return console.log(err); }
-  
-      res.status(200).send(html);
-      return
-    });
+  let featuredBlogs = null;
+  if (featuredResponse.status == 200) {
+    featuredBlogs = await featuredResponse.json();
   }
+  
+  let recipesBlogs = null;
+  if (recipesResponse.status == 200) {
+    recipesBlogs = await recipesResponse.json();
+  }
+
+  let popularBlogs = null;
+  if (popularResponse.status == 200) {
+    popularBlogs = await popularResponse.json();
+  }
+
+  //create object to store admin controls
+  const adminData = { notification: false }
+  
+  if (req.session.userid != null) {
+    if (req.session.roles == 'admin') {
+
+      if (req.query?.deleted == 'true')
+      adminData.notification = true;
+    }
+  }
+
+  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, popularBlogs }, (err, html) => {
+    if (err) { return console.log(err); }
+
+    res.status(200).send(html);
+    return
+  });
 }
 
 export async function blog_getURI(req, res) {
@@ -361,8 +391,16 @@ export async function blog_getURI(req, res) {
 
   if (response.status == 200) {
     const blogData = await response.json();
+
+    let adminControls = false;
+
+    if (req.session.userid != null) {
+      if (req.session.roles == 'admin') {
+        adminControls = true;
+      }
+    }
   
-    const blogPage = await res.render('blog-post', { blogData }, (err, html) => {
+    const blogPage = await res.render('blog-post', { blogData, adminControls }, (err, html) => {
       if (err) { return console.log(err); }
   
       res.status(200).send(html);
@@ -415,3 +453,4 @@ const tagsTooManyMsg = "Post can only have 5 tags";
 const coverEmptyMsg = "Post contains no image for cover photo";
 const descriptionEmptyMsg = "Post contains no paragraph for description";
 const contentEmptyMsg = "Content is empty";
+const noDataMsg = "No data was sent";

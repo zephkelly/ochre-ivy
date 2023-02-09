@@ -11,8 +11,8 @@ let spacerPresent: boolean = false;
 const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
 const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
 
-const loggedNotification: HTMLElement = document.getElementById("logged-notification") as HTMLElement;
-let loggedNotificationPresent: boolean = false;
+const notification: HTMLElement = document.getElementById("notification") as HTMLElement;
+let notificationPresent: boolean = false;
 
 window.addEventListener('load', () => {
   if (navTextSpacer) {
@@ -25,16 +25,15 @@ window.addEventListener('load', () => {
     navMenu.style.display = 'none';
   }
 
-  if (loggedNotification) {
-    loggedNotificationPresent = true;
-    
-    loggedNotification.style.left = '2rem';
+  if (notification) {    
+    notificationPresent = true;
+    notification.style.left = '2rem';
 
     delay(4500).then(() => {
-      loggedNotification.style.opacity = '0';
+      notification.style.opacity = '0';
 
       delay(300).then(() => {
-        loggedNotification.remove();
+        notification.remove();
       });
     });
   }
@@ -99,16 +98,16 @@ export function shrinkNavbar() {
           '2.8rem', '1.4rem', '1.8rem', true
         );
 
-        if (loggedNotificationPresent) {
-          loggedNotification.style.top = '5.5rem';
+        if (notificationPresent) {
+          notification.style.top = '5.5rem';
         }
       }
       else {
         if (!shrunkNavbar) return;
         manipulateNavDOM('', '', '', '', false);
 
-        if (loggedNotificationPresent) {
-          loggedNotification.style.top = '';
+        if (notificationPresent) {
+          notification.style.top = '';
         }
       }
 
@@ -127,7 +126,7 @@ export function shrinkNavbar() {
           navText.style.marginBottom = '0';
           
           navMenuBtn.style.top = '0.5rem';
-          navMenu.style.top = '4.5rem';
+          navMenu.style.top = '4.2rem';
           navMenu.style.borderRadius = '0 0 0.5rem 0.5rem';
           
           if (!spacerPresent) return;
