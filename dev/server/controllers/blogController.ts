@@ -178,7 +178,6 @@ export function blogAPI_getURI(req, res) {
 }
 
 export async function blogAPI_post(req, res) {
-
   let validated = validateBlogData(req.body);
 
   if (req.body == null) {
@@ -192,35 +191,12 @@ export async function blogAPI_post(req, res) {
   }
   
   if (validated.status === 200) {
-    Blog.countDocuments({ uri: req.body.uri }, (err, count) => {
+    let blog = validated.cleanedValidatedBlog;
+
+    blog.save((err, blog) => {
       if (err) { return console.log(err); }
 
-      if (count > 0) {
-        return res.status(400).send(postExistsMsg);
-      }
-      else {
-        let createdDate = (req.body.date == null || req.body.date == '')
-          ? new Date().toISOString()
-          : new Date(req.body.date).toISOString();
-
-        const blog = new Blog({
-          uri: req.body.uri,
-          title: req.body.title,
-          subtitle: req.body.subtitle,
-          description: req.body.description,
-          createdDate: createdDate,
-          updatedDate: createdDate,
-          cover: req.body.cover,
-          tags: req.body.tags,
-          content: req.body.content
-        });
-
-        blog.save((err, blog) => {
-          if (err) { return console.log(err); }
-
-          res.status(200).send("Blog post created");
-        });
-      }
+      res.status(200).send("Blog post created");
     });
   }
   else {
@@ -423,6 +399,22 @@ export async function blog_getURI(req, res) {
 
 //Helper functions ---------------------------------------
 function validateBlogData(body) {
+  let createdDate = (body.date == null || body.date == '')
+    ? new Date().toISOString()
+    : new Date(body.date).toISOString();
+  
+  const blog = new Blog({
+    uri: body.uri,
+    title: body.title,
+    subtitle: body.subtitle,
+    description: body.description,
+    createdDate: createdDate,
+    updatedDate: createdDate,
+    cover: body.cover,
+    tags: body.tags,
+    content: body.content,
+  });
+
   if (body.uri == null || body.uri == "") {
     return { failedValidation: true, message: uriEmptyMsg, status: 400 };
   }
@@ -445,7 +437,51 @@ function validateBlogData(body) {
     return { failedValidation: true, message: contentEmptyMsg, status: 400 };
   }
 
-  return { failedValidation: false, message: "", status: 200 };
+  blog.uri = cleanContent(blog.uri);
+  blog.title = cleanContent(blog.title);
+  blog.subtitle = cleanContent(blog.subtitle);
+  blog.description = cleanContent(blog.description);
+
+  blog.content.blocks.forEach(block => {
+    if (block.type == 'paragraph') {
+      block.data.text = cleanContent(block.data.text);
+    }
+
+    if (block.type == 'quote') {
+      block.data.text = cleanContent(block.data.text);
+    }
+
+    if (block.type == 'header') {
+      block.data.text = cleanContent(block.data.text);
+    }
+
+    if (block.type == 'image') {
+      block.data.caption =cleanContent(block.data.caption);
+    }
+
+    if (block.type == 'list') {
+      block.data.items.forEach(item => {
+        item = cleanContent(item);
+      });
+    }
+  });
+
+  return { failedValidation: false, message: "", status: 200, cleanedValidatedBlog: blog };
+}
+
+//clean content functino
+function cleanContent(content: string) {
+  let cleanContent: string = content;
+
+  cleanContent = cleanContent.replace(/&lt;.*?&gt;/g, '');
+  cleanContent = cleanContent.replace(/&lt;script.*?;.*?&lt;\/script&gt;/g, '');
+  cleanContent = cleanContent.replace(/&lt;script.*?&lt;\/script&gt;/g, '');
+  cleanContent = cleanContent.replace(/&lt;script.*?&gt;/g, '');
+  cleanContent = cleanContent.replace(/<script>.*<\/script>/g, '');
+  cleanContent = cleanContent.replace(/<br>/g, '');
+  cleanContent = cleanContent.replace(/&nbsp;/g, ' ');
+
+  return cleanContent;
 }
 
 

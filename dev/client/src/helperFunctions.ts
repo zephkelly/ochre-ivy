@@ -3,9 +3,14 @@ export function delay(ms: number) {
 }
 
 export function validateString(string: string , charLimit: number = 0) {
-  let validateString = string.replace(/<br>/g, '');
+  let validateString = string.replace(/<br>/g, ' ');
+  
   validateString = validateString.replace(/(\r\n|\n|\r)/gm, '');
-  validateString = string.replace(/<script>.*<\/script>/g, '');
+  validateString = validateString.replace(/<script>.*<\/script>/g, '');
+  validateString = validateString.replace(/&lt;.*?&gt;/g, '');
+  validateString = validateString.replace(/&lt;script.*?;.*?&lt;\/script&gt;/g, '');
+  validateString = validateString.replace(/&lt;script.*?&lt;\/script&gt;/g, '');
+  validateString = validateString.replace(/&lt;script.*?&gt;/g, '');
   validateString = validateString.replace(/&nbsp;/g, '');
 
   if (charLimit == 0) { return validateString; }
