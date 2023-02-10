@@ -763,6 +763,10 @@ main {
 }
 
 /* Blog Home ----------------------------------- */
+#blogs-nav * {
+  position: relative;
+  z-index: 1
+}
 #blogs-nav .section-container {
   display: flex;
   flex-direction: row;
@@ -801,6 +805,15 @@ main {
 }
 #blogs-nav .blog-nav-link.active {
   color: var(--dark);
+}
+
+.faux-page {
+  transition: 0.15s ease-out;
+  opacity: 0;
+  min-height: 80vh;
+}
+.faux-page.active {
+  opacity: 1;
 }
 
 #blogs-featured {
