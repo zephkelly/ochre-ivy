@@ -21,7 +21,7 @@ const Blog = mongoose.model('Blog', blogSchema);
 export function blogAPI_get(req, res) {
   let blogList: any = [];
   
-  const queryDisplay: boolean = req.query.display; 
+  const queryDisplay: boolean = req.query.display == 'true'; 
   const queryPage: boolean = req.query.page;
   const queryLimit: boolean = req.query.limit;
 
@@ -44,31 +44,20 @@ export function blogAPI_get(req, res) {
   let skip = (page - 1) * limit;
 
   if (req.query.tag) {
-    if (queryDisplay) {
-      if (req.query.tag == 'featured') {
-        limit = 3;
-      }
-
-      Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
+    if (req.query.tag == 'featured') {
+      limit = 3;
     }
-    else {
-      Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).exec((err, blogs) => {
-        if (err) { return console.log(err); }
 
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
-    }
+    Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+      if (err) { return console.log(err); }
+
+      pushToBlogList(blogs, queryDisplay);
+      res.send(blogList);
+    });
     return;
   }
 
-  if (req.query.search) {
-    if (queryDisplay) {    
+  if (req.query.search) { 
       Blog.aggregate([
       { $match: { title: { $regex: req.query.search, $options: 'i' } } },
       { $sort: { createdDate: -1 } },
@@ -77,67 +66,46 @@ export function blogAPI_get(req, res) {
     ]).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
-      pushToBlogList(blogs);
+      pushToBlogList(blogs, queryDisplay);
       res.send(blogList);
-    });   
-    }
-    else {
-      Blog.find({ title: { $search: req.query.search } }).sort({ createdDate: -1 }).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
-    }
+    });  
     return;
   }
 
-  if (queryDisplay) {
-    if (req.query.alphabetical) {
-      Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
-      return;
-    }
-
-    //check if oldest query
-    if (req.query.oldest) {
-      Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
-      return;
-    }
-
-    //check if recent query
-    if (req.query.recent) {
-      Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-        pushToBlogList(blogs);
-        res.send(blogList);
-      });
-      return;
-    }
-
-    Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
+  if (req.query.alphabetical) {
+    Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
-      pushToBlogList(blogs);
+      pushToBlogList(blogs, queryDisplay);
       res.send(blogList);
     });
     return;
   }
 
-  Blog.find({}, (err, blogs) => {
-    if (err) { return console.log(err); }
+  if (req.query.oldest) {
+    Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+      if (err) { return console.log(err); }
 
-    pushToBlogList(blogs, false);
+      pushToBlogList(blogs, queryDisplay);
+      res.send(blogList);
+    });
+    return;
+  }
+
+  if (req.query.recent) {
+    Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+      if (err) { return console.log(err); }
+
+      pushToBlogList(blogs, queryDisplay);
+      res.send(blogList);
+    });
+    return;
+  }
+
+  Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
+    if (err) { return console.log(err); }
+    
+    pushToBlogList(blogs, queryDisplay);
     res.send(blogList);
   });
   

@@ -56,7 +56,7 @@ var Blog = mongoose.model('Blog', blogSchema);
 //API Routes ------------------------------------------------
 function blogAPI_get(req, res) {
     var blogList = [];
-    var queryDisplay = req.query.display;
+    var queryDisplay = req.query.display == 'true';
     var queryPage = req.query.page;
     var queryLimit = req.query.limit;
     var page = parseInt(req.query.page) || 1;
@@ -75,102 +75,68 @@ function blogAPI_get(req, res) {
     }
     var skip = (page - 1) * limit;
     if (req.query.tag) {
-        if (queryDisplay) {
-            if (req.query.tag == 'featured') {
-                limit = 3;
-            }
-            Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
+        if (req.query.tag == 'featured') {
+            limit = 3;
         }
-        else {
-            Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-        }
-        return;
-    }
-    if (req.query.search) {
-        if (queryDisplay) {
-            Blog.aggregate([
-                { $match: { title: { $regex: req.query.search, $options: 'i' } } },
-                { $sort: { createdDate: -1 } },
-                { $skip: skip },
-                { $limit: limit }
-            ]).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-        }
-        else {
-            Blog.find({ title: { $search: req.query.search } }).sort({ createdDate: -1 }).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-        }
-        return;
-    }
-    if (queryDisplay) {
-        if (req.query.alphabetical) {
-            Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-            return;
-        }
-        //check if oldest query
-        if (req.query.oldest) {
-            Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-            return;
-        }
-        //check if recent query
-        if (req.query.recent) {
-            Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                pushToBlogList(blogs);
-                res.send(blogList);
-            });
-            return;
-        }
-        Blog.find({}).skip(skip).limit(limit).exec(function (err, blogs) {
+        Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
             if (err) {
                 return console.log(err);
             }
-            pushToBlogList(blogs);
+            pushToBlogList(blogs, queryDisplay);
             res.send(blogList);
         });
         return;
     }
-    Blog.find({}, function (err, blogs) {
+    if (req.query.search) {
+        Blog.aggregate([
+            { $match: { title: { $regex: req.query.search, $options: 'i' } } },
+            { $sort: { createdDate: -1 } },
+            { $skip: skip },
+            { $limit: limit }
+        ]).exec(function (err, blogs) {
+            if (err) {
+                return console.log(err);
+            }
+            pushToBlogList(blogs, queryDisplay);
+            res.send(blogList);
+        });
+        return;
+    }
+    if (req.query.alphabetical) {
+        Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+            if (err) {
+                return console.log(err);
+            }
+            pushToBlogList(blogs, queryDisplay);
+            res.send(blogList);
+        });
+        return;
+    }
+    if (req.query.oldest) {
+        Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+            if (err) {
+                return console.log(err);
+            }
+            pushToBlogList(blogs, queryDisplay);
+            res.send(blogList);
+        });
+        return;
+    }
+    if (req.query.recent) {
+        Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+            if (err) {
+                return console.log(err);
+            }
+            pushToBlogList(blogs, queryDisplay);
+            res.send(blogList);
+        });
+        return;
+    }
+    Blog.find({}).skip(skip).limit(limit).exec(function (err, blogs) {
         if (err) {
             return console.log(err);
         }
-        pushToBlogList(blogs, false);
+        pushToBlogList(blogs, queryDisplay);
         res.send(blogList);
     });
     function pushToBlogList(blogs, display) {
