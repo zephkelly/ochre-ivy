@@ -1,5 +1,5 @@
 import './style.css'
-import { shrinkNavbar } from './navbarInteraction'
+import { shrinkNavbar } from './navbar'
 
 window.addEventListener("scroll", () => {
   shrinkNavbar();

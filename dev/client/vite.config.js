@@ -7,7 +7,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        blogEditor: 'src/blogEditor.ts',
+        blogEditor: 'src/blog/blogEditor.ts',
+        blogHome: 'src/blog/blogHome.ts',
+        blogPost: 'src/blog/blogPost.ts',
       },
       output: {
         entryFileNames: `[name].js`,

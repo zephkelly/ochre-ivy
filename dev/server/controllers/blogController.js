@@ -119,6 +119,7 @@ function blogAPI_get(req, res) {
                         tags: blogs[i].tags,
                     });
                 }
+                blogList.sort(function () { return Math.random() - 0.5; });
                 res.send(blogList);
             });
             return;
@@ -386,12 +387,11 @@ function blogAPI_delete(req, res) {
         return __generator(this, function (_a) {
             Blog.deleteOne({ uri: req.params.blogURI }, function (err) { return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    try {
-                        res.status(200).send("Successfully deleted blog post");
+                    if (err) {
+                        res.status(500).send("Error deleting post");
+                        return [2 /*return*/];
                     }
-                    catch (error) {
-                        res.send(error);
-                    }
+                    res.status(200).send("Post deleted");
                     return [2 /*return*/];
                 });
             }); });

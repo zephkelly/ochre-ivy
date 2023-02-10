@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
   <title><%= blogData.title %></title>
   <script type="module" crossorigin src="/main.js"></script>
+  <script type="module" crossorigin src="/blogPost.js"></script>
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
@@ -18,7 +19,7 @@
   <main>
     <section id="blog-post">
       <% if (adminControls == true) { %>
-        <div class="container" style="min-height: 0rem;">
+        <div class="section-container" style="min-height: 0rem;">
           <div class="admin-controls">
             <a href="/admin/blog/edit/<%= blogData.uri %>">Edit</a>
             <a class="delete-button" style="cursor: pointer;">Delete</a>
@@ -52,7 +53,7 @@
           });
         </script>
       <% } %>
-      <div class="container">
+      <div class="section-container">
         <h1 class="post-title"><%= blogData.title %></h1>
         <h3 class="post-subtitle"><%= blogData.subtitle %></h3>
         <h6 id="post-date">
@@ -101,67 +102,6 @@
             </div>
           <% }); %>
         </div>
-        <script>
-          //Remove br from text
-          const imageCaptions = document.querySelectorAll('.image-tool__caption');
-          const paragraphText = document.querySelectorAll('.ce-paragraph');
-          const headerText = document.querySelectorAll('.ce-header');
-          const quotesText = document.querySelectorAll('.cdx-quote__text');
-          const quotesCaption = document.querySelectorAll('.cdx-quote__caption');
-          const listItems = document.querySelectorAll('.cdx-list__item');
-          
-          imageCaptions.forEach((caption) => {
-            caption.innerHTML = validateString(caption.textContent);
-          });
-
-          paragraphText.forEach((paragraph) => {
-            paragraph.innerHTML = validateString(paragraph.textContent);
-          });
-
-          headerText.forEach((header) => {
-            header.innerHTML = validateString(header.textContent);
-          });
-
-          quotesText.forEach((quote) => {
-            quote.innerHTML = validateString(quote.textContent);
-          });
-
-          quotesCaption.forEach((quote) => {
-            quote.innerHTML = validateString(quote.textContent);
-          });
-
-          listItems.forEach((listItem) => {
-            listItem.innerHTML = validateString(listItem.textContent);
-          });
-
-          function validateString(string) {
-            let validateString = string.replace(/<br>/g, '');
-
-            validateString = string.replace(/<script>.*<\/script>/g, '');
-            validateString = validateString.replace(/&nbsp;/g, '');
-          
-            return validateString;
-          }
-          
-          // Format date
-          const blogCreatedDate = document.getElementById('post-date');
-          const blogCreatedDateText = blogCreatedDate.innerText;
-
-          function formatDate(date) {
-            var date = new Date(date);
-            date.toLocaleDateString('en-GB');
-            date = date.toDateString();
-
-            date = date.slice(0, 3) + "," + date.slice(3);
-            date = date.slice(0, 11) + "." + date.slice(11);
-
-            return date;
-          }
-
-          const date = formatDate(blogCreatedDateText);
-
-          blogCreatedDate.innerText = date;
-        </script>
       </div>
     </section>
   </main>

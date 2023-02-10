@@ -14,24 +14,28 @@
 <body>
   <header>
     <div class="navbar">
-      <div class="wrapper">
-        <h3 class="nav-text">Ochre & Ivy</h3>
-        <div class="nav-text-spacer"></div>
+      <div class="section">
+        <div class="container">
+          <a class="wrapper" href="/">
+            <h3 class="nav-text">Ochre & Ivy</h3>
+            <div class="nav-text-spacer"></div>
+          </a>
+          <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+          <nav class="nav-menu">
+            <ul class="nav-list">
+              <li class="nav-item"><a href="/">Home</a></li>
+              <li class="nav-item"><a href="/blog">Blog</a></li>
+              <li class="nav-item"><a href="?">Recipes</a></li>
+              <li class="nav-item"><a href="#">About</a></li>
+            </ul>
+          </nav>
+        </div>
       </div>
-      <button type="button" class="nav-btn-bg"><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-      <nav class="nav-menu">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="/recpies">Recipes</a></li>
-          <li class="nav-item"><a href="/blog">Blog</a></li>
-          <li class="nav-item"><a href="/about">About</a></li>
-        </ul>
-      </nav>
     </div>
   </header>
   <main>
     <section id="landing">
-      <div class="section container">
+      <div class="section-container">
         <h1 class="hero-text">NOURISH, CREATE MOTIVATE</h1>
         <p class="hero-description">Recipes & blogs for holistic living</p>
         <a class="landing-btn accent-button button-outlined-black">Learn More</a>
@@ -40,19 +44,30 @@
       <div class="landing-bgBox"></div> 
     </section>
     <section id="blog-section">
-      <div class="section container">
-        <h3 class="blog-text">A naturally simple blog.</h3>
-        <p class="blog-description">Your body deserves to be nourished, but where do you start? Being <span class="color-highlight">healthy</span> can be an overwhelming topic but our blog makes it simple; without the clutter.</p>
-        <a class="blog-btn">Read now</a>
+      <div class="section-container">
+        <div class="blog container">
+          <h3 class="blog-text">A naturally simple blog.</h3>
+          <p class="blog-description">Your body deserves to be nourished, but where do you start? Being <span class="color-highlight">healthy</span> can be an overwhelming topic but our blog makes it simple; without the clutter.</p>
+          <a class="blog-btn accent-button button-solid-accent">View blog</a>
+        </div>
+        <div class="latest-post container">
+          <div class="wrapper">
+            <h4 class="latest-post-title">Latest post</h4>
+            <p class="latest-post-date">May 1, 2021</p>
+          </div>
+          <h3 class="latest-post-text">How to make a healthy smoothie</h3>
+          <p class="latest-post-description">Smoothies are a great way to get a quick, healthy meal in. They’re easy to make, and you can customize them to your liking. Here’s how to make a healthy smoothie.</p>
+          <a class="latest-post-btn accent-button button-outlined-black">Read now</a>
+        </div>
         <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
       </div>
       <div id="blog-bgBox"></div>
     </section>
     <section id="recipes-section">
-      <div class="section container">
+      <div class="section-container">
         <h3 class="recipes-text">Delicious, <span class="accent-color">plant-based</span> recipes.</h3>
         <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
-        <a class="recipes-btn">Read now</a>
+        <a class="recipes-btn accent-button button-outlined-black">Read now</a>
         <div class="recipe-bgBox"></div>
         <div class="recipe-bgBox"></div>
       </div>
@@ -64,8 +79,8 @@
         <nav>
           <ul class="footer-nav-menu">
             <li class="footer-nav-item"><a href="">Home</a></li>
-            <li class="footer-nav-item"><a href="#">Recipes</a></li>
             <li class="footer-nav-item"><a href="#">Blog</a></li>
+            <li class="footer-nav-item"><a href="#">Recipes</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>
         </nav>

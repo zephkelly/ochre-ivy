@@ -87,6 +87,8 @@ export function blogAPI_get(req, res) {
           });
         }
 
+        blogList.sort(() => Math.random() - 0.5);
+
         res.send(blogList);
       });
       return;
@@ -348,13 +350,13 @@ export async function blogAPI_update(req, res) {
 }
 
 export async function blogAPI_delete(req, res) {
-  
   Blog.deleteOne({ uri: req.params.blogURI }, async (err) => {
-    try {
-      res.status(200).send("Successfully deleted blog post");
-    } catch (error) {
-      res.send(error);
+    if (err) {
+      res.status(500).send("Error deleting post");
+      return;
     }
+
+    res.status(200).send("Post deleted");
   });
 }
 
