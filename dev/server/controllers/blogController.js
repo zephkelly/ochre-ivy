@@ -55,166 +55,113 @@ var blogSchema = new mongoose.Schema({
 var Blog = mongoose.model('Blog', blogSchema);
 //API Routes ------------------------------------------------
 function blogAPI_get(req, res) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-    if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.recent) != null) {
-        if (((_b = req.query) === null || _b === void 0 ? void 0 : _b.display) == 'true') {
-            var blogList_1 = [];
-            var blogListLength_1 = 0;
-            //find blogs by created date, then sort by created date most recent
-            Blog.find({}).sort({ createdDate: -1 }).exec(function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                if (blogs.length > 10) {
-                    blogListLength_1 = 10;
-                }
-                else {
-                    blogListLength_1 = blogs.length;
-                }
-                for (var i = 0; i < blogListLength_1; i++) {
-                    blogList_1.push({
-                        uri: blogs[i].uri,
-                        title: blogs[i].title,
-                        subtitle: blogs[i].subtitle,
-                        description: blogs[i].description,
-                        createdDate: blogs[i].createdDate,
-                        updatedDate: blogs[i].updatedDate,
-                        cover: blogs[i].cover,
-                        tags: blogs[i].tags,
-                    });
-                }
-                res.send(blogList_1);
-            });
+    var blogList = [];
+    var queryDisplay = req.query.display;
+    var queryPage = req.query.page;
+    var queryLimit = req.query.limit;
+    var page = parseInt(req.query.page) || 1;
+    if (queryPage) {
+        if (isNaN(page) || page < 1) {
+            res.status(400).send('Invalid page number');
             return;
         }
     }
-    if (((_c = req.query) === null || _c === void 0 ? void 0 : _c.tag) != null) {
-        if (((_d = req.query) === null || _d === void 0 ? void 0 : _d.display) == 'true') {
-            Blog.find({ tags: { $in: [req.query.tag] } }, function (err, blogs) {
+    var limit = parseInt(req.query.limit) || 10;
+    if (queryLimit) {
+        if (isNaN(limit) || limit < 1) {
+            res.status(400).send('Invalid limit number');
+            return;
+        }
+    }
+    var skip = (page - 1) * limit;
+    if (req.query.tag) {
+        if (queryDisplay) {
+            if (req.query.tag == 'featured') {
+                limit = 3;
+            }
+            Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
                 if (err) {
                     return console.log(err);
                 }
-                var blogListLength = 0;
-                var blogList = [];
-                if (req.query.tag == 'featured') {
-                    if (blogs.length > 3) {
-                        blogListLength = 3;
-                    }
-                    else {
-                        blogListLength = blogs.length;
-                    }
+                pushToBlogList(blogs);
+                res.send(blogList);
+            });
+        }
+        else {
+            Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).exec(function (err, blogs) {
+                if (err) {
+                    return console.log(err);
                 }
-                else {
-                    blogListLength = blogs.length;
+                pushToBlogList(blogs);
+                res.send(blogList);
+            });
+        }
+        return;
+    }
+    if (req.query.search) {
+        if (queryDisplay) {
+            Blog.aggregate([
+                { $match: { title: { $regex: req.query.search, $options: 'i' } } },
+                { $sort: { createdDate: -1 } },
+                { $skip: skip },
+                { $limit: limit }
+            ]).exec(function (err, blogs) {
+                if (err) {
+                    return console.log(err);
                 }
-                for (var i = 0; i < blogListLength; i++) {
-                    blogList.push({
-                        uri: blogs[i].uri,
-                        title: blogs[i].title,
-                        subtitle: blogs[i].subtitle,
-                        description: blogs[i].description,
-                        createdDate: blogs[i].createdDate,
-                        updatedDate: blogs[i].updatedDate,
-                        cover: blogs[i].cover,
-                        tags: blogs[i].tags,
-                    });
+                pushToBlogList(blogs);
+                res.send(blogList);
+            });
+        }
+        else {
+            Blog.find({ title: { $search: req.query.search } }).sort({ createdDate: -1 }).exec(function (err, blogs) {
+                if (err) {
+                    return console.log(err);
                 }
-                blogList.sort(function () { return Math.random() - 0.5; });
+                pushToBlogList(blogs);
+                res.send(blogList);
+            });
+        }
+        return;
+    }
+    if (queryDisplay) {
+        if (req.query.alphabetical) {
+            Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+                if (err) {
+                    return console.log(err);
+                }
+                pushToBlogList(blogs);
                 res.send(blogList);
             });
             return;
         }
-        else {
-            Blog.find({ tags: { $in: [req.query.tag] } }, function (err, blogs) {
+        //check if oldest query
+        if (req.query.oldest) {
+            Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
                 if (err) {
                     return console.log(err);
                 }
-                res.send(blogs);
-            });
-            return;
-        }
-    }
-    if (((_e = req.query) === null || _e === void 0 ? void 0 : _e.searchTitle) != null) {
-        Blog.find({ title: req.query.searchTitle }, function (err, blogs) {
-            if (err) {
-                return console.log(err);
-            }
-            var blogList = [];
-            for (var i = 0; i < blogs.length; i++) {
-                blogList.push({
-                    uri: blogs[i].uri,
-                    title: blogs[i].title,
-                    subtitle: blogs[i].subtitle,
-                    createdDate: blogs[i].createdDate,
-                    updatedDate: blogs[i].updatedDate,
-                    cover: blogs[i].cover,
-                    tags: blogs[i].tags,
-                });
-            }
-            res.send(blogList);
-        });
-        return;
-    }
-    if (((_f = req.query) === null || _f === void 0 ? void 0 : _f.all) == true) {
-        if (((_g = req.query) === null || _g === void 0 ? void 0 : _g.display) == true) {
-            Blog.find({}, function (err, blogs) {
-                if (err) {
-                    return console.log(err);
-                }
-                var blogList = [];
-                for (var i = 0; i < blogs.length; i++) {
-                    blogList.push({
-                        uri: blogs[i].uri,
-                        title: blogs[i].title,
-                        subtitle: blogs[i].subtitle,
-                        description: blogs[i].description,
-                        createdDate: blogs[i].createdDate,
-                        updatedDate: blogs[i].updatedDate,
-                        cover: blogs[i].cover,
-                        tags: blogs[i].tags,
-                    });
-                }
+                pushToBlogList(blogs);
                 res.send(blogList);
             });
             return;
         }
-        else {
-            Blog.find({}, function (err, blogs) {
+        //check if recent query
+        if (req.query.recent) {
+            Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
                 if (err) {
                     return console.log(err);
                 }
-                res.send(blogs);
+                pushToBlogList(blogs);
+                res.send(blogList);
             });
             return;
         }
-    }
-    if (((_h = req.query) === null || _h === void 0 ? void 0 : _h.count) == true) {
-        Blog.countDocuments({}, function (err, count) {
+        Blog.find({}).skip(skip).limit(limit).exec(function (err, blogs) {
             if (err) {
                 return console.log(err);
             }
-            res.send({ count: count });
-        });
-        return;
-    }
-    if (((_j = req.query) === null || _j === void 0 ? void 0 : _j.display) == 'true') {
-        Blog.find({}, function (err, blogs) {
-            if (err) {
-                return console.log(err);
-            }
-            var blogList = [];
-            for (var i = 0; i < blogs.length; i++) {
-                blogList.push({
-                    uri: blogs[i].uri,
-                    title: blogs[i].title,
-                    subtitle: blogs[i].subtitle,
-                    description: blogs[i].description,
-                    createdDate: blogs[i].createdDate,
-                    updatedDate: blogs[i].updatedDate,
-                    cover: blogs[i].cover,
-                    tags: blogs[i].tags,
-                });
-            }
+            pushToBlogList(blogs);
             res.send(blogList);
         });
         return;
@@ -223,8 +170,27 @@ function blogAPI_get(req, res) {
         if (err) {
             return console.log(err);
         }
-        res.send(blogs);
+        pushToBlogList(blogs, false);
+        res.send(blogList);
     });
+    function pushToBlogList(blogs, display) {
+        if (display === void 0) { display = true; }
+        for (var i = 0; i < blogs.length; i++) {
+            blogList.push({
+                uri: blogs[i].uri,
+                title: blogs[i].title,
+                subtitle: blogs[i].subtitle,
+                description: blogs[i].description,
+                createdDate: blogs[i].createdDate,
+                updatedDate: blogs[i].updatedDate,
+                cover: blogs[i].cover,
+                tags: blogs[i].tags,
+            });
+            if (!display) {
+                blogList[i].content = blogs[i].content;
+            }
+        }
+    }
 }
 exports.blogAPI_get = blogAPI_get;
 function blogAPI_getURI(req, res) {
@@ -421,7 +387,7 @@ exports.blogAPI_imageUpload = blogAPI_imageUpload;
 function blog_homePage(req, res) {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var featuredResponse, recipesResponse, recentResponse, featuredBlogs, recipesBlogs, recentBlogs, adminData, blogHome;
+        var featuredResponse, recipesResponse, recentResponse, allResponse, featuredBlogs, recipesBlogs, recentBlogs, allBlogs, adminData, blogHome;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured')];
@@ -433,27 +399,37 @@ function blog_homePage(req, res) {
                     return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&recent')];
                 case 3:
                     recentResponse = _b.sent();
-                    featuredBlogs = null;
-                    if (!(featuredResponse.status == 200)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, featuredResponse.json()];
+                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&page=1')];
                 case 4:
-                    featuredBlogs = _b.sent();
-                    _b.label = 5;
+                    allResponse = _b.sent();
+                    featuredBlogs = null;
+                    if (!(featuredResponse.status == 200)) return [3 /*break*/, 6];
+                    return [4 /*yield*/, featuredResponse.json()];
                 case 5:
-                    recipesBlogs = null;
-                    if (!(recipesResponse.status == 200)) return [3 /*break*/, 7];
-                    return [4 /*yield*/, recipesResponse.json()];
+                    featuredBlogs = _b.sent();
+                    _b.label = 6;
                 case 6:
-                    recipesBlogs = _b.sent();
-                    _b.label = 7;
+                    recipesBlogs = null;
+                    if (!(recipesResponse.status == 200)) return [3 /*break*/, 8];
+                    return [4 /*yield*/, recipesResponse.json()];
                 case 7:
-                    recentBlogs = null;
-                    if (!(recentResponse.status == 200)) return [3 /*break*/, 9];
-                    return [4 /*yield*/, recentResponse.json()];
+                    recipesBlogs = _b.sent();
+                    _b.label = 8;
                 case 8:
-                    recentBlogs = _b.sent();
-                    _b.label = 9;
+                    recentBlogs = null;
+                    if (!(recentResponse.status == 200)) return [3 /*break*/, 10];
+                    return [4 /*yield*/, recentResponse.json()];
                 case 9:
+                    recentBlogs = _b.sent();
+                    _b.label = 10;
+                case 10:
+                    allBlogs = null;
+                    if (!(allResponse.status == 200)) return [3 /*break*/, 12];
+                    return [4 /*yield*/, allResponse.json()];
+                case 11:
+                    allBlogs = _b.sent();
+                    _b.label = 12;
+                case 12:
                     adminData = { notification: false };
                     if (req.session.userid != null) {
                         if (req.session.roles == 'admin') {
@@ -461,14 +437,14 @@ function blog_homePage(req, res) {
                                 adminData.notification = true;
                         }
                     }
-                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, recentBlogs: recentBlogs }, function (err, html) {
+                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, recentBlogs: recentBlogs, allBlogs: allBlogs }, function (err, html) {
                             if (err) {
                                 return console.log(err);
                             }
                             res.status(200).send(html);
                             return;
                         })];
-                case 10:
+                case 13:
                     blogHome = _b.sent();
                     return [2 /*return*/];
             }

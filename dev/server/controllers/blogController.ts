@@ -19,174 +19,116 @@ const Blog = mongoose.model('Blog', blogSchema);
 
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
-  if (req.query?.recent != null) {
-    if (req.query?.display == 'true') {
+  let blogList: any = [];
+  
+  const queryDisplay: boolean = req.query.display; 
+  const queryPage: boolean = req.query.page;
+  const queryLimit: boolean = req.query.limit;
 
-      let blogList = [];
-      let blogListLength = 0;
-
-      //find blogs by created date, then sort by created date most recent
-      Blog.find({}).sort({ createdDate: -1 }).exec((err, blogs) => {
-        if (err) { return console.log(err); }
-
-
-        if (blogs.length > 10) {
-          blogListLength = 10;
-        } else {
-          blogListLength = blogs.length;
-        }
-
-        for (let i = 0; i < blogListLength; i++) {
-          blogList.push({
-            uri: blogs[i].uri,
-            title: blogs[i].title,
-            subtitle: blogs[i].subtitle,
-            description: blogs[i].description,
-            createdDate: blogs[i].createdDate,
-            updatedDate: blogs[i].updatedDate,
-            cover: blogs[i].cover,
-            tags: blogs[i].tags,
-          });
-        }
-
-        res.send(blogList);
-      });
+  let page = parseInt(req.query.page) || 1;
+  if (queryPage) {
+    if (isNaN(page) || page < 1) {
+      res.status(400).send('Invalid page number');
       return;
     }
   }
 
-  if (req.query?.tag != null) {
-    if (req.query?.display == 'true') {
-      Blog.find({ tags: { $in: [req.query.tag] } }, (err, blogs) => {
-        if (err) { return console.log(err); }
-
-        let blogListLength = 0;
-        let blogList = [];
-
-        if (req.query.tag == 'featured') {
-          if (blogs.length > 3) {
-            blogListLength = 3;
-          } else {
-            blogListLength = blogs.length;
-          }
-        }
-        else {
-          blogListLength = blogs.length;   
-        }
-
-        for (let i = 0; i < blogListLength; i++) {
-          blogList.push({
-            uri: blogs[i].uri,
-            title: blogs[i].title,
-            subtitle: blogs[i].subtitle,
-            description: blogs[i].description,
-            createdDate: blogs[i].createdDate,
-            updatedDate: blogs[i].updatedDate,
-            cover: blogs[i].cover,
-            tags: blogs[i].tags,
-          });
-        }
-
-        blogList.sort(() => Math.random() - 0.5);
-
-        res.send(blogList);
-      });
-      return;
-
-    } else {
-      Blog.find({ tags: { $in: [req.query.tag] } }, (err, blogs) => {
-        if (err) { return console.log(err); }
-
-        res.send(blogs);
-      });
+  let limit = parseInt(req.query.limit) || 10;
+  if (queryLimit) {
+    if (isNaN(limit) || limit < 1) {
+      res.status(400).send('Invalid limit number');
       return;
     }
   }
 
-  if (req.query?.searchTitle != null) {
-    Blog.find({ title: req.query.searchTitle }, (err, blogs) => {
-      if (err) { return console.log(err); }
-      
-      let blogList = [];
+  let skip = (page - 1) * limit;
 
-      for (let i = 0; i < blogs.length; i++) {
-        blogList.push({
-          uri: blogs[i].uri,
-          title: blogs[i].title,
-          subtitle: blogs[i].subtitle,
-          createdDate: blogs[i].createdDate,
-          updatedDate: blogs[i].updatedDate,
-          cover: blogs[i].cover,
-          tags: blogs[i].tags,
-        });
+  if (req.query.tag) {
+    if (queryDisplay) {
+      if (req.query.tag == 'featured') {
+        limit = 3;
       }
 
+      Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        if (err) { return console.log(err); }
+
+        pushToBlogList(blogs);
+        res.send(blogList);
+      });
+    }
+    else {
+      Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).exec((err, blogs) => {
+        if (err) { return console.log(err); }
+
+        pushToBlogList(blogs);
+        res.send(blogList);
+      });
+    }
+    return;
+  }
+
+  if (req.query.search) {
+    if (queryDisplay) {    
+      Blog.aggregate([
+      { $match: { title: { $regex: req.query.search, $options: 'i' } } },
+      { $sort: { createdDate: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    ]).exec((err, blogs) => {
+      if (err) { return console.log(err); }
+
+      pushToBlogList(blogs);
       res.send(blogList);
-    });
+    });   
+    }
+    else {
+      Blog.find({ title: { $search: req.query.search } }).sort({ createdDate: -1 }).exec((err, blogs) => {
+        if (err) { return console.log(err); }
+
+        pushToBlogList(blogs);
+        res.send(blogList);
+      });
+    }
     return;
   }
 
-  if (req.query?.all == true) {
-    if (req.query?.display == true) {
-      Blog.find({}, (err, blogs) => {
+  if (queryDisplay) {
+    if (req.query.alphabetical) {
+      Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
         if (err) { return console.log(err); }
-        
-        let blogList = [];
 
-        for (let i = 0; i < blogs.length; i++) {
-          blogList.push({
-            uri: blogs[i].uri,
-            title: blogs[i].title,
-            subtitle: blogs[i].subtitle,
-            description: blogs[i].description,
-            createdDate: blogs[i].createdDate,
-            updatedDate: blogs[i].updatedDate,
-            cover: blogs[i].cover,
-            tags: blogs[i].tags,
-          });
-        }
-
+        pushToBlogList(blogs);
         res.send(blogList);
       });
       return;
-    } else {
-      Blog.find({}, (err, blogs) => {
+    }
+
+    //check if oldest query
+    if (req.query.oldest) {
+      Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
         if (err) { return console.log(err); }
 
-        res.send(blogs);
+        pushToBlogList(blogs);
+        res.send(blogList);
       });
       return;
     }
-  }
 
-  if (req.query?.count == true) {
-    Blog.countDocuments({}, (err, count) => {
+    //check if recent query
+    if (req.query.recent) {
+      Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        if (err) { return console.log(err); }
+
+        pushToBlogList(blogs);
+        res.send(blogList);
+      });
+      return;
+    }
+
+    Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
-      res.send({ count: count });
-    });
-    return;
-  }
-
-  if (req.query?.display == 'true') {
-    Blog.find({}, (err, blogs) => {
-      if (err) { return console.log(err); }
-      
-      let blogList = [];
-
-      for (let i = 0; i < blogs.length; i++) {
-        blogList.push({
-          uri: blogs[i].uri,
-          title: blogs[i].title,
-          subtitle: blogs[i].subtitle,
-          description: blogs[i].description,
-          createdDate: blogs[i].createdDate,
-          updatedDate: blogs[i].updatedDate,
-          cover: blogs[i].cover,
-          tags: blogs[i].tags,
-        });
-      }
-
+      pushToBlogList(blogs);
       res.send(blogList);
     });
     return;
@@ -195,8 +137,28 @@ export function blogAPI_get(req, res) {
   Blog.find({}, (err, blogs) => {
     if (err) { return console.log(err); }
 
-    res.send(blogs);
+    pushToBlogList(blogs, false);
+    res.send(blogList);
   });
+  
+  function pushToBlogList(blogs: any, display: boolean = true) {
+    for (let i = 0; i < blogs.length; i++) {
+      blogList.push({
+        uri: blogs[i].uri,
+        title: blogs[i].title,
+        subtitle: blogs[i].subtitle,
+        description: blogs[i].description,
+        createdDate: blogs[i].createdDate,
+        updatedDate: blogs[i].updatedDate,
+        cover: blogs[i].cover,
+        tags: blogs[i].tags,
+      });
+
+      if (!display) {
+        blogList[i].content = blogs[i].content;
+      }
+    }
+  }
 }
 
 export function blogAPI_getURI(req, res) {
@@ -387,6 +349,7 @@ export async function blog_homePage(req, res) {
   const featuredResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured');
   const recipesResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe');
   const recentResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&recent');
+  const allResponse = await fetch('http://localhost:62264/api/blog?display=true' + '&page=1');
 
   let featuredBlogs = null;
   if (featuredResponse.status == 200) {
@@ -403,6 +366,11 @@ export async function blog_homePage(req, res) {
     recentBlogs = await recentResponse.json();
   }
 
+  let allBlogs = null;
+  if (allResponse.status == 200) {
+    allBlogs = await allResponse.json();
+  }
+
   //create object to store admin controls
   const adminData = { notification: false }
   
@@ -414,7 +382,7 @@ export async function blog_homePage(req, res) {
     }
   }
 
-  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, recentBlogs }, (err, html) => {
+  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
     if (err) { return console.log(err); }
 
     res.status(200).send(html);

@@ -782,8 +782,6 @@ main {
   list-style: none;
   padding: 0rem;
   margin: 0rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
 }
 #blogs-nav .blog-title {
   font-family: 'Poppins', sans-serif;
@@ -793,18 +791,21 @@ main {
   margin: 0rem;
   color: var(--dark);
   padding-left: 1.75rem;
+  cursor: default;
 }
 #blogs-nav .blog-nav-link {
   color: var(--accent-color-tertiary);
   transition: 0.15s ease-out;
   cursor: pointer;
-  padding-left: 1.75rem;
+  margin-left: 1.75rem;
+  padding-left: 0rem;
 }
 #blogs-nav .blog-nav-link:hover {
   color: var(--accent-color-darker);
 }
 #blogs-nav .blog-nav-link.active {
   color: var(--dark);
+  cursor: default;
 }
 
 .faux-page {
@@ -1011,16 +1012,13 @@ main {
   margin-bottom: 4rem;
   border-radius: 0.5rem;
   background-color: var(--light);
-  box-shadow: 0rem 2rem 2rem rgba(0, 0, 0, 0.035);
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.1);
 }
 #blogs-recipes .recipe-blog .cover-img {
   width: 100%;
   height: 20rem;
   overflow: hidden;
   border-radius: 0.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 #blogs-recipes .recipe-blog .cover-img img {
   width: 100%;
@@ -1099,6 +1097,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   margin-top: 3.5rem;
   background-color: var(--light);
   box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
@@ -1107,6 +1106,7 @@ main {
 #blogs-recent .recent-blog {
   width: 100%;
   height: 12rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
 }
 #blogs-recent .recent-blog .content {
   width: 100%;
@@ -1184,6 +1184,31 @@ main {
   height: 100%;
   width: auto;
 }
+
+#blogs-all {
+
+}
+#blogs-all .section-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+#blogs-all .all-blog {
+width: 100%;
+height: 25rem;
+}
+#blogs-all .cover-img {
+  width: 100%;
+  height: 40%;
+  border-radius: 0.5rem;
+}
+#blogs-all .cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
 
 /* Post ---------------------------------------- */
 #blog-post {

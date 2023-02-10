@@ -8,6 +8,10 @@ const blogHomePage: HTMLElement = document.querySelector('.faux-page-home') as H
 const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTMLElement;
 
 blogNavHome?.addEventListener('click', () => {
+  if (blogNavHome.classList.contains('active')) {
+    return;
+  }
+
   blogNavHome.classList.add('active');
   blogNavAll.classList.remove('active');
   
@@ -24,9 +28,13 @@ blogNavHome?.addEventListener('click', () => {
 });
 
 blogNavAll?.addEventListener('click', () => {
+  if (blogNavAll.classList.contains('active')) {
+    return;
+  }
+
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
-  
+
   blogHomePage.classList.remove('active');
   
   setTimeout(() => {
