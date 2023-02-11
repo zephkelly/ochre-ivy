@@ -387,7 +387,6 @@ function setActiveFilter(filter: HTMLElement) {
     window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
   }
 
-  clearAllBlogs();
   makeRequest(queryParam);
 }
 
