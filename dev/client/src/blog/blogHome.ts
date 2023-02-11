@@ -54,10 +54,19 @@ const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTM
 const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
 
 blogNavHome?.addEventListener('click', () => {
+  if (blogNavAll.classList.contains('active')) {
+    return;
+  }
+
   enableHomePage();
 });
 
 blogNavAll?.addEventListener('click', () => {
+   if (blogNavHome.classList.contains('active')) {
+    return;
+  }
+
+  setActiveFilter(allFilter);
   enableAllPage();
 });
 
@@ -73,10 +82,6 @@ function enableHomePage() {
   makeRequest('');
 
   removeActiveFilter();
-
-  if (blogNavHome.classList.contains('active')) {
-    return;
-  }
 
   blogNavHome.classList.add('active');
   blogNavAll.classList.remove('active');
@@ -105,12 +110,6 @@ function enableAllPage() {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.set('section', 'all');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
-
-  setActiveFilter(allFilter);
-
-   if (blogNavAll.classList.contains('active')) {
-    return;
-  }
 
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
