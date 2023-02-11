@@ -17,6 +17,7 @@ const mongoose = require('mongoose').mongoose;
 const blogSchema = new mongoose.Schema({
     uri: String,
     title: String,
+    titleLower: String,
     subtitle: String,
     description: String,
     createdDate: String,
@@ -120,15 +121,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.alphabetical) {
-        //aggreate to alphabetically by the title
-        Blog.aggregate([{
-                $sort: {
-                    title: 1
-                }
-            },
-            { $skip: skip },
-            { $limit: limit }
-        ]).exec((err, blogs) => {
+        Blog.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -408,6 +401,7 @@ function validateBlogData(body) {
     const blog = new Blog({
         uri: body.uri,
         title: body.title,
+        titleLower: body.title.toLowerCase(),
         subtitle: body.subtitle,
         description: body.description,
         createdDate: createdDate,

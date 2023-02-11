@@ -2,10 +2,10 @@ import { formatString, formatDate } from '../helperFunctions';
 
 window.addEventListener('load', () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const page = urlParams.get('page');
+  const section = urlParams.get('section');
   const filter = urlParams.get('filter');
 
-  if (page === 'all') {
+  if (section === 'all') {
     searchInputValue = searchInput.value;
 
     if (searchInputValue.length > 0) {
@@ -63,13 +63,16 @@ blogNavAll?.addEventListener('click', () => {
 
 function enableHomePage() {
   const urlParams = new URLSearchParams(window.location.search);
-  urlParams.delete('page');
+  urlParams.delete('section');
+  urlParams.delete('filter');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   //Reset all page
   searchInput.value = '';
   searchInputValue = '';
   makeRequest('');
+
+  removeActiveFilter();
 
   if (blogNavHome.classList.contains('active')) {
     return;
@@ -100,8 +103,10 @@ function enableHomePage() {
 
 function enableAllPage() {
   const urlParams = new URLSearchParams(window.location.search);
-  urlParams.set('page', 'all');
+  urlParams.set('section', 'all');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  setActiveFilter(allFilter);
 
    if (blogNavAll.classList.contains('active')) {
     return;
@@ -269,28 +274,6 @@ searchInput.addEventListener('input', () => {
   makeRequest('&search=' + searchInputValue);
 });
 
-async function makeRequest(queryParam: string, page = 1) {
-  const response = await fetch('/api/blog?display=true' + queryParam + '&page=' + page, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  });
-
-  if (response.status !== 200) {
-    console.log('Error: ' + response.status);
-    return;
-  }
-
-  const data = await response.json();
-
-  if (page == 1) {
-    clearAllBlogs();
-  }
-
-  appendBlogs(data);
-}
-
 // Filter blogs by category
 const allFilter: HTMLElement = document.querySelector('.filter-button.all') as HTMLElement;
 const recipesFilter: HTMLElement = document.querySelector('.filter-button.recipes') as HTMLElement;
@@ -298,52 +281,23 @@ const newestFilter: HTMLElement = document.querySelector('.filter-button.newest'
 const oldestFilter: HTMLElement = document.querySelector('.filter-button.oldest') as HTMLElement;
 const azFilter: HTMLElement = document.querySelector('.filter-button.az') as HTMLElement;
 
-allFilter.addEventListener('click', () => {
-  if (allFilter.classList.contains('active')) {
-    return;
-  }
+const filters = [allFilter, recipesFilter, newestFilter, oldestFilter, azFilter];
 
-  setActiveFilter(allFilter);
-});
+filters.forEach((filter) => {
+  filter.addEventListener('click', () => {
+    if (filter.classList.contains('active')) {
+      return;
 
-recipesFilter.addEventListener('click', () => {
-  if (recipesFilter.classList.contains('active')) {
-    return;
-  }
-
-  setActiveFilter(recipesFilter);
-});
-
-newestFilter.addEventListener('click', () => {
-  if (newestFilter.classList.contains('active')) {
-    return;
-  }
-
-  setActiveFilter(newestFilter);
-});
-
-oldestFilter.addEventListener('click', () => {
-  if (oldestFilter.classList.contains('active')) {
-    return;
-  }
-
-  setActiveFilter(oldestFilter);
-});
-
-azFilter.addEventListener('click', () => {
-  if (azFilter.classList.contains('active')) {
-    return;
-  }
-  
-  setActiveFilter(azFilter);
+    } else {
+      setActiveFilter(filter);
+    }
+  });
 });
 
 function removeActiveFilter() {
-  allFilter.classList.remove('active');
-  recipesFilter.classList.remove('active');
-  newestFilter.classList.remove('active');
-  oldestFilter.classList.remove('active');
-  azFilter.classList.remove('active');
+  filters.forEach((filter) => {
+    filter.classList.remove('active');
+  });
 }
 
 function setActiveFilter(filter: HTMLElement) {
@@ -356,38 +310,59 @@ function setActiveFilter(filter: HTMLElement) {
     allFilter.classList.add('active');
 
     urlParams.set('filter', 'all');
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   } else if (filter === recipesFilter) {
     queryParam = '&tag=recipe';
     recipesFilter.classList.add('active');
 
     urlParams.set('filter', 'recipe');
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   } else if (filter === newestFilter) {
     queryParam = '&recent=true';
     newestFilter.classList.add('active');
 
     urlParams.set('filter', 'newest');
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   } else if (filter === oldestFilter) {
     queryParam = '&oldest=true';
     oldestFilter.classList.add('active');
 
     urlParams.set('filter', 'oldest');
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   } else if (filter === azFilter) {
     queryParam = '&alphabetical=true';
     azFilter.classList.add('active');
 
     urlParams.set('filter', 'alphabetical');
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
   }
+  
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   makeRequest(queryParam);
+}
+
+// Pagination
+const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
+
+morebutton.addEventListener('click', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sectionParam = urlParams.get('section');
+  const pageParam = urlParams.get('page');
+  const filterParam = urlParams.get('filter');
+
+  let queryParam = 'section=' + sectionParam + '&filter=' + filterParam;
+
+  if (pageParam) {
+    makeRequest(queryParam, parseInt(pageParam) + 1);
+  }
+});
+
+function checkIfMoreBlogs(data: any) {
+  if (data.length % 10 === 0) {
+    morebutton.style.display = 'block';
+  } else {
+    morebutton.style.display = 'none';
+  }
 }
 
 //Manipulate all blogs DOM
@@ -418,6 +393,35 @@ function appendBlogs(data: any) {
       </div>
     `;
   });
+}
+
+//Request
+async function makeRequest(queryParam: string, page = 1) {
+  if (page == null || page == undefined) {
+    page = 1;
+  }
+
+  const response = await fetch('/api/blog?display=true' + queryParam + '&page=' + page, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  if (await response.status !== 200) {
+    console.log('Error: ' + response.status);
+    clearAllBlogs();
+    return;
+  }
+
+  const data = await response.json();
+
+  if (page == 1) {
+    clearAllBlogs();
+  }
+
+  checkIfMoreBlogs(data);
+  appendBlogs(data);
 }
 
 export { };

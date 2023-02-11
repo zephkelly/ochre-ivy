@@ -22,7 +22,7 @@
           <h6 class="logged-in">Signed in successfully!</h6>
           <span class="check-symbol material-symbols-outlined">done</span>
         </div>
-        <p class="logged-in-notification">Welcome back, <%= userData.name %>.</p>
+        <p class="logged-in-notification">Welcome back, <%= session.name %>.</p>
       </div>
       <script>
         window.history.replaceState({}, document.title, "/");
@@ -75,7 +75,7 @@
         <nav>
           <ul class="footer-nav-menu">
             <li class="footer-nav-item"><a href="">Home</a></li>
-            <li class="footer-nav-item"><a href="/blog?page=all&filter=recipe">Recipes</a></li>
+            <li class="footer-nav-item"><a href="/blog?section=all&filter=recipe">Recipes</a></li>
             <li class="footer-nav-item"><a href="/blog">Blog</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>

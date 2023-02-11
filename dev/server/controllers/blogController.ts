@@ -6,6 +6,7 @@ const mongoose = require('mongoose').mongoose;
 const blogSchema = new mongoose.Schema({
   uri: String,
   title: String,
+  titleLower: String,
   subtitle: String,
   description: String,
   createdDate: String,
@@ -123,21 +124,13 @@ export function blogAPI_get(req, res) {
   }
 
   if (req.query.alphabetical) {
-    //aggreate to alphabetically by the title
-
-    Blog.aggregate([{
-      $sort: {
-        title: 1
-      }
-    },
-      { $skip: skip },
-      { $limit: limit }
-    ]).exec((err, blogs) => {
+    Blog.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
       res.send(blogList);
     });
+
     return;
   }
 
@@ -434,6 +427,7 @@ function validateBlogData(body) {
   const blog = new Blog({
     uri: body.uri,
     title: body.title,
+    titleLower: body.title.toLowerCase(),
     subtitle: body.subtitle,
     description: body.description,
     createdDate: createdDate,
@@ -511,7 +505,6 @@ function cleanContent(content: string) {
 
   return cleanContent;
 }
-
 
 const uriEmptyMsg = "URI is empty";
 const postExistsMsg = "Post with that URI already exists";
