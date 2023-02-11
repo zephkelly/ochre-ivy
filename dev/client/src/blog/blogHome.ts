@@ -54,7 +54,7 @@ const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTM
 const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
 
 blogNavHome?.addEventListener('click', () => {
-  if (blogNavAll.classList.contains('active')) {
+  if (blogNavHome.classList.contains('active')) {
     return;
   }
 
@@ -62,7 +62,7 @@ blogNavHome?.addEventListener('click', () => {
 });
 
 blogNavAll?.addEventListener('click', () => {
-   if (blogNavHome.classList.contains('active')) {
+   if (blogNavAll.classList.contains('active')) {
     return;
   }
 
