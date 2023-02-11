@@ -228,33 +228,15 @@ export async function blogAPI_update(req, res) {
   const uri: string = req.body.uri;
   const title: string = req.body.title;
   const subtitle: string = req.body.subtitle;
+  const description: string = req.body.description;
   const createdDate: string = req.body.date;
   const updatedDate: string = new Date().toISOString();
   const tags: Array<string> = req.body.tags;
-  const content: string = req.body.content;
-
-  //turn content into object
-  let jsonContent = JSON.parse(content);
-
-  let coverImage = null;
-  let description = null;
-
-  jsonContent.blocks.map(block => {
-    if (block.type == 'image') {
-      coverImage = block.data.file.url;
-      return;
-    }
-  });
-
-  jsonContent.blocks.map(block => {
-    if (block.type == 'paragraph') {
-      description = block.data.text;
-      return;
-    }
-  });
+  const cover: string = req.body.cover;
+  const content: any = req.body.content;
 
   const filter = { uri: req.params.blogURI };
-  let update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: coverImage, tags: tags, content: content }
+  let update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: cover, tags: tags, content: content }
 
   //Remove null or empty values
   for (let i = 0; i < Object.keys(update).length; i++) {
@@ -263,27 +245,18 @@ export async function blogAPI_update(req, res) {
     }
   }
 
-  //If the uri is the same, ignore
-  if (update.uri == req.params.blogURI) {
-    delete update.uri;
-  }
-
   if (update.createdDate != null) {
     update.createdDate = new Date(update.createdDate).toISOString();
   }
   
   const validateBlogPost = async () => {
-
-    //Does post already exist?
-    let postCount = await Blog.find({ uri: req.body.uri }).countDocuments();
-    if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
-    
-    if (update.cover == null || update.cover == "") {
-      return { failedValidation: true, message: coverEmptyMsg, status: 400 };
-    }
-    
-    if (update.description == null || update.description == "") {
-      return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
+    //If the uri is the same, ignore
+    if (update.uri == req.params.blogURI) {
+      delete update.uri;
+    } else {
+      //Does post already exist?
+      let postCount = await Blog.find({ uri: req.body.uri }).countDocuments();
+      if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
     }
 
     //Standard checks
@@ -419,7 +392,7 @@ export async function blog_getURI(req, res) {
 }
 
 //Helper functions ---------------------------------------
-function validateBlogData(body) {
+function validateBlogData(body, isUpdate = false) {
   let createdDate = (body.date == null || body.date == '')
     ? new Date().toISOString()
     : new Date(body.date).toISOString();
@@ -457,6 +430,12 @@ function validateBlogData(body) {
   }
   else if (body.content == null || body.content == "") {
     return { failedValidation: true, message: contentEmptyMsg, status: 400 };
+  }
+  else if (body.cover == null || body.cover == "") {
+    return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+  }
+  else if (body.description == null || body.description == "") {
+    return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
   }
 
   blog.uri = cleanContent(blog.uri);

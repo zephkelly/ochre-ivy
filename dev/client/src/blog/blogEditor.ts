@@ -29,9 +29,27 @@ const editor = new EditorJS({
   },
 });
 
-if (editor) {
-  console.log('Editor is ready');
-}
+const saveButton: HTMLElement = document.getElementById('save-button') as HTMLElement;
+
+window.addEventListener('load', () => {
+  //check if the url contains /blog/edit/ and if so, load the blog data
+  if (window.location.href.includes('/dashboard/blog/edit/')) {
+    loadEditBlog();
+    
+    const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
+    dashboardNavLink.innerText = 'Edit';
+    
+    const editorTitle = document.querySelector('.editor-title') as HTMLElement;
+    editorTitle.innerText = 'Edit blog';
+    
+    saveButton.innerText = 'Save blog';
+    saveButton.addEventListener('click', updateBlog);
+    return;
+  }
+  else if (window.location.href.includes('/dashboard/blog/new')){
+    saveButton?.addEventListener('click', saveBlog);
+  }
+});
 
 const uriInput: HTMLInputElement = document.getElementById('uri-input') as HTMLInputElement;
 const title: HTMLInputElement = document.getElementById('title-input') as HTMLInputElement;
@@ -45,9 +63,6 @@ const createdDateValidation: HTMLElement = document.getElementById('date-input-v
 const tagsValidation: HTMLElement = document.getElementById('tags-input-validation') as HTMLElement;
 
 let tags: string[] = [];
-
-const button = document.getElementById('save-button');
-if (button != null) button.addEventListener('click', saveBlog);
 
 (async function sanitiseInputs() {  
   runValidation();
@@ -193,7 +208,6 @@ async function saveBlog() {
     headers: { 'Content-Type': 'application/json' }
   });
 
-  //read body from response ReadableStream
   response.body?.getReader().read().then(({ value }) => { 
     const statusMessage = new TextDecoder().decode(value);
 
@@ -219,5 +233,100 @@ async function saveBlog() {
     }
 
     console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
+  });
+}
+
+async function updateBlog() {
+  const outputData = await editor.save();
+
+  let coverImage = null;
+  let description = null;
+
+  for (let i = 0; i < outputData.blocks.length; i++) {
+    if (outputData.blocks[i].type == 'image') {
+      coverImage = outputData.blocks[i].data.file.url;
+      break;
+    }
+  }
+
+  for (let i = 0; i < outputData.blocks.length; i++) {
+    if (outputData.blocks[i].type == 'paragraph') {
+      description = outputData.blocks[i].data.text;
+      break;
+    }
+  }
+
+  const blogData = {
+    uri: uriInput.value,
+    title: title.value,
+    subtitle: subtitle.value,
+    description: description,
+    date: createdDate.value ? createdDate.value : '',
+    tags: tags,
+    cover: coverImage,
+    content: outputData
+  }
+
+  const response = await fetch('/api/blog/' + loadedBlog.uri, {
+    method: 'PUT',
+    body: JSON.stringify(blogData),
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  response.body?.getReader().read().then(({ value }) => {
+    const statusMessage = new TextDecoder().decode(value);
+
+    if (response.status == 200) {
+      postResponse.innerText = 'Blog updated successfully!';
+      postResponse.style.color = 'green';
+    }
+    else {
+      postResponse.innerText = 'Blog update failed: ' + statusMessage;
+      postResponse.style.color = 'var(--accent-color-secondary)';
+    }
+
+    console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
+  });
+}
+
+
+let loadedBlog: any = null;
+async function loadEditBlog() {
+  const uri = window.location.pathname.split('/')[4];
+
+  const response = await fetch('/api/blog/' + uri, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+  
+  //read body from response ReadableStream
+  response.body?.getReader().read().then(({ value }) => {
+    if (response.status == 200) {
+      const blogData = JSON.parse(new TextDecoder().decode(value));
+      loadedBlog = blogData;
+
+      uriInput.value = blogData.uri;
+      title.value = blogData.title;
+      subtitle.value = blogData.subtitle;
+      tagsInput.value = blogData.tags.join(', ');
+
+      //Turn createdDate into yyyy-mm-dd format
+      const date = new Date(blogData.createdDate);
+      const year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day: number = date.getDate();
+
+      function pad(n: number) {
+        return n < 10 ? '0' + n : n;
+      }
+
+      createdDate.value = year + '/' + pad(month) + '/' + pad(day);
+
+      runValidation();
+
+      editor.isReady.then(() => {
+        editor.render(blogData.content);
+      });
+    }
   });
 }

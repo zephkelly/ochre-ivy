@@ -222,52 +222,34 @@ function blogAPI_update(req, res) {
         const uri = req.body.uri;
         const title = req.body.title;
         const subtitle = req.body.subtitle;
+        const description = req.body.description;
         const createdDate = req.body.date;
         const updatedDate = new Date().toISOString();
         const tags = req.body.tags;
+        const cover = req.body.cover;
         const content = req.body.content;
-        //turn content into object
-        let jsonContent = JSON.parse(content);
-        let coverImage = null;
-        let description = null;
-        jsonContent.blocks.map(block => {
-            if (block.type == 'image') {
-                coverImage = block.data.file.url;
-                return;
-            }
-        });
-        jsonContent.blocks.map(block => {
-            if (block.type == 'paragraph') {
-                description = block.data.text;
-                return;
-            }
-        });
         const filter = { uri: req.params.blogURI };
-        let update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: coverImage, tags: tags, content: content };
+        let update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: cover, tags: tags, content: content };
         //Remove null or empty values
         for (let i = 0; i < Object.keys(update).length; i++) {
             if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
                 delete update[Object.keys(update)[i]];
             }
         }
-        //If the uri is the same, ignore
-        if (update.uri == req.params.blogURI) {
-            delete update.uri;
-        }
         if (update.createdDate != null) {
             update.createdDate = new Date(update.createdDate).toISOString();
         }
         const validateBlogPost = () => __awaiter(this, void 0, void 0, function* () {
-            //Does post already exist?
-            let postCount = yield Blog.find({ uri: req.body.uri }).countDocuments();
-            if (postCount > 0) {
-                return { failedValidation: true, message: postExistsMsg };
+            //If the uri is the same, ignore
+            if (update.uri == req.params.blogURI) {
+                delete update.uri;
             }
-            if (update.cover == null || update.cover == "") {
-                return { failedValidation: true, message: coverEmptyMsg, status: 400 };
-            }
-            if (update.description == null || update.description == "") {
-                return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
+            else {
+                //Does post already exist?
+                let postCount = yield Blog.find({ uri: req.body.uri }).countDocuments();
+                if (postCount > 0) {
+                    return { failedValidation: true, message: postExistsMsg };
+                }
             }
             //Standard checks
             return validateBlogData(req.body);
@@ -394,7 +376,7 @@ function blog_getURI(req, res) {
 }
 exports.blog_getURI = blog_getURI;
 //Helper functions ---------------------------------------
-function validateBlogData(body) {
+function validateBlogData(body, isUpdate = false) {
     let createdDate = (body.date == null || body.date == '')
         ? new Date().toISOString()
         : new Date(body.date).toISOString();
@@ -430,6 +412,12 @@ function validateBlogData(body) {
     }
     else if (body.content == null || body.content == "") {
         return { failedValidation: true, message: contentEmptyMsg, status: 400 };
+    }
+    else if (body.cover == null || body.cover == "") {
+        return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+    }
+    else if (body.description == null || body.description == "") {
+        return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
     }
     blog.uri = cleanContent(blog.uri);
     blog.title = cleanContent(blog.title);
