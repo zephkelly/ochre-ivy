@@ -792,6 +792,7 @@ main {
   color: var(--dark);
   padding-left: 1.75rem;
   cursor: default;
+  transition: 0.15s ease-out;
 }
 #blogs-nav .blog-nav-link {
   color: var(--accent-color-tertiary);
@@ -807,11 +808,27 @@ main {
   color: var(--dark);
   cursor: default;
 }
+#blogs-nav .blogs-header-bgBox {
+  position: absolute;
+  border-radius: 40rem;
+  transform: rotate(-8deg);
+  transition: 0.8s ease-out;
+  background-color: var(--accent-color);
+  width: auto;
+  height: auto;
+  min-height: 100rem;
+  top: -50rem;
+  left: -15rem;
+  right: -18rem;
+  z-index: -1;
+}
 
 .faux-page {
-  transition: 0.15s ease-out;
   opacity: 0;
+  width: 100%;
+  max-width: 1280px;
   min-height: 80vh;
+  transition: 0.15s ease-out;
 }
 .faux-page.active {
   opacity: 1;
@@ -966,19 +983,6 @@ main {
 #blogs-featured .featured-blog-link:hover {
   background-color: var(--accent-color);
 }
-#blogs-featured .blogs-featured-bgBox {
-  position: absolute;
-  border-radius: 40rem;
-  transform: rotate(-8deg);
-  background-color: var(--accent-color);
-  width: auto;
-  height: auto;
-  min-height: 100rem;
-  top: -52rem;
-  left: -15rem;
-  right: -18rem;
-  z-index: -1;
-}
 
 #blogs-recipes-popular {
   height: auto;
@@ -1006,6 +1010,7 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   margin-top: 3.5rem;
+  margin-bottom: 8rem;
 }
 #blogs-recipes .recipe-blog {
   width: 100%;
@@ -1105,7 +1110,7 @@ main {
 }
 #blogs-recent .recent-blog {
   width: 100%;
-  height: 12rem;
+  height: 15rem;
   box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
 }
 #blogs-recent .recent-blog .content {
@@ -1185,8 +1190,79 @@ main {
   width: auto;
 }
 
-#blogs-all {
+#blog-all-toolbar {
+  margin-top: 0rem;
+  margin-bottom: 2rem;
+}
+#blog-all-toolbar .section-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+#blog-all-toolbar .section-container .wrapper {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+#blog-all-toolbar .section-container .wrapper:last-of-type {
+  flex-direction: column;
+  justify-content: center;
+}
+#blog-all-toolbar .search-input {
+  font-size: 1.1rem;
+  width: 100%;
+  height: 2.2rem;
+  border-radius: 1rem;
+  padding: 0rem 0.8rem;
+  border: none;
+  transition: 0.15s ease-out;
+}
+#blog-all-toolbar .search-input:focus {
+  outline: none;
+}
+#blog-all-toolbar .search-icon {
+  position: relative;
+  font-size: 1.3rem;
+  right: 2.2rem;
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#blog-all-toolbar .filter-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0rem;
+  color: var(--dark);
+}
+#blog-all-toolbar .group.filter-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+#blog-all-toolbar .group .filter-button {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: var(--accent-color-secondary);
+  cursor: pointer;
+  transition: .15s ease-out;
+}
+#blog-all-toolbar .group .filter-button:hover {
+  color: var(--dark);
+}
+#blog-all-toolbar .group .filter-button.active {
+  color: var(--dark);
+}
 
+#blogs-all {
+  margin-top: 0rem;
 }
 #blogs-all .section-container {
   display: grid;
@@ -1194,13 +1270,17 @@ main {
   gap: 4rem;
 }
 #blogs-all .all-blog {
-width: 100%;
-height: 25rem;
+  width: 100%;
+  height: 30rem;
+  background-color: var(--light);
+  border-radius: 0.5rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.1);
 }
 #blogs-all .cover-img {
   width: 100%;
   height: 40%;
   border-radius: 0.5rem;
+  overflow: hidden;
 }
 #blogs-all .cover-img img {
   width: 100%;
@@ -1208,7 +1288,50 @@ height: 25rem;
   object-fit: cover;
   border-radius: 0.5rem;
 }
-
+#blogs-all .content {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+#blogs-all .content .blog-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0rem;
+  color: var(--dark);
+}
+#blogs-all .content .blog-subtitle {
+  font-family: 'Lato',sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: .5rem 0rem;
+  color: var(--dark);
+}
+#blogs-all .content .blog-date {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: grey;
+}
+#blogs-all .content .all-blog-description {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: grey;
+}
+#blogs-all .content .blog-link-all {
+  margin-top: 1rem;
+  height: 2.5rem;
+  width: 4.5rem;
+  font-size: 1rem;
+}
 
 /* Post ---------------------------------------- */
 #blog-post {

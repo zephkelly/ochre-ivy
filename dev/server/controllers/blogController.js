@@ -8,40 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blog_getURI = exports.blog_homePage = exports.blogAPI_imageUpload = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
 require('dotenv').config();
-var fetch = require("node-fetch-commonjs");
-var mongoose = require('mongoose').mongoose;
+const fetch = require("node-fetch-commonjs");
+const mongoose = require('mongoose').mongoose;
 // Model ----------------------------------------------------
-var blogSchema = new mongoose.Schema({
+const blogSchema = new mongoose.Schema({
     uri: String,
     title: String,
     subtitle: String,
@@ -52,33 +25,33 @@ var blogSchema = new mongoose.Schema({
     tags: Array,
     content: Object
 });
-var Blog = mongoose.model('Blog', blogSchema);
+const Blog = mongoose.model('Blog', blogSchema);
 //API Routes ------------------------------------------------
 function blogAPI_get(req, res) {
-    var blogList = [];
-    var queryDisplay = req.query.display == 'true';
-    var queryPage = req.query.page;
-    var queryLimit = req.query.limit;
-    var page = parseInt(req.query.page) || 1;
+    let blogList = [];
+    const queryDisplay = req.query.display == 'true';
+    const queryPage = req.query.page;
+    const queryLimit = req.query.limit;
+    let page = parseInt(req.query.page) || 1;
     if (queryPage) {
         if (isNaN(page) || page < 1) {
             res.status(400).send('Invalid page number');
             return;
         }
     }
-    var limit = parseInt(req.query.limit) || 10;
+    let limit = parseInt(req.query.limit) || 10;
     if (queryLimit) {
         if (isNaN(limit) || limit < 1) {
             res.status(400).send('Invalid limit number');
             return;
         }
     }
-    var skip = (page - 1) * limit;
+    let skip = (page - 1) * limit;
     if (req.query.tag) {
         if (req.query.tag == 'featured') {
             limit = 3;
         }
-        Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+        Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -88,22 +61,65 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.search) {
-        Blog.aggregate([
-            { $match: { title: { $regex: req.query.search, $options: 'i' } } },
-            { $sort: { createdDate: -1 } },
+        //Search for exact match
+        Blog.aggregate([{
+                $match: {
+                    $or: [
+                        { title: req.query.search },
+                        { subtitle: req.query.search },
+                        { tags: req.query.search }
+                    ]
+                }
+            },
             { $skip: skip },
             { $limit: limit }
-        ]).exec(function (err, blogs) {
+        ]).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
             pushToBlogList(blogs, queryDisplay);
+        });
+        //Search for partial match
+        //Split search into array of words
+        let searchArray = req.query.search.split(' ');
+        searchArray = searchArray.filter((word) => { return word != ''; });
+        let searchRegexArray = [];
+        searchArray.forEach((word) => {
+            let regex = new RegExp(word, 'i');
+            searchRegexArray.push(regex);
+        });
+        Blog.aggregate([{
+                $match: {
+                    $or: [
+                        { title: { $in: searchRegexArray } },
+                        { subtitle: { $in: searchRegexArray } },
+                        { tags: { $in: searchRegexArray } }
+                    ]
+                }
+            },
+            { $skip: skip },
+            { $limit: limit }
+        ]).exec((err, blogs) => {
+            if (err) {
+                return console.log(err);
+            }
+            pushToBlogList(blogs, queryDisplay);
+            //loop over blogList and remove duplicates
+            for (let i = 0; i < blogList.length; i++) {
+                for (let j = i + 1; j < blogList.length; j++) {
+                    if (blogList[i].uri == blogList[j].uri) {
+                        blogList.splice(j, 1);
+                        //decrement j to account for removed element
+                        j--;
+                    }
+                }
+            }
             res.send(blogList);
         });
         return;
     }
     if (req.query.alphabetical) {
-        Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+        Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -113,7 +129,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.oldest) {
-        Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+        Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -123,7 +139,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.recent) {
-        Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec(function (err, blogs) {
+        Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -132,16 +148,15 @@ function blogAPI_get(req, res) {
         });
         return;
     }
-    Blog.find({}).skip(skip).limit(limit).exec(function (err, blogs) {
+    Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
         if (err) {
             return console.log(err);
         }
         pushToBlogList(blogs, queryDisplay);
         res.send(blogList);
     });
-    function pushToBlogList(blogs, display) {
-        if (display === void 0) { display = true; }
-        for (var i = 0; i < blogs.length; i++) {
+    function pushToBlogList(blogs, display = true) {
+        for (let i = 0; i < blogs.length; i++) {
             blogList.push({
                 uri: blogs[i].uri,
                 title: blogs[i].title,
@@ -160,7 +175,7 @@ function blogAPI_get(req, res) {
 }
 exports.blogAPI_get = blogAPI_get;
 function blogAPI_getURI(req, res) {
-    Blog.find({ uri: req.params.blogURI }, function (err, blog) {
+    Blog.find({ uri: req.params.blogURI }, (err, blog) => {
         if (err) {
             console.log("500");
             return res.send("500");
@@ -174,144 +189,119 @@ function blogAPI_getURI(req, res) {
 }
 exports.blogAPI_getURI = blogAPI_getURI;
 function blogAPI_post(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var validated, blog;
-        return __generator(this, function (_a) {
-            validated = validateBlogData(req.body);
-            if (req.body == null) {
-                validated = { failedValidation: true, message: noDataMsg, status: 400 };
-            }
-            else if (req.body.cover == null || req.body.cover == "") {
-                validated = { failedValidation: true, message: coverEmptyMsg, status: 400 };
-            }
-            else if (req.body.description == null || req.body.description == "") {
-                validated = { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
-            }
-            if (validated.status === 200) {
-                blog = validated.cleanedValidatedBlog;
-                blog.save(function (err, blog) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    res.status(200).send("Blog post created");
-                });
-            }
-            else {
-                res.status(validated.status).send(validated.message);
-            }
-            return [2 /*return*/];
-        });
+    return __awaiter(this, void 0, void 0, function* () {
+        let validated = validateBlogData(req.body);
+        if (req.body == null) {
+            validated = { failedValidation: true, message: noDataMsg, status: 400 };
+        }
+        else if (req.body.cover == null || req.body.cover == "") {
+            validated = { failedValidation: true, message: coverEmptyMsg, status: 400 };
+        }
+        else if (req.body.description == null || req.body.description == "") {
+            validated = { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
+        }
+        if (validated.status === 200) {
+            let blog = validated.cleanedValidatedBlog;
+            blog.save((err, blog) => {
+                if (err) {
+                    return console.log(err);
+                }
+                res.status(200).send("Blog post created");
+            });
+        }
+        else {
+            res.status(validated.status).send(validated.message);
+        }
     });
 }
 exports.blogAPI_post = blogAPI_post;
 function blogAPI_update(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var uri, title, subtitle, createdDate, updatedDate, tags, content, jsonContent, coverImage, description, filter, update, i, validateBlogPost, validationStatus;
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    uri = req.body.uri;
-                    title = req.body.title;
-                    subtitle = req.body.subtitle;
-                    createdDate = req.body.date;
-                    updatedDate = new Date().toISOString();
-                    tags = req.body.tags;
-                    content = req.body.content;
-                    jsonContent = JSON.parse(content);
-                    coverImage = null;
-                    description = null;
-                    jsonContent.blocks.map(function (block) {
-                        if (block.type == 'image') {
-                            coverImage = block.data.file.url;
-                            return;
-                        }
-                    });
-                    jsonContent.blocks.map(function (block) {
-                        if (block.type == 'paragraph') {
-                            description = block.data.text;
-                            return;
-                        }
-                    });
-                    filter = { uri: req.params.blogURI };
-                    update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: coverImage, tags: tags, content: content };
-                    //Remove null or empty values
-                    for (i = 0; i < Object.keys(update).length; i++) {
-                        if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
-                            delete update[Object.keys(update)[i]];
-                        }
-                    }
-                    //If the uri is the same, ignore
-                    if (update.uri == req.params.blogURI) {
-                        delete update.uri;
-                    }
-                    if (update.createdDate != null) {
-                        update.createdDate = new Date(update.createdDate).toISOString();
-                    }
-                    validateBlogPost = function () { return __awaiter(_this, void 0, void 0, function () {
-                        var postCount;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, Blog.find({ uri: req.body.uri }).countDocuments()];
-                                case 1:
-                                    postCount = _a.sent();
-                                    if (postCount > 0) {
-                                        return [2 /*return*/, { failedValidation: true, message: postExistsMsg }];
-                                    }
-                                    if (update.cover == null || update.cover == "") {
-                                        return [2 /*return*/, { failedValidation: true, message: coverEmptyMsg, status: 400 }];
-                                    }
-                                    if (update.description == null || update.description == "") {
-                                        return [2 /*return*/, { failedValidation: true, message: descriptionEmptyMsg, status: 400 }];
-                                    }
-                                    //Standard checks
-                                    return [2 /*return*/, validateBlogData(req.body)];
-                            }
-                        });
-                    }); };
-                    return [4 /*yield*/, validateBlogPost()];
-                case 1:
-                    validationStatus = _a.sent();
-                    if (validationStatus.failedValidation) {
-                        res.status(400).send("Bad request: " + validationStatus.message);
-                        return [2 /*return*/];
-                    }
-                    Blog.findOneAndUpdate(filter, update, { new: true }, function (err, blog) {
-                        if (err) {
-                            res.send(err);
-                        }
-                        else {
-                            res.status(200).send(blog);
-                        }
-                    });
-                    return [2 /*return*/];
+    return __awaiter(this, void 0, void 0, function* () {
+        const uri = req.body.uri;
+        const title = req.body.title;
+        const subtitle = req.body.subtitle;
+        const createdDate = req.body.date;
+        const updatedDate = new Date().toISOString();
+        const tags = req.body.tags;
+        const content = req.body.content;
+        //turn content into object
+        let jsonContent = JSON.parse(content);
+        let coverImage = null;
+        let description = null;
+        jsonContent.blocks.map(block => {
+            if (block.type == 'image') {
+                coverImage = block.data.file.url;
+                return;
+            }
+        });
+        jsonContent.blocks.map(block => {
+            if (block.type == 'paragraph') {
+                description = block.data.text;
+                return;
+            }
+        });
+        const filter = { uri: req.params.blogURI };
+        let update = { uri: uri, title: title, subtitle: subtitle, description: description, createdDate: createdDate, updatedDate: updatedDate, cover: coverImage, tags: tags, content: content };
+        //Remove null or empty values
+        for (let i = 0; i < Object.keys(update).length; i++) {
+            if (update[Object.keys(update)[i]] == null || update[Object.keys(update)[i]] == "") {
+                delete update[Object.keys(update)[i]];
+            }
+        }
+        //If the uri is the same, ignore
+        if (update.uri == req.params.blogURI) {
+            delete update.uri;
+        }
+        if (update.createdDate != null) {
+            update.createdDate = new Date(update.createdDate).toISOString();
+        }
+        const validateBlogPost = () => __awaiter(this, void 0, void 0, function* () {
+            //Does post already exist?
+            let postCount = yield Blog.find({ uri: req.body.uri }).countDocuments();
+            if (postCount > 0) {
+                return { failedValidation: true, message: postExistsMsg };
+            }
+            if (update.cover == null || update.cover == "") {
+                return { failedValidation: true, message: coverEmptyMsg, status: 400 };
+            }
+            if (update.description == null || update.description == "") {
+                return { failedValidation: true, message: descriptionEmptyMsg, status: 400 };
+            }
+            //Standard checks
+            return validateBlogData(req.body);
+        });
+        //If validation fails, bad request. Send error message
+        const validationStatus = yield validateBlogPost();
+        if (validationStatus.failedValidation) {
+            res.status(400).send("Bad request: " + validationStatus.message);
+            return;
+        }
+        Blog.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.status(200).send(blog);
             }
         });
     });
 }
 exports.blogAPI_update = blogAPI_update;
 function blogAPI_delete(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var _this = this;
-        return __generator(this, function (_a) {
-            Blog.deleteOne({ uri: req.params.blogURI }, function (err) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    if (err) {
-                        res.status(500).send("Error deleting post");
-                        return [2 /*return*/];
-                    }
-                    res.status(200).send("Post deleted");
-                    return [2 /*return*/];
-                });
-            }); });
-            return [2 /*return*/];
-        });
+    return __awaiter(this, void 0, void 0, function* () {
+        Blog.deleteOne({ uri: req.params.blogURI }, (err) => __awaiter(this, void 0, void 0, function* () {
+            if (err) {
+                res.status(500).send("Error deleting post");
+                return;
+            }
+            res.status(200).send("Post deleted");
+        }));
     });
 }
 exports.blogAPI_delete = blogAPI_delete;
 function blogAPI_imageUpload(req, res) {
-    var image = req.files.image;
-    var imageData = {
+    const { image } = req.files;
+    const imageData = {
         success: 0,
         file: {
             url: ''
@@ -329,124 +319,82 @@ exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
 function blog_homePage(req, res) {
     var _a;
-    return __awaiter(this, void 0, void 0, function () {
-        var featuredResponse, recipesResponse, recentResponse, allResponse, featuredBlogs, recipesBlogs, recentBlogs, allBlogs, adminData, blogHome;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured')];
-                case 1:
-                    featuredResponse = _b.sent();
-                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe')];
-                case 2:
-                    recipesResponse = _b.sent();
-                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&recent')];
-                case 3:
-                    recentResponse = _b.sent();
-                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog?display=true' + '&page=1')];
-                case 4:
-                    allResponse = _b.sent();
-                    featuredBlogs = null;
-                    if (!(featuredResponse.status == 200)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, featuredResponse.json()];
-                case 5:
-                    featuredBlogs = _b.sent();
-                    _b.label = 6;
-                case 6:
-                    recipesBlogs = null;
-                    if (!(recipesResponse.status == 200)) return [3 /*break*/, 8];
-                    return [4 /*yield*/, recipesResponse.json()];
-                case 7:
-                    recipesBlogs = _b.sent();
-                    _b.label = 8;
-                case 8:
-                    recentBlogs = null;
-                    if (!(recentResponse.status == 200)) return [3 /*break*/, 10];
-                    return [4 /*yield*/, recentResponse.json()];
-                case 9:
-                    recentBlogs = _b.sent();
-                    _b.label = 10;
-                case 10:
-                    allBlogs = null;
-                    if (!(allResponse.status == 200)) return [3 /*break*/, 12];
-                    return [4 /*yield*/, allResponse.json()];
-                case 11:
-                    allBlogs = _b.sent();
-                    _b.label = 12;
-                case 12:
-                    adminData = { notification: false };
-                    if (req.session.userid != null) {
-                        if (req.session.roles == 'admin') {
-                            if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.deleted) == 'true')
-                                adminData.notification = true;
-                        }
-                    }
-                    return [4 /*yield*/, res.render('blog-home', { adminData: adminData, featuredBlogs: featuredBlogs, recipesBlogs: recipesBlogs, recentBlogs: recentBlogs, allBlogs: allBlogs }, function (err, html) {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            res.status(200).send(html);
-                            return;
-                        })];
-                case 13:
-                    blogHome = _b.sent();
-                    return [2 /*return*/];
+    return __awaiter(this, void 0, void 0, function* () {
+        const featuredResponse = yield fetch('http://localhost:62264/api/blog?display=true' + '&tag=featured');
+        const recipesResponse = yield fetch('http://localhost:62264/api/blog?display=true' + '&tag=recipe');
+        const recentResponse = yield fetch('http://localhost:62264/api/blog?display=true' + '&recent');
+        const allResponse = yield fetch('http://localhost:62264/api/blog?display=true' + '&page=1');
+        let featuredBlogs = null;
+        if (featuredResponse.status == 200) {
+            featuredBlogs = yield featuredResponse.json();
+        }
+        let recipesBlogs = null;
+        if (recipesResponse.status == 200) {
+            recipesBlogs = yield recipesResponse.json();
+        }
+        let recentBlogs = null;
+        if (recentResponse.status == 200) {
+            recentBlogs = yield recentResponse.json();
+        }
+        let allBlogs = null;
+        if (allResponse.status == 200) {
+            allBlogs = yield allResponse.json();
+        }
+        //create object to store admin controls
+        const adminData = { notification: false };
+        if (req.session.userid != null) {
+            if (req.session.roles == 'admin') {
+                if (((_a = req.query) === null || _a === void 0 ? void 0 : _a.deleted) == 'true')
+                    adminData.notification = true;
             }
+        }
+        const blogHome = yield res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
+            if (err) {
+                return console.log(err);
+            }
+            res.status(200).send(html);
+            return;
         });
     });
 }
 exports.blog_homePage = blog_homePage;
 function blog_getURI(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var blogId, response, blogData, adminControls, blogPage;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    blogId = req.params.blogURI;
-                    return [4 /*yield*/, fetch('http://localhost:62264/api/blog/' + blogId)];
-                case 1:
-                    response = _a.sent();
-                    if (!(response.status == 200)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    blogData = _a.sent();
-                    adminControls = false;
-                    if (req.session.userid != null) {
-                        if (req.session.roles == 'admin') {
-                            adminControls = true;
-                        }
-                    }
-                    return [4 /*yield*/, res.render('blog-post', { blogData: blogData, adminControls: adminControls }, function (err, html) {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            res.status(200).send(html);
-                            return;
-                        })];
-                case 3:
-                    blogPage = _a.sent();
-                    return [3 /*break*/, 5];
-                case 4:
-                    if (response.status == 404) {
-                        res.status(404).send("Blog post not found");
-                        return [2 /*return*/];
-                    }
-                    else {
-                        res.status(response.status).send();
-                        return [2 /*return*/];
-                    }
-                    _a.label = 5;
-                case 5: return [2 /*return*/];
+    return __awaiter(this, void 0, void 0, function* () {
+        const blogId = req.params.blogURI;
+        const response = yield fetch('http://localhost:62264/api/blog/' + blogId);
+        if (response.status == 200) {
+            const blogData = yield response.json();
+            let adminControls = false;
+            if (req.session.userid != null) {
+                if (req.session.roles == 'admin') {
+                    adminControls = true;
+                }
             }
-        });
+            const blogPage = yield res.render('blog-post', { blogData, adminControls }, (err, html) => {
+                if (err) {
+                    return console.log(err);
+                }
+                res.status(200).send(html);
+                return;
+            });
+        }
+        else if (response.status == 404) {
+            res.status(404).send("Blog post not found");
+            return;
+        }
+        else {
+            res.status(response.status).send();
+            return;
+        }
     });
 }
 exports.blog_getURI = blog_getURI;
 //Helper functions ---------------------------------------
 function validateBlogData(body) {
-    var createdDate = (body.date == null || body.date == '')
+    let createdDate = (body.date == null || body.date == '')
         ? new Date().toISOString()
         : new Date(body.date).toISOString();
-    var blog = new Blog({
+    const blog = new Blog({
         uri: body.uri,
         title: body.title,
         subtitle: body.subtitle,
@@ -482,7 +430,7 @@ function validateBlogData(body) {
     blog.title = cleanContent(blog.title);
     blog.subtitle = cleanContent(blog.subtitle);
     blog.description = cleanContent(blog.description);
-    blog.content.blocks.forEach(function (block) {
+    blog.content.blocks.forEach(block => {
         if (block.type == 'paragraph') {
             block.data.text = cleanContent(block.data.text);
         }
@@ -496,7 +444,7 @@ function validateBlogData(body) {
             block.data.caption = cleanContent(block.data.caption);
         }
         if (block.type == 'list') {
-            block.data.items.forEach(function (item) {
+            block.data.items.forEach(item => {
                 item = cleanContent(item);
             });
         }
@@ -505,7 +453,7 @@ function validateBlogData(body) {
 }
 //clean content functino
 function cleanContent(content) {
-    var cleanContent = content;
+    let cleanContent = content;
     cleanContent = cleanContent.replace(/&lt;.*?&gt;/g, '');
     cleanContent = cleanContent.replace(/&lt;script.*?;.*?&lt;\/script&gt;/g, '');
     cleanContent = cleanContent.replace(/&lt;script.*?&lt;\/script&gt;/g, '');
@@ -515,14 +463,14 @@ function cleanContent(content) {
     cleanContent = cleanContent.replace(/&nbsp;/g, ' ');
     return cleanContent;
 }
-var uriEmptyMsg = "URI is empty";
-var postExistsMsg = "Post with that URI already exists";
-var uriTooLongMsg = "URI is too long";
-var uriTooShortMsg = "URI is too short";
-var titleEmptyMsg = "Title is empty";
-var tagsEmptyMsg = "Post has no tags";
-var tagsTooManyMsg = "Post can only have 5 tags";
-var coverEmptyMsg = "Post contains no image for cover photo";
-var descriptionEmptyMsg = "Post contains no paragraph for description";
-var contentEmptyMsg = "Content is empty";
-var noDataMsg = "No data was sent";
+const uriEmptyMsg = "URI is empty";
+const postExistsMsg = "Post with that URI already exists";
+const uriTooLongMsg = "URI is too long";
+const uriTooShortMsg = "URI is too short";
+const titleEmptyMsg = "Title is empty";
+const tagsEmptyMsg = "Post has no tags";
+const tagsTooManyMsg = "Post can only have 5 tags";
+const coverEmptyMsg = "Post contains no image for cover photo";
+const descriptionEmptyMsg = "Post contains no paragraph for description";
+const contentEmptyMsg = "Content is empty";
+const noDataMsg = "No data was sent";

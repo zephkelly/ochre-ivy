@@ -1,19 +1,53 @@
-import { validateString, formatDate } from '../helperFunctions';
+import { formatString, formatDate } from '../helperFunctions';
+
+window.addEventListener('load', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get('page');
+
+  if (page === 'all') {
+    enableAllPage();
+  }
+});
 
 // Navigation menu
+const blogTitle: HTMLElement = document.querySelector('.blog-nav-title') as HTMLElement;
 const blogNavHome: HTMLElement = document.querySelector('.blog-nav-home') as HTMLElement;
 const blogNavAll: HTMLElement = document.querySelector('.blog-nav-all') as HTMLElement;
+
+const navHeaderBgBox: HTMLElement = document.querySelector('.blogs-header-bgBox') as HTMLElement;
 
 const blogHomePage: HTMLElement = document.querySelector('.faux-page-home') as HTMLElement;
 const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTMLElement;
 
+const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
+
 blogNavHome?.addEventListener('click', () => {
+  enableHomePage();
+});
+
+blogNavAll?.addEventListener('click', () => {
+  enableAllPage();
+});
+
+function enableHomePage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.delete('page');
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
   if (blogNavHome.classList.contains('active')) {
     return;
   }
 
   blogNavHome.classList.add('active');
   blogNavAll.classList.remove('active');
+
+  navHeaderBgBox.style.transform = 'rotate(-8deg)';
+  navHeaderBgBox.style.position = 'absolute';
+  navHeaderBgBox.style.top = '';
+
+  footerContainer.style.borderTop = 'none';
+  blogTitle.style.paddingLeft = '';
+  blogTitle.style.marginLeft = '';
   
   blogAllPage.classList.remove('active');
   
@@ -25,15 +59,27 @@ blogNavHome?.addEventListener('click', () => {
       blogHomePage.classList.add('active');
     }, 5);
   }, 150);
-});
+}
 
-blogNavAll?.addEventListener('click', () => {
-  if (blogNavAll.classList.contains('active')) {
+function enableAllPage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set('page', 'all');
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+   if (blogNavAll.classList.contains('active')) {
     return;
   }
 
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
+
+  navHeaderBgBox.style.transform = 'rotate(0deg)';
+  navHeaderBgBox.style.position = 'fixed';
+  navHeaderBgBox.style.top = '-10rem';
+
+  footerContainer.style.borderTop = '2px solid var(--dark)';
+  blogTitle.style.paddingLeft = '0rem';
+  blogTitle.style.marginLeft = '-0.2rem';
 
   blogHomePage.classList.remove('active');
   
@@ -45,7 +91,7 @@ blogNavAll?.addEventListener('click', () => {
       blogAllPage.classList.add('active');
     }, 5);
   }, 150);
-});
+}
 
 // Format dates
 const blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
@@ -59,17 +105,24 @@ for (let i = 0; i < blogCreatedDate.length; i++) {
 // Format descriptions
 const blogDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
 const recipeDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.recipe-description') as NodeListOf<HTMLElement>;
+const allBlogsDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.all-blog-description') as NodeListOf<HTMLElement>;
 
 for (let i = 0; i < blogDescription.length; i++) {
   const blogDescriptionText = blogDescription[i].innerText;
-  const description = validateString(blogDescriptionText, 400);
+  const description = formatString(blogDescriptionText, 400);
   blogDescription[i].innerText = description;
 }
 
 for (let i = 0; i < recipeDescription.length; i++) {
   const recipeDescriptionText = recipeDescription[i].innerText;
-  const description = validateString(recipeDescriptionText, 250);
+  const description = formatString(recipeDescriptionText, 250);
   recipeDescription[i].innerText = description;
+}
+
+for (let i = 0; i < allBlogsDescription.length; i++) {
+  const allBlogsDescriptionText = allBlogsDescription[i].innerText;
+  const description = formatString(allBlogsDescriptionText, 255);
+  allBlogsDescription[i].innerText = description;
 }
 
 // Carousel for featured blogs
@@ -116,7 +169,6 @@ let lastFeaturedBlog = featuredBlogs.length - 1;
 let currentFeaturedBlog = 0;
 
 showFeaturedBlog();
-
 function showFeaturedBlog() {
   lastFeaturedBlog = currentFeaturedBlog;
 
@@ -135,6 +187,97 @@ function showFeaturedBlog() {
   
   featuredBlogs[currentFeaturedBlog].style.display = 'flex';
   featuredBlogLinks[currentFeaturedBlog].classList.add('active');
+}
+
+// Search bar for all page
+const searchInput: HTMLInputElement = document.querySelector('.search-input') as HTMLInputElement;
+
+let lastSearchInput: string = '';
+let searchInputValue: string = '';
+
+searchInput.addEventListener('focus', () => {
+  searchInputValue = searchInput.value;
+
+  if (searchInputValue === lastSearchInput) {
+      return;
+  }
+  
+  makeRequest('&search=' + searchInputValue);
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  searchInputValue = searchInput.value;
+
+  if (e.key === 'Enter') {
+    if (searchInputValue === lastSearchInput) {
+      return;
+    }
+
+    makeRequest('&search=' + searchInputValue);
+  }
+});
+
+searchInput.addEventListener('input', () => {
+  searchInputValue = searchInput.value;
+
+  if (searchInputValue == '') {
+    makeRequest('');
+    return;
+  }
+
+  makeRequest('&search=' + searchInputValue);
+});
+
+async function makeRequest(queryParam: string, page = 1) {
+  const response = await fetch('/api/blog?display=true' + queryParam + '&page=' + page, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+
+  if (response.status !== 200) {
+    console.log('Error: ' + response.status);
+    return;
+  }
+
+  const data = await response.json();
+
+  if (page == 1) {
+    clearAllBlogs();
+  }
+
+  appendBlogs(data);
+}
+
+//Manipulate all blogs DOM
+const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
+
+function clearAllBlogs() {
+  blogsAllSection.innerHTML = '';
+}
+
+function appendBlogs(data: any) {
+  data.forEach((blog: any) => {
+    blogsAllSection.innerHTML += `
+      <div class="all-blog">
+        <div class="cover-img">
+          <img src="${blog.cover}" alt="${blog.title}" class="recipe-image">
+        </div>
+        <div class="content">
+          <div class="wrapper">
+            <h3 class="blog-title">${blog.title}</h3>
+            <h6 class="blog-subtitle">${blog.subtitle}</h6>
+            <p class="blog-date">${formatDate(blog.createdDate, true)}</p>
+          </div>
+          <div class="wrapper">
+            <p class="all-blog-description">${formatString(blog.description, 255)}</p>
+            <a href="/blog/${blog.uri}" class="blog-link-all accent-button button-solid-accent">Read</a>
+          </div>
+        </div>
+      </div>
+    `;
+  });
 }
 
 export { };

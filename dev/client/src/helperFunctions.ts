@@ -2,7 +2,9 @@ export function delay(ms: number) {
   return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-export function validateString(string: string , charLimit: number = 0) {
+export function formatString(string: string, charLimit: number = 0) {
+  if (string == null || string == '') { return ''; }
+
   let validateString = string.replace(/<br>/g, ' ');
   
   validateString = validateString.replace(/(\r\n|\n|\r)/gm, '');
@@ -30,9 +32,9 @@ export function validateString(string: string , charLimit: number = 0) {
 }
 
 export function formatDate(inputDate: string, noDay: boolean = false) {
-  let date: Date = new Date(inputDate);
-  let dateString: string = date.toLocaleDateString('en-GB');
-  dateString = new Date(dateString).toDateString();
+    let date = new Date(inputDate);
+    date.toLocaleDateString('en-GB');
+    let dateString = date.toDateString();
 
   if (noDay) {
     dateString = dateString.slice(4);

@@ -1,4 +1,4 @@
-import { validateString, formatDate } from '../helperFunctions';
+import { formatString, formatDate } from '../helperFunctions';
 
 //Validate text
 const imageCaptions: NodeListOf<HTMLElement> = document.querySelectorAll('.image-tool__caption') as NodeListOf<HTMLElement>;
@@ -18,7 +18,7 @@ elementTextValidation(listItems);
 function elementTextValidation(elementNodeList: NodeListOf<HTMLElement>) {
   elementNodeList.forEach((element) => {
     if (element.textContent != null) {
-      element.innerHTML = validateString(element.textContent);
+      element.innerHTML = formatString(element.textContent);
     }
   });
 }

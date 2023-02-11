@@ -21,7 +21,7 @@ const Blog = mongoose.model('Blog', blogSchema);
 export function blogAPI_get(req, res) {
   let blogList: any = [];
   
-  const queryDisplay: boolean = req.query.display == 'true'; 
+  const queryDisplay: boolean = req.query.display == 'true';
   const queryPage: boolean = req.query.page;
   const queryLimit: boolean = req.query.limit;
 
@@ -57,18 +57,66 @@ export function blogAPI_get(req, res) {
     return;
   }
 
-  if (req.query.search) { 
-      Blog.aggregate([
-      { $match: { title: { $regex: req.query.search, $options: 'i' } } },
-      { $sort: { createdDate: -1 } },
+  if (req.query.search) {
+    //Search for exact match
+    Blog.aggregate([{
+      $match: {
+        $or: [
+          { title: req.query.search },
+          { subtitle: req.query.search },
+          { tags: req.query.search }
+        ]
+      }
+    },
+    { $skip: skip },
+    { $limit: limit }
+    ]).exec((err, blogs) => {
+      if (err) { return console.log(err); }
+
+      pushToBlogList(blogs, queryDisplay);
+    });
+      
+    //Search for partial match
+    //Split search into array of words
+    let searchArray = req.query.search.split(' ');
+    searchArray = searchArray.filter((word) => { return word != ''; });
+
+    let searchRegexArray = [];
+    searchArray.forEach((word) => {
+      let regex = new RegExp(word, 'i');
+      searchRegexArray.push(regex);
+    });
+
+    Blog.aggregate([{
+      $match: {
+        $or: [
+          { title: { $in: searchRegexArray } },
+          { subtitle: { $in: searchRegexArray } },
+          { tags: { $in: searchRegexArray } }
+        ]
+      }
+    },
       { $skip: skip },
       { $limit: limit }
     ]).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
+
+      //loop over blogList and remove duplicates
+      for (let i = 0; i < blogList.length; i++) {
+        for (let j = i + 1; j < blogList.length; j++) {
+          if (blogList[i].uri == blogList[j].uri) {
+            blogList.splice(j, 1);
+
+            //decrement j to account for removed element
+            j--;
+          }
+        }
+      }
+
       res.send(blogList);
-    });  
+    });
     return;
   }
 

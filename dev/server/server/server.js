@@ -1,20 +1,20 @@
 require('dotenv').config();
-var express = require('express');
-var bodyParser = require('body-parser');
-var cookieParser = require("cookie-parser");
-var mongoose = require('mongoose');
-var session = require('express-session');
-var fileUpload = require('express-fileupload');
-var MongoStore = require('connect-mongo');
-var authRoutes = require('./server/routes/authRoutes');
-var blogRoutes = require('./server/routes/blogRoutes');
-var adminRoutes = require('./server/routes/adminRoutes');
-var app = express();
-var PORT = process.env.PORT;
+const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
+const mongoose = require('mongoose');
+const session = require('express-session');
+const fileUpload = require('express-fileupload');
+const MongoStore = require('connect-mongo');
+const authRoutes = require('./server/routes/authRoutes');
+const blogRoutes = require('./server/routes/blogRoutes');
+const adminRoutes = require('./server/routes/adminRoutes');
+const app = express();
+const PORT = process.env.PORT;
 app.set('view engine', 'ejs', 'html');
 app.set('views', __dirname + '/server/views');
 //Sessions
-var oneDay = 1000 * 60 * 60 * 24;
+const oneDay = 1000 * 60 * 60 * 24;
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
@@ -32,24 +32,24 @@ app.use(cookieParser());
 app.use(fileUpload());
 //Database
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(function () {
-    app.listen(PORT, function () { console.log('Listening on port ' + PORT); });
+    .then(() => {
+    app.listen(PORT, () => { console.log('Listening on port ' + PORT); });
 })
-    .catch(function (err) { return console.log(err); });
+    .catch((err) => console.log(err));
 //Routes
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     var _a;
     if (req.session.userid) {
-        var userData = { name: req.session.name };
+        const userData = { name: req.session.name };
         if (req.session.roles == 'admin') {
-            var siteData = { blogCount: 0, recipeCount: 0 };
+            const siteData = { blogCount: 0, recipeCount: 0 };
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
-                var loggedData = { loggedMessage: true };
-                res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
+                const loggedData = { loggedMessage: true };
+                res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
             }
             else {
-                var loggedData = { loggedMessage: false };
-                res.status(200).render('admin/admin-index', { loggedData: loggedData, userData: userData, siteData: siteData });
+                const loggedData = { loggedMessage: false };
+                res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
             }
         }
         return;

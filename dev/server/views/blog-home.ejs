@@ -33,7 +33,7 @@
     <% } %>
     <section id="blogs-nav">
       <div class="section-container">
-          <h1 class="blog-title">BLOGS</h1>
+          <h1 class="blog-title blog-nav-title">BLOGS</h1>
           <nav class="blogs-home-nav">
             <ul>
               <li><a class="blog-title blog-nav-link blog-nav-all">ALL</a></li>
@@ -41,6 +41,7 @@
             </ul>
           </nav>
         </div>
+        <div class="blogs-header-bgBox"></div>
     </section>
     <div class="faux-page faux-page-home active">
       <section id="blogs-featured">
@@ -72,7 +73,6 @@
             </ul>
           </nav>
         </div>
-        <div class="blogs-featured-bgBox"></div>
       </section>
       <section id="blogs-recipes-popular">
         <div class="section-container">
@@ -139,7 +139,25 @@
         </div>
       </section>
     </div>
-    <div class="faux-page faux-page-all">
+    <div class="faux-page faux-page-all" style="display: none">
+      <section id="blog-all-toolbar" .container>
+        <div class="section-container">
+          <div class="wrapper">
+            <input type="text" class="search-input" placeholder="Search">
+            <span class="material-symbols-outlined search-icon">search</span>
+          </div>
+          <div class="wrapper">
+            <h6 class="filter-title">Filters</h6>
+            <div class="group filter-buttons">
+              <a class="filter-button all">All</a>
+              <a class="filter-button recipes">Recipes</a>
+              <a class="filter-button newest">Newest</a>
+              <a class="filter-button oldest">Oldest</a>
+              <a class="filter-button az">A-Z</a>
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="blogs-all">
         <div class="section-container">
           <% for (i = 0; i < allBlogs.length; i++) { %>
@@ -155,8 +173,8 @@
                   <p class="blog-date"><%= blog.createdDate %></p>
                 </div>
                 <div class="wrapper">
-                  <p class="recipe-description"><%= blog.description %></p>
-                  <a href="/blog/<%= blog.uri %>" class="blog-link">Read more</a>
+                  <p class="all-blog-description"><%= blog.description %></p>
+                  <a href="/blog/<%= blog.uri %>" class="blog-link-all accent-button button-solid-accent">Read</a>
                 </div>
               </div>
             </div>
@@ -166,7 +184,7 @@
     </div>
   </main>
   <footer id="footer-main">
-    <div class="container">
+    <div class="container" id="footer-container">
       <section class="footer-links">
         <nav>
           <ul class="footer-nav-menu">
