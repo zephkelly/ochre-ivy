@@ -162,19 +162,19 @@ async function saveBlog() {
   let coverImage = null;
   let description = null;
 
-  outputData.blocks.map(block => {
-    if (block.type == 'image') {
-      coverImage = block.data.file.url;
-      return;
+  for (let i = 0; i < outputData.blocks.length; i++) {
+    if (outputData.blocks[i].type == 'image') {
+      coverImage = outputData.blocks[i].data.file.url;
+      break;
     }
-  });
+  }
 
-  outputData.blocks.map(block => {
-    if (block.type == 'paragraph') {
-      description = block.data.text;
-      return;
+  for (let i = 0; i < outputData.blocks.length; i++) {
+    if (outputData.blocks[i].type == 'paragraph') {
+      description = outputData.blocks[i].data.text;
+      break;
     }
-  });
+  }
 
   const blogData = {
     uri: uriInput.value,

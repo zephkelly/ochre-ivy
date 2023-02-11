@@ -42,7 +42,7 @@ export function formatDate(inputDate: string, noDay: boolean = false) {
   }
   else {
     dateString = dateString.slice(0, 3) + "," + dateString.slice(3);
-    dateString = dateString.slice(0, 11) + "." + dateString.slice(11);
+    dateString = dateString.slice(0, 11) + "," + dateString.slice(11);
   }
 
   return dateString;
