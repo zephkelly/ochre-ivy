@@ -3,9 +3,41 @@ import { formatString, formatDate } from '../helperFunctions';
 window.addEventListener('load', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const page = urlParams.get('page');
+  const filter = urlParams.get('filter');
 
   if (page === 'all') {
+    searchInputValue = searchInput.value;
+
+    if (searchInputValue.length > 0) {
+      makeRequest('&search=' + searchInputValue);
+      removeActiveFilter();
+    }
+
+    if (filter !== null) {
+      if (filter === 'all') {
+        removeActiveFilter();
+        setActiveFilter(allFilter);
+      }
+      else if (filter === 'recipe') {
+        removeActiveFilter();
+        setActiveFilter(recipesFilter);
+      }
+      else if (filter === 'newest') {
+        removeActiveFilter();
+        setActiveFilter(newestFilter);
+      }
+      else if (filter === 'oldest') {
+        removeActiveFilter();
+        setActiveFilter(oldestFilter);
+      }
+      else if (filter === 'alphabetical') {
+        removeActiveFilter();
+        setActiveFilter(azFilter);
+      }
+    }
+
     enableAllPage();
+    return;
   }
 });
 
@@ -33,6 +65,11 @@ function enableHomePage() {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  //Reset all page
+  searchInput.value = '';
+  searchInputValue = '';
+  makeRequest('');
 
   if (blogNavHome.classList.contains('active')) {
     return;
@@ -202,6 +239,7 @@ searchInput.addEventListener('focus', () => {
       return;
   }
   
+  removeActiveFilter();
   makeRequest('&search=' + searchInputValue);
 });
 
@@ -213,6 +251,7 @@ searchInput.addEventListener('keydown', (e) => {
       return;
     }
 
+    removeActiveFilter();
     makeRequest('&search=' + searchInputValue);
   }
 });
@@ -222,9 +261,11 @@ searchInput.addEventListener('input', () => {
 
   if (searchInputValue == '') {
     makeRequest('');
+    setActiveFilter(allFilter);
     return;
   }
 
+  removeActiveFilter();
   makeRequest('&search=' + searchInputValue);
 });
 
@@ -248,6 +289,106 @@ async function makeRequest(queryParam: string, page = 1) {
   }
 
   appendBlogs(data);
+}
+
+// Filter blogs by category
+const allFilter: HTMLElement = document.querySelector('.filter-button.all') as HTMLElement;
+const recipesFilter: HTMLElement = document.querySelector('.filter-button.recipes') as HTMLElement;
+const newestFilter: HTMLElement = document.querySelector('.filter-button.newest') as HTMLElement;
+const oldestFilter: HTMLElement = document.querySelector('.filter-button.oldest') as HTMLElement;
+const azFilter: HTMLElement = document.querySelector('.filter-button.az') as HTMLElement;
+
+allFilter.addEventListener('click', () => {
+  if (allFilter.classList.contains('active')) {
+    return;
+  }
+
+  setActiveFilter(allFilter);
+});
+
+recipesFilter.addEventListener('click', () => {
+  if (recipesFilter.classList.contains('active')) {
+    return;
+  }
+
+  setActiveFilter(recipesFilter);
+});
+
+newestFilter.addEventListener('click', () => {
+  if (newestFilter.classList.contains('active')) {
+    return;
+  }
+
+  setActiveFilter(newestFilter);
+});
+
+oldestFilter.addEventListener('click', () => {
+  if (oldestFilter.classList.contains('active')) {
+    return;
+  }
+
+  setActiveFilter(oldestFilter);
+});
+
+azFilter.addEventListener('click', () => {
+  if (azFilter.classList.contains('active')) {
+    return;
+  }
+  
+  setActiveFilter(azFilter);
+});
+
+function removeActiveFilter() {
+  allFilter.classList.remove('active');
+  recipesFilter.classList.remove('active');
+  newestFilter.classList.remove('active');
+  oldestFilter.classList.remove('active');
+  azFilter.classList.remove('active');
+}
+
+function setActiveFilter(filter: HTMLElement) {
+  removeActiveFilter();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let queryParam = '';
+
+  if (filter === allFilter) {
+    allFilter.classList.add('active');
+
+    urlParams.set('filter', 'all');
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  } else if (filter === recipesFilter) {
+    queryParam = '&tag=recipe';
+    recipesFilter.classList.add('active');
+
+    urlParams.set('filter', 'recipe');
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  } else if (filter === newestFilter) {
+    queryParam = '&recent=true';
+    newestFilter.classList.add('active');
+
+    urlParams.set('filter', 'newest');
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  } else if (filter === oldestFilter) {
+    queryParam = '&oldest=true';
+    oldestFilter.classList.add('active');
+
+    urlParams.set('filter', 'oldest');
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  } else if (filter === azFilter) {
+    queryParam = '&alphabetical=true';
+    azFilter.classList.add('active');
+
+    urlParams.set('filter', 'alphabetical');
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+  }
+
+  clearAllBlogs();
+  makeRequest(queryParam);
 }
 
 //Manipulate all blogs DOM

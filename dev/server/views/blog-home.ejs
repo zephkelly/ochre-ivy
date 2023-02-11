@@ -27,7 +27,9 @@
           <p class="logged-in-notification">Successfully deleted blog post!</p>
         </div>
         <script>
-          window.history.replaceState({}, document.title, "/blog");
+          const url = window.location.href;
+          const newUrl = url.replace('?deleted=true', '');
+          window.history.replaceState({}, document.title, newUrl);
         </script>
       </section>
     <% } %>
@@ -149,7 +151,7 @@
           <div class="wrapper">
             <h6 class="filter-title">Filters</h6>
             <div class="group filter-buttons">
-              <a class="filter-button all">All</a>
+              <a class="filter-button all active">All</a>
               <a class="filter-button recipes">Recipes</a>
               <a class="filter-button newest">Newest</a>
               <a class="filter-button oldest">Oldest</a>

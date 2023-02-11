@@ -121,7 +121,16 @@ export function blogAPI_get(req, res) {
   }
 
   if (req.query.alphabetical) {
-    Blog.find({}).sort({ title: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+    //aggreate to alphabetically by the title
+
+    Blog.aggregate([{
+      $sort: {
+        title: 1
+      }
+    },
+      { $skip: skip },
+      { $limit: limit }
+    ]).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
