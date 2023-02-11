@@ -70,9 +70,13 @@ exports.dashboard_blog_new_post = dashboard_blog_new_post;
 function dashboard_blog_editURI(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch('http://localhost:62264/api/blog/' + req.params.blogURI);
+        const session = { admin: false };
         if (response.status == 200) {
             const blogData = { uri: req.params.blogURI, data: yield response.json() };
-            res.render('admin/blog-editor', { blogData }, (err, html) => {
+            if (req.session.admin) {
+                session.admin = true;
+            }
+            res.render('admin/blog-editor', { session, blogData }, (err, html) => {
                 if (err) {
                     return console.log(err);
                 }

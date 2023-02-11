@@ -18,7 +18,7 @@
   <%- include('partials/navbar.ejs') %>
   <main>
     <section id="blog-post">
-      <% if (adminControls == true) { %>
+      <% if (session.admin) { %>
         <div class="section-container" style="min-height: 0rem;">
           <div class="admin-controls">
             <a href="/admin/blog/edit/<%= blogData.uri %>">Edit</a>
@@ -110,9 +110,9 @@
       <section class="footer-links">
         <nav>
           <ul class="footer-nav-menu">
-            <li class="footer-nav-item"><a href="#">Home</a></li>
-            <li class="footer-nav-item"><a href="#">Recipes</a></li>
-            <li class="footer-nav-item"><a href="#">Blog</a></li>
+            <li class="footer-nav-item"><a href="/">Home</a></li>
+            <li class="footer-nav-item"><a href="/blog?page=all&filter=recipe">Recipes</a></li>
+            <li class="footer-nav-item"><a href="/blog">Blog</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>
         </nav>

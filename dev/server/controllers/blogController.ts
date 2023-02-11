@@ -62,9 +62,9 @@ export function blogAPI_get(req, res) {
     Blog.aggregate([{
       $match: {
         $or: [
-          { title: req.query.search },
-          { subtitle: req.query.search },
-          { tags: req.query.search }
+          { title: req.query.search.toLowerCase() },
+          { subtitle: req.query.search.toLowerCase() },
+          { tags: req.query.search.toLowerCase() }
         ]
       }
     },
@@ -75,11 +75,13 @@ export function blogAPI_get(req, res) {
 
       pushToBlogList(blogs, queryDisplay);
     });
+
+    //search for exact match and make req.query.search and the titles lowercase
       
     //Search for partial match
     //Split search into array of words
     let searchArray = req.query.search.split(' ');
-    searchArray = searchArray.filter((word) => { return word != ''; });
+    searchArray = searchArray.filter((word) => { return word.toLowerCase() != ''; });
 
     let searchRegexArray = [];
     searchArray.forEach((word) => {
@@ -373,17 +375,19 @@ export async function blog_homePage(req, res) {
   }
 
   //create object to store admin controls
-  const adminData = { notification: false }
+  const session = { notification: false, admin: false }
   
   if (req.session.userid != null) {
     if (req.session.roles == 'admin') {
+      session.admin = true 
 
-      if (req.query?.deleted == 'true')
-      adminData.notification = true;
+      if (req.query?.deleted == 'true') {
+        session.notification = true;
+      }
     }
   }
 
-  const blogHome = await res.render('blog-home', { adminData, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
+  const blogHome = await res.render('blog-home', { session, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
     if (err) { return console.log(err); }
 
     res.status(200).send(html);
@@ -395,19 +399,18 @@ export async function blog_getURI(req, res) {
   const blogId = req.params.blogURI;
 
   const response = await fetch('http://localhost:62264/api/blog/' + blogId);
+  const session = { notification: false, admin: false }
 
   if (response.status == 200) {
     const blogData = await response.json();
 
-    let adminControls = false;
-
     if (req.session.userid != null) {
       if (req.session.roles == 'admin') {
-        adminControls = true;
+        session.admin = true;
       }
     }
   
-    const blogPage = await res.render('blog-post', { blogData, adminControls }, (err, html) => {
+    const blogPage = await res.render('blog-post', { session, blogData }, (err, html) => {
       if (err) { return console.log(err); }
   
       res.status(200).send(html);

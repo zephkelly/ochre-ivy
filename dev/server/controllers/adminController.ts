@@ -58,11 +58,16 @@ export async function dashboard_blog_new_post(req, res)
 export async function dashboard_blog_editURI(req, res)
 {
   const response = await fetch('http://localhost:62264/api/blog/' + req.params.blogURI);
+  const session = { admin: false };
 
   if (response.status == 200) {
     const blogData = { uri: req.params.blogURI, data: await response.json() };
 
-    res.render('admin/blog-editor', { blogData }, (err, html) => {
+    if (req.session.admin) {
+      session.admin = true;
+    }
+
+    res.render('admin/blog-editor', { session, blogData }, (err, html) => {
       if (err) { return console.log(err); }
 
       res.status(200).send(html);

@@ -17,7 +17,7 @@
 <body>
   <%- include('partials/navbar.ejs') %>
   <main>
-    <% if (adminData.notification == true) { %>
+    <% if (session.notification == true) { %>
       <section id="notification">
         <div class="container">
           <div class="wrapper">
@@ -38,8 +38,8 @@
           <h1 class="blog-title blog-nav-title">BLOGS</h1>
           <nav class="blogs-home-nav">
             <ul>
-              <li><a class="blog-title blog-nav-link blog-nav-all">ALL</a></li>
               <li><a class="blog-title blog-nav-link blog-nav-home active">HOME</a></li>
+              <li><a class="blog-title blog-nav-link blog-nav-all">ALL</a></li>
             </ul>
           </nav>
         </div>
@@ -191,7 +191,7 @@
         <nav>
           <ul class="footer-nav-menu">
             <li class="footer-nav-item"><a href="/">Home</a></li>
-            <li class="footer-nav-item"><a href="#">Recipes</a></li>
+            <li class="footer-nav-item"><a href="/blog?page=all&filter=recipe">Recipes</a></li>
             <li class="footer-nav-item"><a href="">Blog</a></li>
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>

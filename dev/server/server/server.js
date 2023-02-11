@@ -39,18 +39,16 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
 //Routes
 app.get('/', (req, res) => {
     var _a;
+    const session = { name: null, admin: false, notification: false };
+    const siteData = { blogCount: 0, recipeCount: 0 };
     if (req.session.userid) {
-        const userData = { name: req.session.name };
+        session.name = req.session.name;
         if (req.session.roles == 'admin') {
-            const siteData = { blogCount: 0, recipeCount: 0 };
+            session.admin = true;
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
-                const loggedData = { loggedMessage: true };
-                res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
+                session.notification = true;
             }
-            else {
-                const loggedData = { loggedMessage: false };
-                res.status(200).render('admin/admin-index', { loggedData, userData, siteData });
-            }
+            res.status(200).render('admin/admin-index', { session, siteData });
         }
         return;
     }
