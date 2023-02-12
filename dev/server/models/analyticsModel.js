@@ -11,5 +11,5 @@ var Analytics;
         blogCount: Number,
         recipeCount: Number
     });
-    Analytics.AnalyticsModel = (0, mongoose_1.model)('Analytics', Analytics.AnalyticsSchema);
+    Analytics.Model = (0, mongoose_1.model)('Analytics', Analytics.AnalyticsSchema);
 })(Analytics = exports.Analytics || (exports.Analytics = {}));

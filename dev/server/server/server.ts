@@ -47,13 +47,13 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
   .catch((err) => console.log(err));
 
 // Analytics
-Analytics.AnalyticsModel.findOne({}, (err, analytics) => {
+Analytics.Model.findOne({}, (err, analytics) => {
   if (err) {
     console.log(err);
 
   } else {
     if (!analytics) {
-      const analytics = new Analytics.AnalyticsModel({
+      const analytics = new Analytics.Model({
         siteHits: 0,
         blogViews: 0,
         recipeViews: 0,
@@ -67,7 +67,7 @@ Analytics.AnalyticsModel.findOne({}, (err, analytics) => {
 });
 
 function updateAnalytics(req, res, next) {
-  Analytics.AnalyticsModel.findOne({}, (err, analytics) => {
+  Analytics.Model.findOne({}, (err, analytics) => {
     if (err) {
       console.log(err);
 

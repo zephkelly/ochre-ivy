@@ -66,8 +66,8 @@ blogNavAll?.addEventListener('click', () => {
     return;
   }
 
-  enableAllPage();
   setActiveFilter(allFilter);
+  enableAllPage();
 });
 
 function enableHomePage() {
@@ -292,58 +292,47 @@ filters.forEach((filter) => {
     } else {
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.delete('page');
-      window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
       setActiveFilter(filter);
     }
   });
 });
 
+function setActiveFilter(filter: HTMLElement) {
+  removeActiveFilter();
+  filter.classList.add('active');
+
+  const urlParams = new URLSearchParams(window.location.search);
+
+  function getFilter(): string {
+    if (filter === allFilter) {
+      return 'none';
+    } else if (filter === recipesFilter) {
+      return 'recipe';
+    } else if (filter === newestFilter) {
+      return 'newest';
+    } else if (filter === oldestFilter) {
+      return 'oldest';
+    } else if (filter === azFilter) {
+      return 'alphabetical';
+    }
+
+    console.log("Cant find filter");
+    return 'none';
+  }
+  
+  const selectedFilter = getFilter();
+
+  urlParams.set('filter', selectedFilter);
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  makeRequest("&filter=" + selectedFilter);
+}
+
 function removeActiveFilter() {
   filters.forEach((filter) => {
     filter.classList.remove('active');
   });
-}
-
-function setActiveFilter(filter: HTMLElement) {
-  removeActiveFilter();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  let queryParam = '';
-
-  if (filter === allFilter) {
-    allFilter.classList.add('active');
-
-    urlParams.set('filter', 'all');
-
-  } else if (filter === recipesFilter) {
-    queryParam = '&tag=recipe';
-    recipesFilter.classList.add('active');
-
-    urlParams.set('filter', 'recipe');
-
-  } else if (filter === newestFilter) {
-    queryParam = '&recent=true';
-    newestFilter.classList.add('active');
-
-    urlParams.set('filter', 'newest');
-
-  } else if (filter === oldestFilter) {
-    queryParam = '&oldest=true';
-    oldestFilter.classList.add('active');
-
-    urlParams.set('filter', 'oldest');
-
-  } else if (filter === azFilter) {
-    queryParam = '&alphabetical=true';
-    azFilter.classList.add('active');
-
-    urlParams.set('filter', 'alphabetical');
-  }
-  
-  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
-
-  makeRequest(queryParam);
 }
 
 // Pagination
@@ -383,26 +372,27 @@ function clearAllBlogs() {
 }
 
 function appendBlogs(data: any) {
-  data.forEach((blog: any) => {
+  //for loop
+  for (let i = 0; i < data.length; i++) {
     blogsAllSection.innerHTML += `
       <div class="all-blog">
         <div class="cover-img">
-          <img src="${blog.cover}" alt="${blog.title}" class="recipe-image">
+          <img src="${data[i].cover}" alt="${data[i].title}" class="recipe-image">
         </div>
         <div class="content">
           <div class="wrapper">
-            <h3 class="blog-title">${blog.title}</h3>
-            <h6 class="blog-subtitle">${blog.subtitle}</h6>
-            <p class="blog-date">${formatDate(blog.createdDate, true)}</p>
+            <h3 class="blog-title">${data[i].title}</h3>
+            <h6 class="blog-subtitle">${data[i].subtitle}</h6>
+            <p class="blog-date">${formatDate(data[i].createdDate, true)}</p>
           </div>
           <div class="wrapper">
-            <p class="all-blog-description">${formatString(blog.description, 255)}</p>
-            <a href="/blog/${blog.uri}" class="blog-link-all accent-button button-solid-accent">Read</a>
+            <p class="all-blog-description">${formatString(data[i].description, 255)}</p>
+            <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-solid-accent">Read</a>
           </div>
         </div>
       </div>
     `;
-  });
+  }
 }
 
 //Request

@@ -17,5 +17,5 @@ export module Analytics {
     recipeCount: Number
   });
   
-  export const AnalyticsModel = model<IAnalytics>('Analytics', AnalyticsSchema);
+  export const Model = model<IAnalytics>('Analytics', AnalyticsSchema);
 }
