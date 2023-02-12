@@ -13,20 +13,8 @@ exports.blog_getURI = exports.blog_homePage = exports.blogAPI_imageUpload = expo
 require('dotenv').config();
 const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
-// Model ----------------------------------------------------
-const blogSchema = new mongoose.Schema({
-    uri: String,
-    title: String,
-    titleLower: String,
-    subtitle: String,
-    description: String,
-    createdDate: String,
-    updatedDate: String,
-    cover: String,
-    tags: Array,
-    content: Object
-});
-const Blog = mongoose.model('Blog', blogSchema);
+const analyticsModel_1 = require("../models/analyticsModel");
+const blogModel_1 = require("../models/blogModel");
 //API Routes ------------------------------------------------
 function blogAPI_get(req, res) {
     let blogList = [];
@@ -52,7 +40,7 @@ function blogAPI_get(req, res) {
         if (req.query.tag == 'featured') {
             limit = 3;
         }
-        Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        blogModel_1.BlogModel.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -63,7 +51,7 @@ function blogAPI_get(req, res) {
     }
     if (req.query.search) {
         //Search for exact match
-        Blog.aggregate([{
+        blogModel_1.BlogModel.aggregate([{
                 $match: {
                     $or: [
                         { title: req.query.search.toLowerCase() },
@@ -90,7 +78,7 @@ function blogAPI_get(req, res) {
             let regex = new RegExp(word, 'i');
             searchRegexArray.push(regex);
         });
-        Blog.aggregate([{
+        blogModel_1.BlogModel.aggregate([{
                 $match: {
                     $or: [
                         { title: { $in: searchRegexArray } },
@@ -121,7 +109,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.alphabetical) {
-        Blog.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        blogModel_1.BlogModel.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -131,7 +119,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.oldest) {
-        Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        blogModel_1.BlogModel.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -141,7 +129,7 @@ function blogAPI_get(req, res) {
         return;
     }
     if (req.query.recent) {
-        Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+        blogModel_1.BlogModel.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
                 return console.log(err);
             }
@@ -150,7 +138,7 @@ function blogAPI_get(req, res) {
         });
         return;
     }
-    Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
+    blogModel_1.BlogModel.find({}).skip(skip).limit(limit).exec((err, blogs) => {
         if (err) {
             return console.log(err);
         }
@@ -177,7 +165,13 @@ function blogAPI_get(req, res) {
 }
 exports.blogAPI_get = blogAPI_get;
 function blogAPI_getURI(req, res) {
-    Blog.find({ uri: req.params.blogURI }, (err, blog) => {
+    analyticsModel_1.Analytics.AnalyticsModel.findOneAndUpdate({ uri: req.params.blogURI }, { $inc: { views: 1 } }, { new: true }, (err, analytics) => {
+        if (err) {
+            console.log("500");
+            return res.send("500");
+        }
+    });
+    blogModel_1.BlogModel.find({ uri: req.params.blogURI }, (err, blog) => {
         if (err) {
             console.log("500");
             return res.send("500");
@@ -246,7 +240,7 @@ function blogAPI_update(req, res) {
             }
             else {
                 //Does post already exist?
-                let postCount = yield Blog.find({ uri: req.body.uri }).countDocuments();
+                let postCount = yield blogModel_1.BlogModel.find({ uri: req.body.uri }).countDocuments();
                 if (postCount > 0) {
                     return { failedValidation: true, message: postExistsMsg };
                 }
@@ -260,7 +254,7 @@ function blogAPI_update(req, res) {
             res.status(400).send("Bad request: " + validationStatus.message);
             return;
         }
-        Blog.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
+        blogModel_1.BlogModel.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
             if (err) {
                 res.send(err);
             }
@@ -273,7 +267,7 @@ function blogAPI_update(req, res) {
 exports.blogAPI_update = blogAPI_update;
 function blogAPI_delete(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        Blog.deleteOne({ uri: req.params.blogURI }, (err) => __awaiter(this, void 0, void 0, function* () {
+        blogModel_1.BlogModel.deleteOne({ uri: req.params.blogURI }, (err) => __awaiter(this, void 0, void 0, function* () {
             if (err) {
                 res.status(500).send("Error deleting post");
                 return;
@@ -380,7 +374,7 @@ function validateBlogData(body, isUpdate = false) {
     let createdDate = (body.date == null || body.date == '')
         ? new Date().toISOString()
         : new Date(body.date).toISOString();
-    const blog = new Blog({
+    const blog = new blogModel_1.BlogModel({
         uri: body.uri,
         title: body.title,
         titleLower: body.title.toLowerCase(),
@@ -423,7 +417,7 @@ function validateBlogData(body, isUpdate = false) {
     blog.title = cleanContent(blog.title);
     blog.subtitle = cleanContent(blog.subtitle);
     blog.description = cleanContent(blog.description);
-    blog.content.blocks.forEach(block => {
+    body.content.blocks.forEach(block => {
         if (block.type == 'paragraph') {
             block.data.text = cleanContent(block.data.text);
         }

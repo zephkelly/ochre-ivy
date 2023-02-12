@@ -13,15 +13,29 @@ exports.dashboard_blog_editURI_post = exports.dashboard_blog_editURI = exports.d
 const mongoose = require('mongoose').mongoose;
 const fetch = require("node-fetch-commonjs");
 function dashboard_get(req, res) {
-    res.render('admin/dashboard', { title: 'Dashboard' });
+    const session = { name: null, admin: false };
+    if (req.session.userid) {
+        session.name = req.session.name;
+        if (req.session.roles == 'admin') {
+            session.admin = true;
+        }
+    }
+    res.render('admin/admin-dashboard', { session });
 }
 exports.dashboard_get = dashboard_get;
 function dashboard_blog_get(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const session = { name: null, admin: false };
+        if (req.session.userid) {
+            session.name = req.session.name;
+            if (req.session.roles == 'admin') {
+                session.admin = true;
+            }
+        }
         const response = yield fetch('http://localhost:62264/api/blog/');
         if (response.status == 200) {
             const blogsData = yield response.json();
-            res.render('admin/blog', { blogsData }, (err, html) => {
+            res.render('admin/admin-dashboard-blog', { session, blogsData }, (err, html) => {
                 if (err) {
                     return console.log(err);
                 }

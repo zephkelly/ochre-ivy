@@ -66,14 +66,15 @@ blogNavAll?.addEventListener('click', () => {
     return;
   }
 
-  setActiveFilter(allFilter);
   enableAllPage();
+  setActiveFilter(allFilter);
 });
 
 function enableHomePage() {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.delete('section');
   urlParams.delete('filter');
+  urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   //Reset all page
@@ -109,6 +110,7 @@ function enableHomePage() {
 function enableAllPage() {
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.set('section', 'all');
+  urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   blogNavHome.classList.remove('active');
@@ -288,6 +290,10 @@ filters.forEach((filter) => {
       return;
 
     } else {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.delete('page');
+      window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
       setActiveFilter(filter);
     }
   });
@@ -346,7 +352,12 @@ const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button
 morebutton.addEventListener('click', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const sectionParam = urlParams.get('section');
-  const pageParam = urlParams.get('page');
+  let pageParam = urlParams.get('page');
+
+  if (!pageParam) {
+    pageParam = '1';
+  }
+
   const filterParam = urlParams.get('filter');
 
   let queryParam = 'section=' + sectionParam + '&filter=' + filterParam;
@@ -357,8 +368,8 @@ morebutton.addEventListener('click', () => {
 });
 
 function checkIfMoreBlogs(data: any) {
-  if (data.length % 10 === 0) {
-    morebutton.style.display = 'block';
+  if (data.length % 10 === 0 && data.length > 0) {
+    morebutton.style.display = 'flex';
   } else {
     morebutton.style.display = 'none';
   }

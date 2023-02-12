@@ -1096,7 +1096,6 @@ main {
   color: var(--accent-color-secondary);
 }
 
-
 #blogs-recent {
   width: 100%;
   display: flex;
@@ -1104,8 +1103,6 @@ main {
   align-items: center;
   gap: 1rem;
   margin-top: 3.5rem;
-  background-color: var(--light);
-  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05);
   border-radius: 0.5rem;
 }
 #blogs-recent .recent-blog {
@@ -1124,6 +1121,7 @@ main {
   opacity: 0.5;
   height: 1px;
   width: 80%;
+  margin-bottom: -0.05rem;
 }
 #blogs-recent .content .wrapper {
   display: flex;
@@ -1405,13 +1403,20 @@ main {
   border-top: none;
 }
 
-/* Editor -------------------------------------- */
+/* Admin Section ------------------------------ */
+#admin-dashboard {
+  margin-top: 0rem;
+  margin-bottom: 6rem;
+}
+
+/* Editor/Blog Formatting --------------------- */
 #link-section a {
   font-family: 'Poppins', sans-serif;
   color: grey;
   text-decoration: none;
   margin: 0rem;
   padding-right: 0.6rem;
+  user-select: none;
 }
 #link-section a:not(:first-child) {
   padding-left: 0.6rem;

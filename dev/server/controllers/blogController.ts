@@ -2,21 +2,8 @@ require('dotenv').config()
 const fetch = require("node-fetch-commonjs");
 const mongoose = require('mongoose').mongoose;
 
-// Model ----------------------------------------------------
-const blogSchema = new mongoose.Schema({
-  uri: String,
-  title: String,
-  titleLower: String,
-  subtitle: String,
-  description: String,
-  createdDate: String,
-  updatedDate: String,
-  cover: String,
-  tags: Array,
-  content: Object
-});
-
-const Blog = mongoose.model('Blog', blogSchema);
+import { Analytics } from '../models/analyticsModel';
+import { BlogModel } from '../models/blogModel';
 
 //API Routes ------------------------------------------------
 export function blogAPI_get(req, res) {
@@ -49,7 +36,7 @@ export function blogAPI_get(req, res) {
       limit = 3;
     }
 
-    Blog.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+    BlogModel.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
@@ -60,7 +47,7 @@ export function blogAPI_get(req, res) {
 
   if (req.query.search) {
     //Search for exact match
-    Blog.aggregate([{
+    BlogModel.aggregate([{
       $match: {
         $or: [
           { title: req.query.search.toLowerCase() },
@@ -90,7 +77,7 @@ export function blogAPI_get(req, res) {
       searchRegexArray.push(regex);
     });
 
-    Blog.aggregate([{
+    BlogModel.aggregate([{
       $match: {
         $or: [
           { title: { $in: searchRegexArray } },
@@ -124,7 +111,7 @@ export function blogAPI_get(req, res) {
   }
 
   if (req.query.alphabetical) {
-    Blog.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+    BlogModel.find({}).sort({ titleLower: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
@@ -135,7 +122,7 @@ export function blogAPI_get(req, res) {
   }
 
   if (req.query.oldest) {
-    Blog.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
+    BlogModel.find({}).sort({ createdDate: 1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
@@ -145,7 +132,7 @@ export function blogAPI_get(req, res) {
   }
 
   if (req.query.recent) {
-    Blog.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
+    BlogModel.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
       if (err) { return console.log(err); }
 
       pushToBlogList(blogs, queryDisplay);
@@ -154,7 +141,7 @@ export function blogAPI_get(req, res) {
     return;
   }
 
-  Blog.find({}).skip(skip).limit(limit).exec((err, blogs) => {
+  BlogModel.find({}).skip(skip).limit(limit).exec((err, blogs) => {
     if (err) { return console.log(err); }
     
     pushToBlogList(blogs, queryDisplay);
@@ -182,7 +169,14 @@ export function blogAPI_get(req, res) {
 }
 
 export function blogAPI_getURI(req, res) {
-  Blog.find({ uri: req.params.blogURI }, (err, blog) => {
+  Analytics.AnalyticsModel.findOneAndUpdate({ uri: req.params.blogURI }, { $inc: { views: 1 } }, { new: true }, (err, analytics) => {
+    if (err) {
+      console.log("500")
+      return res.send("500");
+    }
+  });
+
+  BlogModel.find({ uri: req.params.blogURI }, (err, blog) => {
     if (err) {
       console.log("500")
       return res.send("500");
@@ -255,7 +249,7 @@ export async function blogAPI_update(req, res) {
       delete update.uri;
     } else {
       //Does post already exist?
-      let postCount = await Blog.find({ uri: req.body.uri }).countDocuments();
+      let postCount = await BlogModel.find({ uri: req.body.uri }).countDocuments();
       if (postCount > 0) { return { failedValidation: true, message: postExistsMsg }; }
     }
 
@@ -271,7 +265,7 @@ export async function blogAPI_update(req, res) {
     return;
   }
 
-  Blog.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
+  BlogModel.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
     if (err) {
       res.send(err);
     } else {
@@ -281,7 +275,7 @@ export async function blogAPI_update(req, res) {
 }
 
 export async function blogAPI_delete(req, res) {
-  Blog.deleteOne({ uri: req.params.blogURI }, async (err) => {
+  BlogModel.deleteOne({ uri: req.params.blogURI }, async (err) => {
     if (err) {
       res.status(500).send("Error deleting post");
       return;
@@ -339,7 +333,7 @@ export async function blog_homePage(req, res) {
   if (allResponse.status == 200) {
     allBlogs = await allResponse.json();
   }
-
+  
   //create object to store admin controls
   const session = { notification: false, admin: false }
   
@@ -397,7 +391,7 @@ function validateBlogData(body, isUpdate = false) {
     ? new Date().toISOString()
     : new Date(body.date).toISOString();
   
-  const blog = new Blog({
+  const blog = new BlogModel({
     uri: body.uri,
     title: body.title,
     titleLower: body.title.toLowerCase(),
@@ -408,6 +402,7 @@ function validateBlogData(body, isUpdate = false) {
     cover: body.cover,
     tags: body.tags,
     content: body.content,
+    views: (isUpdate) ? body.views: 0,
   });
 
   if (body.uri == null || body.uri == "") {
@@ -443,7 +438,7 @@ function validateBlogData(body, isUpdate = false) {
   blog.subtitle = cleanContent(blog.subtitle);
   blog.description = cleanContent(blog.description);
 
-  blog.content.blocks.forEach(block => {
+  body.content.blocks.forEach(block => {
     if (block.type == 'paragraph') {
       block.data.text = cleanContent(block.data.text);
     }

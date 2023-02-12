@@ -6,12 +6,13 @@
   "scripts": {
     "copyControllers": "copyfiles -u 1 ./controllers/*.js ./../../dist/server/controllers",
     "copyRoutes": "copyfiles -u 1 ./routes/*.js ./../../dist/server/routes",
+    "copyModels": "copyfiles -u 1 ./models/*.js ./../../dist/server/models",
     "copyViews1": "copyfiles ./views/** ./../../dist/server",
     "copyViews2": "copyfiles ./views/**/** ./../../dist/server",
     "copyViews": "npm run copyViews1 && npm run copyViews2",
     "copyServer": "copyfiles -u 1 ./server/*.js ./../../dist",
     "compile": "tsc",
-    "copy": "npm run copyControllers && npm run copyRoutes && npm run copyServer && npm run copyViews",
+    "copy": "npm run copyControllers && npm run copyRoutes && npm run copyModels && npm run copyServer && npm run copyViews",
     "build": "npm run compile && npm run copy"
   },
   "author": "",

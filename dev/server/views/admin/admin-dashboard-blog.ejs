@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
+  <title>Blog Dashboard</title>
+  <script type="module" crossorigin src="/main.js"></script>
+  <script type="module" crossorigin src="/blogEditor.js"></script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <%- include('../partials/navbar.ejs') %>
+    <% if ( session.notification ) { %>
+    <section id="notification">
+      <div class="container">
+        <div class="wrapper">
+          <h6 class="logged-in">Signed in successfully!</h6>
+          <span class="check-symbol material-symbols-outlined">done</span>
+        </div>
+        <p class="logged-in-notification">Welcome back, <%= session.name %>.</p>
+      </div>
+      <script>
+        window.history.replaceState({}, document.title, "/");
+      </script>
+    </section>
+    <% } %>
+    <main>
+      <section id="link-section">
+        <div class="section-container">
+          <a href="/dashboard">Dashboard</a> > <a class=" active dashboard-nav-link">Blog</a>
+        </div>
+      </section>
+      <scetion id="admin-dashboard-blog">
+        
+      </scetion>
+    </main>
+  </body>
+</html>

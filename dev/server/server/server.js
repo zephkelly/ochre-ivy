@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,6 +11,8 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./server/routes/authRoutes');
 const blogRoutes = require('./server/routes/blogRoutes');
 const adminRoutes = require('./server/routes/adminRoutes');
+// @ts-ignore
+const analyticsModel_1 = require("./server/models/analyticsModel");
 const app = express();
 const PORT = process.env.PORT;
 app.set('view engine', 'ejs', 'html');
@@ -36,15 +40,45 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedT
     app.listen(PORT, () => { console.log('Listening on port ' + PORT); });
 })
     .catch((err) => console.log(err));
+// Analytics
+analyticsModel_1.Analytics.AnalyticsModel.findOne({}, (err, analytics) => {
+    if (err) {
+        console.log(err);
+    }
+    else {
+        if (!analytics) {
+            const analytics = new analyticsModel_1.Analytics.AnalyticsModel({
+                siteHits: 0,
+                blogViews: 0,
+                recipeViews: 0,
+                blogCount: 0,
+                recipeCount: 0
+            });
+            analytics.save();
+        }
+    }
+});
+function updateAnalytics(req, res, next) {
+    analyticsModel_1.Analytics.AnalyticsModel.findOne({}, (err, analytics) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            analytics.siteHits += 1;
+            analytics.save();
+        }
+    });
+    return next();
+}
 //Routes
-app.get('/', (req, res) => {
+app.get('/', updateAnalytics, (req, res) => {
     var _a;
     const session = { name: null, admin: false, notification: false };
-    const siteData = { blogCount: 0, recipeCount: 0 };
     if (req.session.userid) {
         session.name = req.session.name;
         if (req.session.roles == 'admin') {
             session.admin = true;
+            const siteData = { blogCount: 0, recipeCount: 0 };
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
                 session.notification = true;
             }
