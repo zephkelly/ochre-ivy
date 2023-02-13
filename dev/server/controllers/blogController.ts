@@ -139,7 +139,6 @@ export function blogAPI_get(req, res) {
           if (err) { return console.log(err); }
           pushToBlogList(blogs, queryDisplay);
           blogList = blogList.sort(() => Math.random() - 0.5);
-          
           res.send(blogList);
         });
         break;

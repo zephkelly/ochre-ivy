@@ -104,6 +104,20 @@ app.get('/', updateAnalytics, (req, res) => {
   res.status(200).sendFile(__dirname + '/index.html');
 });
 
+app.get('/about', (req, res) => {
+  const session = { name: null, admin: false, notification: false };
+
+  if(req.session.userid) {
+    session.name = req.session.name;
+
+    if (req.session.roles == 'admin') {
+      session.admin = true;
+    }
+  }
+
+  res.status(200).sendFile(__dirname + '/about.html');
+});
+
 app.use(authRoutes);
 app.use(blogRoutes);
 app.use(adminRoutes);

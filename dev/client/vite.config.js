@@ -7,6 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        about: resolve(__dirname, 'about.html'),
         blogEditor: 'src/blog/blogEditor.ts',
         blogHome: 'src/blog/blogHome.ts',
         blogPost: 'src/blog/blogPost.ts',
@@ -14,7 +15,7 @@ export default defineConfig({
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`
+        assetFileNames: `[name].[ext]`,
       }
     },
   },

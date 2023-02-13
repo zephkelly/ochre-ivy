@@ -100,6 +100,7 @@ main {
 }
 .navbar .nav-text {
   transition: 0.15s ease-out;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 1.8rem;
   margin: 0;
   margin-bottom: 0.4rem;
@@ -479,10 +480,10 @@ main {
 }
 #recipes-section .recipe-bgBox:last-of-type {
   position: absolute;
-  left: 10rem;
+  left: 6rem;
   top: 30rem;
-  border-radius: 20rem;
-  transform: rotate(60deg);
+  border-radius: 40rem;
+  transform: rotate(50deg);
   background-color: var(--accent-color);
   width: 100vw;
   height: 100vw;
@@ -537,6 +538,74 @@ main {
 #footer-main .footer-nav-item:hover > * {
   color: var(--accent-color-secondary);
   font-size: 1.2rem;
+}
+
+/* About page --------------------------------------- */
+.about-page-title {
+  font-family: Poppins, sans-serif;
+  font-size: 3rem;
+  font-weight: 400;
+  margin: 0rem;
+}
+
+#about-section {
+  min-height: 700px;
+  margin-bottom: 7rem;
+}
+#about-section .about-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-top: 2rem;
+}
+#about-section .about-container .wrapper:first-of-type {
+  position: relative;
+}
+#about-section .img-container {
+  width: 85%;
+  height: 85%;
+  position: absolute;
+  overflow: hidden;
+}
+#about-section .img-container:first-of-type {
+  right: 0rem;
+  top: 0rem;
+}
+#about-section .img-container:last-of-type {
+  left: 0rem;
+  bottom: 0rem;
+}
+#about-section .about-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+}
+#about-section .img-container .about-img.portrait{
+  z-index: 1;
+}
+#about-section .img-container .about-img.filler {
+  z-index: 0;
+  width: 150%;
+  height: 150%;
+  top: -10%;
+}
+#about-section .about-description {
+  font-family: Lato, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-top: 2rem;
+}
+#about-section .about-description:first-of-type {
+  margin-top: 0rem;
+}
+
+#about-instagram {
+  margin-bottom: 7rem;
+}
+#about-instagram .about-page-title {
+  text-align: right;
 }
 
 /* Server rendered styles */

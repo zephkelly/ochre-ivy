@@ -148,6 +148,7 @@ function blogAPI_get(req, res) {
                         return console.log(err);
                     }
                     pushToBlogList(blogs, queryDisplay);
+                    blogList = blogList.sort(() => Math.random() - 0.5);
                     res.send(blogList);
                 });
                 break;
