@@ -1,38 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title>Ochre & Ivy</title>
+  <%- include('partials/head.ejs') %>
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <div class="section">
-        <div class="container">
-          <a class="wrapper" href="/">
-            <h3 class="nav-text">Ochre & Ivy</h3>
-            <div class="nav-text-spacer"></div>
-          </a>
-          <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-          <nav class="nav-menu">
-            <ul class="nav-list">
-              <li class="nav-item"><a href="/">Home</a></li>
-              <li class="nav-item"><a href="/blog">Blog</a></li>
-              <li class="nav-item"><a href="/blog?page=all&filter=recipe">Recipes</a></li>
-              <li class="nav-item"><a href="/about">About</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
+  <%- include('partials/navbar.ejs') %>
   <main>
     <section id="landing">
       <div class="section-container">
@@ -60,14 +32,14 @@
           <a class="latest-post-btn accent-button button-outlined-black" href="/blog?page=all&filter=recipe">Read now</a>
         </div>
         <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
+        <div id="blog-bgBox"></div>
       </div>
-      <div id="blog-bgBox"></div>
     </section>
     <section id="recipes-section">
       <div class="section-container">
-        <h3 class="recipes-text">Delicious, <span class="accent-color">plant-based</span> recipes.</h3>
+        <h3 class="recipes-text">Delicious, plant-based recipes.</h3>
         <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
-        <a class="recipes-btn accent-button button-outlined-black">Read now</a>
+        <a class="recipes-btn accent-button button-outlined-black" href="/blog?page=all&filter=recipe">View all</a>
         <div class="recipe-bgBox"></div>
         <div class="recipe-bgBox"></div>
       </div>

@@ -13,14 +13,50 @@ exports.dashboard_blog_editURI_post = exports.dashboard_blog_editURI = exports.d
 const mongoose = require('mongoose').mongoose;
 const fetch = require("node-fetch-commonjs");
 function dashboard_get(req, res) {
-    const session = { name: null, admin: false };
-    if (req.session.userid) {
-        session.name = req.session.name;
-        if (req.session.roles == 'admin') {
-            session.admin = true;
+    return __awaiter(this, void 0, void 0, function* () {
+        const session = { name: null, admin: false };
+        if (req.session.userid) {
+            session.name = req.session.name;
+            if (req.session.roles == 'admin') {
+                session.admin = true;
+            }
         }
-    }
-    res.render('admin/admin-dashboard', { session });
+        res.render('admin/admin-dashboard', { session, siteData: yield getSiteData(), allBlogs: yield getAllBlogs() });
+        function getSiteData() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const siteData = {
+                    blogCount: null,
+                    recipeCount: null,
+                    viewCount: null,
+                    blogViews: null,
+                    recipeViews: null,
+                    siteHits: null,
+                    mostViewedBlogs: [null]
+                };
+                const counts = yield fetch('http://localhost:' + process.env.PORT + '/api/blog?count=true');
+                const countsData = yield counts.json();
+                siteData.blogCount = countsData.blogCount;
+                siteData.recipeCount = countsData.recipeCount;
+                const views = yield fetch('http://localhost:' + process.env.PORT + '/api/analytics');
+                const viewsData = yield views.json();
+                siteData.viewCount = viewsData.blogViews + viewsData.recipeViews;
+                siteData.blogViews = viewsData.blogViews;
+                siteData.recipeViews = viewsData.recipeViews;
+                siteData.siteHits = viewsData.siteHits;
+                const mostViewedBlogs = yield fetch('http://localhost:' + process.env.PORT + '/api/blog?filter=views&limit=3&display=true');
+                const mostViewedBlogsData = yield mostViewedBlogs.json();
+                siteData.mostViewedBlogs = mostViewedBlogsData;
+                return siteData;
+            });
+        }
+        function getAllBlogs() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const allData = yield fetch('http://localhost:' + process.env.PORT + '/api/blog?limit=20&display=true');
+                const allBlogs = yield allData.json();
+                return allBlogs;
+            });
+        }
+    });
 }
 exports.dashboard_get = dashboard_get;
 function dashboard_blog_get(req, res) {

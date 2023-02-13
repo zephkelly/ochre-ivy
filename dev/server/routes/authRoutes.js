@@ -4,8 +4,8 @@ const { Router } = require('express');
 const authController = require('../controllers/authController');
 const router = Router();
 //API Routes ------------------------------------------------
-router.get("/api/logout", (req, res) => { authController.logout_get(req, res); });
-router.get("/api/op/:email", authController.isAuthorised, (req, res) => { authController.makeAdmin_get(req, res); });
+router.get("/logout", (req, res) => { authController.logout_get(req, res); });
+router.get("/api/admin/:email", authController.isAuthorised, (req, res) => { authController.makeAdmin_get(req, res); });
 //Routes ------------------------------------------------
 router.post("/signup", (req, res) => { authController.signup_post(req, res); });
 router.get("/signup", (req, res) => { authController.signup_get(req, res); });

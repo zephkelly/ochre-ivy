@@ -1,18 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title>Blog | Home</title>
-  <script type="module" crossorigin src="/main.js"></script>
+  <%- include('partials/head.ejs') %>
   <script type="module" crossorigin src="/blogHome.js"></script>
-  <link rel="stylesheet" href="/index.css">
 </head>
 <body>
   <%- include('partials/navbar.ejs') %>
@@ -95,7 +85,7 @@
                       </div>
                       <div class="wrapper">
                         <p class="recipe-description"><%= blog.description %></p>
-                        <a href="/blog/<%= blog.uri %>" class="blog-link">Read more</a>
+                        <a href="/blog/<%= blog.uri %>" class="blog-link button-outlined-accent">Read more</a>
                       </div>
                     </div>
                   </div>
@@ -117,7 +107,7 @@
                           </div>
                           <div class="container">
                             <div class="blog-date"><%= blog.createdDate %></div>
-                            <a class="recent-blog-btn accent-button button-solid-accent" href="/blog/<%= blog.uri %>"><span class="material-symbols-outlined">chevron_right</span></a>
+                            <a class="recent-blog-btn accent-button button-outlined-accent" href="/blog/<%= blog.uri %>"><span class="material-symbols-outlined">chevron_right</span></a>
                           </div>
                         </div>
                         <% if (i != recentBlogs.length - 1) { %>
@@ -162,25 +152,7 @@
       </section>
       <section id="blogs-all">
         <div class="section-container">
-          <% for (i = 0; i < allBlogs.length; i++) { %>
-            <% const blog = allBlogs[i]; %>
-            <div class="all-blog">
-              <div class="cover-img">
-                <img src="<%- blog.cover %>" alt="<%= blog.title %>" class="recipe-image">
-              </div>
-              <div class="content">
-                <div class="wrapper">
-                  <h3 class="blog-title"><%= blog.title %></h3>
-                  <h6 class="blog-subtitle"><%= blog.subtitle %></h6>
-                  <p class="blog-date"><%= blog.createdDate %></p>
-                </div>
-                <div class="wrapper">
-                  <p class="all-blog-description"><%= blog.description %></p>
-                  <a href="/blog/<%= blog.uri %>" class="blog-link-all accent-button button-solid-accent">Read</a>
-                </div>
-              </div>
-            </div>
-          <% }; %>
+    
         </div>
       </section>
       <section id="blogs-more">

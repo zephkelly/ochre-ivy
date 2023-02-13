@@ -1,9 +1,19 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
+const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
@@ -11,6 +21,7 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./server/routes/authRoutes');
 const blogRoutes = require('./server/routes/blogRoutes');
 const adminRoutes = require('./server/routes/adminRoutes');
+const analyticsRoutes = require('./server/routes/analyticsRoutes');
 // @ts-ignore
 const analyticsModel_1 = require("./server/models/analyticsModel");
 const app = express();
@@ -71,23 +82,45 @@ function updateAnalytics(req, res, next) {
     return next();
 }
 //Routes
-app.get('/', updateAnalytics, (req, res) => {
+app.get('/', updateAnalytics, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const session = { name: null, admin: false, notification: false };
     if (req.session.userid) {
         session.name = req.session.name;
         if (req.session.roles == 'admin') {
             session.admin = true;
-            const siteData = { blogCount: 0, recipeCount: 0 };
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
                 session.notification = true;
             }
-            res.status(200).render('admin/admin-index', { session, siteData });
+            res.status(200).render('admin/admin-index', { session, siteData: yield getSiteData() });
         }
         return;
     }
-    res.status(200).sendFile(__dirname + '/index.html');
-});
+    res.status(200).render('index', { session, blogData: yield getBlogData() });
+    //Functions
+    function getBlogData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield fetch('http://localhost:' + process.env.PORT + '/api/blogs?filter=recent&limit=1&display=true');
+        });
+    }
+    function getSiteData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const siteData = {
+                blogCount: null,
+                recipeCount: null,
+                blogViews: null,
+            };
+            const counts = yield fetch('http://localhost:' + process.env.PORT + '/api/blog?count=true');
+            const countsData = yield counts.json();
+            siteData.blogCount = countsData.blogCount;
+            siteData.recipeCount = countsData.recipeCount;
+            const views = yield fetch('http://localhost:' + process.env.PORT + '/api/analytics');
+            const viewsData = yield views.json();
+            siteData.blogViews = viewsData.blogViews;
+            return siteData;
+        });
+    }
+}));
 app.get('/about', (req, res) => {
     const session = { name: null, admin: false, notification: false };
     if (req.session.userid) {
@@ -101,5 +134,6 @@ app.get('/about', (req, res) => {
 app.use(authRoutes);
 app.use(blogRoutes);
 app.use(adminRoutes);
+app.use(analyticsRoutes);
 app.use(express.static('./assets'));
 app.use(express.static('./public'));

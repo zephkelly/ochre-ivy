@@ -36,6 +36,23 @@ function blogAPI_get(req, res) {
         }
     }
     let skip = (page - 1) * limit;
+    if (req.query.count) {
+        const countData = { blogCount: null, recipeCount: null };
+        blogModel_1.Blog.Model.countDocuments({}, (err, count) => {
+            if (err) {
+                return console.log(err);
+            }
+            countData.blogCount = count;
+            blogModel_1.Blog.Model.countDocuments({ tags: { $in: ['recipe'] } }, (err, count) => {
+                if (err) {
+                    return console.log(err);
+                }
+                countData.recipeCount = count;
+                res.status(200).send(countData);
+            });
+        });
+        return;
+    }
     if (req.query.tag) {
         if (req.query.tag == 'featured') {
             limit = 3;
@@ -142,7 +159,7 @@ function blogAPI_get(req, res) {
                     res.send(blogList);
                 });
                 break;
-            case 'recipe':
+            case 'recipe' || 'recipes':
                 blogModel_1.Blog.Model.find({ tags: { $in: ['recipe'] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
                     if (err) {
                         return console.log(err);
@@ -222,6 +239,15 @@ function blogAPI_getURI(req, res) {
         blogModel_1.Blog.Model.findOneAndUpdate({ uri: req.params.blogURI }, { $inc: { views: 1 } }, (err, blog) => {
             if (err) {
                 return console.log(err);
+            }
+        });
+        analyticsModel_1.Analytics.Model.findOne({}, (err, analytics) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                analytics.blogViews += 1;
+                analytics.save();
             }
         });
         return res.status(200).send(blog[0]);
@@ -363,7 +389,6 @@ function blog_homePage(req, res) {
         const featuredBlogs = yield getBlogsFromAPI(fetchURL + '&tag=featured');
         const recipesBlogs = yield getBlogsFromAPI(fetchURL + '&tag=recipe');
         const recentBlogs = yield getBlogsFromAPI(fetchURL + '&filter=newest');
-        const allBlogs = yield getBlogsFromAPI(fetchURL + '&page=1');
         //create object to store admin controls
         const session = { notification: false, admin: false };
         if (req.session.userid != null) {
@@ -374,7 +399,7 @@ function blog_homePage(req, res) {
                 }
             }
         }
-        const blogHome = yield res.render('blog-home', { session, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
+        const blogHome = yield res.render('blog-home', { session, featuredBlogs, recipesBlogs, recentBlogs }, (err, html) => {
             if (err) {
                 return console.log(err);
             }

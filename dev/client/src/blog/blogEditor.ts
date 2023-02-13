@@ -31,10 +31,10 @@ const editor = new EditorJS({
 
 const saveButton: HTMLElement = document.getElementById('save-button') as HTMLElement;
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   //check if the url contains /blog/edit/ and if so, load the blog data
   if (window.location.href.includes('/dashboard/blog/edit/')) {
-    loadEditBlog();
+    await loadEditBlog();
     
     const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
     dashboardNavLink.innerText = 'Edit';
@@ -300,9 +300,11 @@ async function loadEditBlog() {
   });
   
   //read body from response ReadableStream
-  response.body?.getReader().read().then(({ value }) => {
+  response.body?.getReader().read().then(async ({ value })=> {
     if (response.status == 200) {
-      const blogData = JSON.parse(new TextDecoder().decode(value));
+      const data = new TextDecoder().decode(value);
+      const blogData = await JSON.parse(data);
+
       loadedBlog = blogData;
 
       uriInput.value = blogData.uri;
@@ -322,9 +324,9 @@ async function loadEditBlog() {
 
       createdDate.value = year + '/' + pad(month) + '/' + pad(day);
 
-      runValidation();
+      await runValidation();
 
-      editor.isReady.then(() => {
+      await editor.isReady.then(() => {
         editor.render(blogData.content);
       });
     }

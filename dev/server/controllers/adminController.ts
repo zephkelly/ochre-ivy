@@ -1,8 +1,7 @@
 const mongoose = require('mongoose').mongoose;
 const fetch = require("node-fetch-commonjs");
 
-export function dashboard_get(req, res) {
-
+export async function dashboard_get(req, res) {
   const session = { name: null, admin: false };
 
   if (req.session.userid) {
@@ -13,7 +12,44 @@ export function dashboard_get(req, res) {
     }
   }
 
-  res.render('admin/admin-dashboard', { session });
+  res.render('admin/admin-dashboard', { session, siteData: await getSiteData(), allBlogs: await getAllBlogs() });
+
+  async function getSiteData() {
+    const siteData = {
+      blogCount: null,
+      recipeCount: null,
+      viewCount: null,
+      blogViews: null,
+      recipeViews: null,
+      siteHits: null,
+      mostViewedBlogs: [null]
+    }
+
+    const counts = await fetch('http://localhost:' + process.env.PORT + '/api/blog?count=true');
+    const countsData = await counts.json();
+    siteData.blogCount = countsData.blogCount;
+    siteData.recipeCount = countsData.recipeCount;
+
+    const views = await fetch('http://localhost:' + process.env.PORT + '/api/analytics');
+    const viewsData = await views.json();
+    siteData.viewCount = viewsData.blogViews + viewsData.recipeViews;
+    siteData.blogViews = viewsData.blogViews;
+    siteData.recipeViews = viewsData.recipeViews;
+    siteData.siteHits = viewsData.siteHits;
+
+    const mostViewedBlogs = await fetch('http://localhost:' + process.env.PORT + '/api/blog?filter=views&limit=3&display=true');
+    const mostViewedBlogsData = await mostViewedBlogs.json();
+    siteData.mostViewedBlogs = mostViewedBlogsData;
+
+    return siteData;
+  }
+
+  async function getAllBlogs() {
+    const allData = await fetch('http://localhost:' + process.env.PORT + '/api/blog?limit=20&display=true')
+    const allBlogs = await allData.json();
+
+    return allBlogs;
+  }
 }
 
 export async function dashboard_blog_get(req, res)

@@ -387,7 +387,7 @@ function appendBlogs(data: any) {
           </div>
           <div class="wrapper">
             <p class="all-blog-description">${formatString(data[i].description, 255)}</p>
-            <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-solid-accent">Read</a>
+            <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-outlined-accent">Read</a>
           </div>
         </div>
       </div>

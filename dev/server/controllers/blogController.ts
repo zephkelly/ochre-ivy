@@ -31,6 +31,23 @@ export function blogAPI_get(req, res) {
 
   let skip = (page - 1) * limit;
 
+  if (req.query.count) {
+    const countData = { blogCount: null, recipeCount: null };
+
+    Blog.Model.countDocuments({}, (err, count) => {
+      if (err) { return console.log(err); }
+      countData.blogCount = count;
+
+      Blog.Model.countDocuments({ tags: { $in: ['recipe'] } }, (err, count) => {
+        if (err) { return console.log(err); }
+        countData.recipeCount = count;
+
+        res.status(200).send(countData);
+      });
+    });
+    return;
+  }
+
   if (req.query.tag) {
     if (req.query.tag == 'featured') {
       limit = 3;
@@ -134,7 +151,7 @@ export function blogAPI_get(req, res) {
           res.send(blogList);
         });
         break;
-      case 'recipe':
+      case 'recipe' || 'recipes':
         Blog.Model.find({ tags: { $in: ['recipe'] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
           if (err) { return console.log(err); }
           pushToBlogList(blogs, queryDisplay);
@@ -219,6 +236,16 @@ export function blogAPI_getURI(req, res) {
     Blog.Model.findOneAndUpdate({ uri: req.params.blogURI }, { $inc: { views: 1 } }, (err, blog) => {
       if (err) { return console.log(err); }
     });
+
+    Analytics.Model.findOne({}, (err, analytics) => {
+    if (err) {
+      console.log(err);
+
+    } else {
+      analytics.blogViews += 1;
+      analytics.save();
+    }
+  });
 
     return res.status(200).send(blog[0]);
   });
@@ -363,7 +390,6 @@ export async function blog_homePage(req, res) {
   const featuredBlogs = await getBlogsFromAPI(fetchURL + '&tag=featured');
   const recipesBlogs = await getBlogsFromAPI(fetchURL + '&tag=recipe');
   const recentBlogs = await getBlogsFromAPI(fetchURL + '&filter=newest');
-  const allBlogs = await getBlogsFromAPI(fetchURL + '&page=1');
 
   //create object to store admin controls
   const session = { notification: false, admin: false }
@@ -378,7 +404,7 @@ export async function blog_homePage(req, res) {
     }
   }
 
-  const blogHome = await res.render('blog-home', { session, featuredBlogs, recipesBlogs, recentBlogs, allBlogs }, (err, html) => {
+  const blogHome = await res.render('blog-home', { session, featuredBlogs, recipesBlogs, recentBlogs }, (err, html) => {
     if (err) { return console.log(err); }
 
     res.status(200).send(html);

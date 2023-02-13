@@ -191,12 +191,12 @@ main {
   width: 8rem;
   height: 3rem;
   margin-top: 1.5rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
+  font-family: 'Latp', sans-serif;
+  font-weight: 400;
   font-size: 1.1rem;
   text-decoration: none;
   border-radius: 1.15rem;
-  border: solid 0.2rem;
+  border: solid 2px;
   transition: 0.15s ease-out;
   cursor: pointer;
 }
@@ -210,6 +210,17 @@ main {
   color: var(--accent-color);
   border-color: var(--dark);
   background-color: var(--dark);
+}
+
+.button-outlined-accent {
+  color: var(--accent-color-secondary);
+  border-color: var(--accent-color-secondary);
+  background-color: transparent;
+}
+.button-outlined-accent:hover {
+  color: var(--light);
+  border-color: var(--accent-color);
+  background-color: var(--accent-color);
 }
 
 .button-solid-accent {
@@ -375,18 +386,18 @@ main {
   position: absolute;
   transition: margin-top, right 0.3s ease-out;
   left: -3rem;
-  bottom: 6rem;
+  bottom: 10rem;
   width: 70%;
   height: auto;
   min-width: 5rem;
   max-width: 35rem;
   z-index: 0;
-  transform: rotate(8deg);
+  transform: rotate(30deg);
 }
 #blog-section #blog-bgBox {
-  position: relative;
-  bottom: 42rem;
-  left: -8rem;
+  position: absolute;
+  top: 6rem;
+  left: -10rem;
   border-radius: 15rem;
   background-color: var(--accent-color);
   width: 40rem;
@@ -985,16 +996,16 @@ main {
   font-size: 1.1rem;
   font-family: Lato, sans-serif;
   font-weight: 400;
-  color: var(--light);
-  background-color: var(--accent-color);
-  border: 2px var(--accent-color) solid;
+  color: var(--accent-color-secondary);
+  background-color: transparent;
+  border: 2px var(--accent-color-secondary) solid;
   border-radius: 1.17rem;
   transition: .15s ease-out;
 }
 #blogs-featured .featured-blog .blog-link:hover {
-  background-color: transparent;
-  border-color: var(--accent-color-secondary);
-  color: var(--accent-color-secondary);
+  background-color: var(--accent-color);
+  border-color: var(--accent-colory);
+  color: var(--light);
 }
 #blogs-featured .featured-blog .cover-img {
   width: 45%;
@@ -1152,17 +1163,10 @@ main {
   font-size: 1.1rem;
   font-family: Lato, sans-serif;
   font-weight: 400;
-  color: var(--light);
-  background-color: var(--accent-color);
-  border: 2px var(--accent-color) solid;
   border-radius: 1.17rem;
+  border: 2px solid;
   transition: .15s ease-out;
   cursor: pointer;
-}
-#blogs-recipes .recipe-blog .blog-link:hover {
-  background-color: transparent;
-  border-color: var(--accent-color-secondary);
-  color: var(--accent-color-secondary);
 }
 
 #blogs-recent {
@@ -1279,7 +1283,7 @@ main {
 #blog-all-toolbar .search-input {
   font-size: 1.1rem;
   width: 100%;
-  height: 2.2rem;
+  height: 2.3rem;
   border-radius: 1rem;
   padding: 0rem 0.8rem;
   border: none;
@@ -1322,10 +1326,10 @@ main {
   cursor: pointer;
   transition: .15s ease-out;
 }
-#blog-all-toolbar .group .filter-button:hover {
+#blog-all-toolbar .filter-buttons .filter-button:hover {
   color: var(--dark);
 }
-#blog-all-toolbar .group .filter-button.active {
+#blog-all-toolbar .filter-buttons .filter-button.active {
   color: var(--dark);
 }
 
@@ -1395,6 +1399,8 @@ main {
   color: grey;
 }
 #blogs-all .content .blog-link-all {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
   margin-top: 1rem;
   height: 2.5rem;
   width: 4.5rem;
@@ -1472,10 +1478,212 @@ main {
   border-top: none;
 }
 
-/* Admin Section ------------------------------ */
-#admin-dashboard {
+/* Dashboard Section ------------------------------ */
+#admin-dash-stats {
   margin-top: 0rem;
   margin-bottom: 6rem;
+}
+#admin-dash-stats .section-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+  background-color: var(--light);
+  border-radius: 1rem;
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.1);
+}
+#admin-dash-stats .wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  justify-content: center;
+  align-items: center;
+}
+#admin-dash-stats .container {
+  width: 100%;
+  height: 100%;
+}
+#admin-dash-stats .container.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 4rem;
+}
+#admin-dash-stats .container.main .stat-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3rem;
+}
+#admin-dash-stats .container.most-viewed {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#admin-dash-stats .container.most-viewed .stat {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+#admin-dash-stats .container.most-viewed .group {
+  width: 100%;
+  height: 100%;
+}
+#admin-dash-stats .most-viewed .stat-most-viewed {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  align-items: center;
+}
+#admin-dash-stats .stats-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--dark);
+  padding-bottom: 0.5rem;
+}
+#admin-dash-stats .stat-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0rem;
+  margin-bottom: 1rem;
+  color: var(--dark);
+}
+#admin-dash-stats .stat-title {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-bottom: 1rem;
+  color: grey;
+}
+#admin-dash-stats h3.stat-title {
+  margin-bottom: 0.4rem;
+}
+#admin-dash-stats .stat-value {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: var(--dark);
+}
+#admin-dash-stats .most-viewed-link {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+}
+#admin-dash-stats .most-viewed-blog-views {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  color: var(--dark);
+}
+#admin-dash-stats .stat-most-viewed .most-viewed-blog {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid grey;
+}
+#admin-dash-stats .stat-most-viewed .most-viewed-blog:last-of-type {
+  border-bottom: none;
+}
+#admin-dash-stats .most-viewed-blog .blog-title {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0rem;
+  color: var(--dark);
+  width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#admin-dash-stats .most-viewed-blog .visibility-icon {
+  font-size: 1.3rem;
+  color: var(--dark);
+  margin-right: 1rem;
+}
+#admin-dash-stats .most-viewed-blog .delete-button {
+  color: red;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+#blog-all-toolbar .filter-buttons .filter-button.dashboard {
+  color: grey;
+}
+#blog-all-toolbar .filter-buttons .filter-button.dashboard:hover {
+  color: var(--dark);
+}
+#blog-all-toolbar .filter-buttons .filter-button.dashboard.active {
+  color: var(--dark);
+}
+#blog-all-toolbar .search-input.dashboard {
+  box-shadow: 0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.1);
+}
+
+#dash-blog-toolbar .blog-admin-button {
+  text-decoration: none;
+  font-family: 'Lato', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  width: 10rem;
+}
+#blogs-all .all-blog.dashboard {
+  height: 35rem;
+}
+#blogs-all .wrapper .group {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+#blogs-all .all-blog .blog-tags {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-bottom: 0.5rem;
+  color: grey;
+  font-style: oblique;
+}
+#blogs-all .blog-link-all-dash {
+  border-radius: 1rem;
+  height: 2.5rem;
+  width: auto;
+  padding: 0rem 1rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border: 2px solid;
+  transition: 0.15s ease-out;
+}
+#blogs-all .blog-link-all-dash:hover {
+  font-size: 1.2rem;
+}
+#blogs-all .delete-button {
+  color: darkred;
+  border-color: darkred;
+  cursor: pointer;
+  user-select: none;
+}
+#blogs-all .delete-button:hover {
+  color: red;
+  border-color: red;
 }
 
 /* Editor/Blog Formatting --------------------- */
@@ -1764,9 +1972,6 @@ main {
   #blog-section .blog-text {
     font-size: 3rem;
   }
-  #blog-section #blog-bgBox {
-    left: -10rem; 
-  }
 
   #recipes-section .recipes-text {
     font-size: 3rem;
@@ -1899,15 +2104,6 @@ main {
   #blog-section .blog-description {
     padding-left: 10%;
   }
-  #blog-section #blog-illustration {
-    margin-top: 0rem;
-    width: 70%;
-  }
-  #blog-section #blog-bgBox {
-    bottom: 24rem;
-    width: 30rem;
-    height: 30rem;
-  }
 
   #recipes-section .container {
     margin-top: 20vw;
@@ -1989,17 +2185,6 @@ main {
     margin-right: 0rem;
         height: 2.8rem;
   }
-  #blog-section #blog-illustration {
-    width: 80%;
-    margin-top: 0rem;
-    margin-left: 1rem;
-  }
-  #blog-section #blog-bgBox {
-    left: -20rem;
-    top: -28rem;
-    width: 30rem;
-    height: 30rem;
-  }
 
   #recipes-section {
     margin-top: 10vw;
@@ -2077,11 +2262,6 @@ main {
   #blog-section .blog-btn {
     margin-right: 0rem;
         height: 2.8rem;
-  }
-  #blog-section #blog-illustration {
-    width: 90%;
-    margin-top: 2rem;
-    margin-left: 1rem;
   }
   #blog-section #blog-bgBox {
     right: auto;

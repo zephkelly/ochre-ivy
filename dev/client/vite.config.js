@@ -6,11 +6,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
         about: resolve(__dirname, 'about.html'),
+        style: 'src/style.css',
         blogEditor: 'src/blog/blogEditor.ts',
         blogHome: 'src/blog/blogHome.ts',
         blogPost: 'src/blog/blogPost.ts',
+        dashboard: 'src/admin/dashboard.ts',
       },
       output: {
         entryFileNames: `[name].js`,

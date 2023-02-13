@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
+const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
@@ -10,6 +11,7 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./server/routes/authRoutes');
 const blogRoutes = require('./server/routes/blogRoutes');
 const adminRoutes = require('./server/routes/adminRoutes');
+const analyticsRoutes = require('./server/routes/analyticsRoutes');
 
 // @ts-ignore
 import { Analytics } from './server/models/analyticsModel';
@@ -81,27 +83,51 @@ function updateAnalytics(req, res, next) {
 }
 
 //Routes
-app.get('/', updateAnalytics, (req, res) => {
+app.get('/', updateAnalytics, async (req, res) => {
   const session = { name: null, admin: false, notification: false };
-
+  
   if (req.session.userid) {
     session.name = req.session.name;
-
+    
     if (req.session.roles == 'admin') {
       session.admin = true;
-
-      const siteData = { blogCount: 0, recipeCount: 0 };
 
       if (req.query?.loggingIn) {
         session.notification = true;
       }
-
-      res.status(200).render('admin/admin-index', { session, siteData });
+      
+      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData() });
     } 
     return;
   }
+  
+  res.status(200).render('index', { session, blogData: await getBlogData() })
+  
+  //Functions
+  async function getBlogData() {
+    return await fetch('http://localhost:' + process.env.PORT + '/api/blogs?filter=recent&limit=1&display=true')
+  }
 
-  res.status(200).sendFile(__dirname + '/index.html');
+  async function getSiteData() {
+    const siteData = {
+      blogCount: null,
+      recipeCount: null,
+      blogViews: null,
+    }
+
+    const counts = await fetch('http://localhost:' + process.env.PORT + '/api/blog?count=true');
+    const countsData = await counts.json();
+
+    siteData.blogCount = countsData.blogCount;
+    siteData.recipeCount = countsData.recipeCount;
+
+    const views = await fetch('http://localhost:' + process.env.PORT + '/api/analytics');
+    const viewsData = await views.json();
+
+    siteData.blogViews = viewsData.blogViews;
+
+    return siteData;
+  }
 });
 
 app.get('/about', (req, res) => {
@@ -121,6 +147,7 @@ app.get('/about', (req, res) => {
 app.use(authRoutes);
 app.use(blogRoutes);
 app.use(adminRoutes);
+app.use(analyticsRoutes);
 
 app.use(express.static('./assets'));
 app.use(express.static('./public'));
