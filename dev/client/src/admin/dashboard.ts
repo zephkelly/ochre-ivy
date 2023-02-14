@@ -1,76 +1,5 @@
 import { formatString, formatDate } from '../helperFunctions';
 
-// Format dates
-const blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
-
-for (let i = 0; i < blogCreatedDate.length; i++) {
-  const blogCreatedDateText = blogCreatedDate[i].innerText;
-  const date = formatDate(blogCreatedDateText, true);
-  blogCreatedDate[i].innerText = date.toString();
-}
-
-//Format descriptions
-const allBlogsDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.all-blog-description') as NodeListOf<HTMLElement>;
-
-for (let i = 0; i < allBlogsDescription.length; i++) {
-  const allBlogsDescriptionText = allBlogsDescription[i].innerText;
-  const description = formatString(allBlogsDescriptionText, 155);
-  allBlogsDescription[i].innerText = description;
-}
-
-//Format tags
-const allBlogsTags: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-tags') as NodeListOf<HTMLElement>;
-
-for (let i = 0; i < allBlogsTags.length; i++) {
-  const allBlogsTagsText = allBlogsTags[i].innerText;
-  const tags = allBlogsTagsText.replace(/,/g, ', ');
-  allBlogsTags[i].innerText = "tags: " + tags;
-}
-
-// Search bar for all page
-const searchInput: HTMLInputElement = document.querySelector('.search-input') as HTMLInputElement;
-
-let lastSearchInput: string = '';
-let searchInputValue: string = '';
-
-searchInput.addEventListener('focus', () => {
-  searchInputValue = searchInput.value;
-
-  if (searchInputValue === lastSearchInput) {
-      return;
-  }
-  
-  removeActiveFilter();
-  makeRequest('&search=' + searchInputValue);
-});
-
-searchInput.addEventListener('keydown', (e) => {
-  searchInputValue = searchInput.value;
-
-  if (e.key === 'Enter') {
-    if (searchInputValue === lastSearchInput) {
-      return;
-    }
-
-    removeActiveFilter();
-    makeRequest('&search=' + searchInputValue);
-  }
-});
-
-searchInput.addEventListener('input', () => {
-  searchInputValue = searchInput.value;
-
-  if (searchInputValue == '') {
-    makeRequest('');
-    setActiveFilter(allFilter);
-    return;
-  }
-
-  removeActiveFilter();
-  makeRequest('&search=' + searchInputValue);
-});
-
-
 // Filter blogs by category
 const allFilter: HTMLElement = document.querySelector('.filter-button.all') as HTMLElement;
 const recipesFilter: HTMLElement = document.querySelector('.filter-button.recipes') as HTMLElement;
@@ -80,19 +9,122 @@ const azFilter: HTMLElement = document.querySelector('.filter-button.az') as HTM
 
 const filters = [allFilter, recipesFilter, newestFilter, oldestFilter, azFilter];
 
-filters.forEach((filter) => {
-  filter.addEventListener('click', () => {
-    if (filter.classList.contains('active')) {
-      return;
+const searchInput: HTMLInputElement = document.querySelector('.search-input') as HTMLInputElement;
+const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
+const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 
-    } else {
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.delete('page');
+let lastSearchInput: string = '';
+let searchInputValue: string = '';
 
-      setActiveFilter(filter);
+window.addEventListener('load', () => {
+  const path = window.location.pathname;
+
+  if (path.includes('/dashboard') && !path.includes('/dashboard/')) {
+    setEventListeners();
+    dashboardValidation();
+  }
+});
+
+function setEventListeners() {
+  filters.forEach((filter) => {
+    filter.addEventListener('click', () => {
+      if (filter.classList.contains('active')) {
+        return;
+
+      } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.delete('page');
+
+        setActiveFilter(filter);
+      }
+    });
+  });
+
+  searchInput.addEventListener('focus', () => {
+    searchInputValue = searchInput.value;
+
+    if (searchInputValue === lastSearchInput) {
+        return;
+    }
+    
+    removeActiveFilter();
+    makeRequest('&search=' + searchInputValue);
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    searchInputValue = searchInput.value;
+
+    if (e.key === 'Enter') {
+      if (searchInputValue === lastSearchInput) {
+        return;
+      }
+
+      removeActiveFilter();
+      makeRequest('&search=' + searchInputValue);
     }
   });
-});
+
+  searchInput.addEventListener('input', () => {
+    searchInputValue = searchInput.value;
+
+    if (searchInputValue == '') {
+      makeRequest('');
+      setActiveFilter(allFilter);
+      return;
+    }
+
+    removeActiveFilter();
+    makeRequest('&search=' + searchInputValue);
+  });
+
+  morebutton.addEventListener('click', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionParam = urlParams.get('section');
+    let pageParam = urlParams.get('page');
+
+    if (!pageParam) {
+      pageParam = '1';
+    }
+
+    const filterParam = urlParams.get('filter');
+
+    let queryParam = 'section=' + sectionParam + '&filter=' + filterParam;
+
+    if (pageParam) {
+      makeRequest(queryParam, parseInt(pageParam) + 1);
+    }
+  });
+}
+
+function dashboardValidation() {
+  // Format dates
+  const blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
+
+  for (let i = 0; i < blogCreatedDate.length; i++) {
+    const blogCreatedDateText = blogCreatedDate[i].innerText;
+    const date = formatDate(blogCreatedDateText, true);
+    blogCreatedDate[i].innerText = date.toString();
+  }
+
+  //Format descriptions
+  const allBlogsDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.all-blog-description') as NodeListOf<HTMLElement>;
+
+  for (let i = 0; i < allBlogsDescription.length; i++) {
+    const allBlogsDescriptionText = allBlogsDescription[i].innerText;
+    const description = formatString(allBlogsDescriptionText, 155);
+    allBlogsDescription[i].innerText = description;
+  }
+
+  //Format tags
+  const allBlogsTags: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-tags') as NodeListOf<HTMLElement>;
+
+  for (let i = 0; i < allBlogsTags.length; i++) {
+    const allBlogsTagsText = allBlogsTags[i].innerText;
+    const tags = allBlogsTagsText.replace(/,/g, ', ');
+    allBlogsTags[i].innerText = "tags: " + tags;
+  }
+}
+
 
 function setActiveFilter(filter: HTMLElement) {
   removeActiveFilter();
@@ -131,27 +163,6 @@ function removeActiveFilter() {
   });
 }
 
-// Pagination
-const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
-
-morebutton.addEventListener('click', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const sectionParam = urlParams.get('section');
-  let pageParam = urlParams.get('page');
-
-  if (!pageParam) {
-    pageParam = '1';
-  }
-
-  const filterParam = urlParams.get('filter');
-
-  let queryParam = 'section=' + sectionParam + '&filter=' + filterParam;
-
-  if (pageParam) {
-    makeRequest(queryParam, parseInt(pageParam) + 1);
-  }
-});
-
 function checkIfMoreBlogs(data: any) {
   if (data.length % 10 === 0 && data.length > 0) {
     morebutton.style.display = 'flex';
@@ -159,8 +170,6 @@ function checkIfMoreBlogs(data: any) {
     morebutton.style.display = 'none';
   }
 }
-//Manipulate all blogs DOM
-const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 
 function clearAllBlogs() {
   blogsAllSection.innerHTML = '';

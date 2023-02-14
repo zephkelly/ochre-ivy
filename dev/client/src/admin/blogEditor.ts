@@ -4,36 +4,14 @@ import Image from '@editorjs/image';
 import Quote from '@editorjs/quote';
 import List from '@editorjs/list';
 
-const editor = new EditorJS({
-  holder: 'editorjs',
-  minHeight: 120,
-  tools: {
-    header: {
-      class: Header,
-      config: {
-        placeholder: 'Enter your heading here',
-        levels: [3, 4],
-        defaultLevel: 4
-      }
-    },
-    quote: Quote,
-    list: List,
-    image: {
-      class: Image,
-      config: {
-        endpoints: {
-          byFile: 'http://localhost:62264/api/blog/imageupload', // Your backend file uploader endpoint
-        }
-      }
-    }
-  },
-});
+let editor: any = null;
 
 const saveButton: HTMLElement = document.getElementById('save-button') as HTMLElement;
 
 window.addEventListener('load', async () => {
   //check if the url contains /blog/edit/ and if so, load the blog data
   if (window.location.href.includes('/dashboard/blog/edit/')) {
+    await setupBlogEditor()
     await loadEditBlog();
     
     const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
@@ -46,8 +24,42 @@ window.addEventListener('load', async () => {
     saveButton.addEventListener('click', updateBlog);
     return;
   }
-  else if (window.location.href.includes('/dashboard/blog/new')){
+  else if (window.location.href.includes('/dashboard/blog/new')) {
+    await setupBlogEditor();
     saveButton?.addEventListener('click', saveBlog);
+  }
+
+  function setupBlogEditor() {
+    new EditorJS({
+      holder: 'editorjs',
+      minHeight: 120,
+      tools: {
+        header: {
+          class: Header,
+          config: {
+            placeholder: 'Enter your heading here',
+            levels: [3, 4],
+            defaultLevel: 4
+          }
+        },
+        quote: Quote,
+        list: List,
+        image: {
+          class: Image,
+          config: {
+            endpoints: {
+              byFile: 'http://localhost:62264/api/blog/imageupload', // Your backend file uploader endpoint
+            }
+          }
+        }
+      },
+    });
+
+    subtitle.addEventListener('input', validateSubtitle);
+    createdDate.addEventListener('input', validateDate);
+    uriInput.addEventListener('input', validateUri);
+    title.addEventListener('input', validateTitle);
+    tagsInput.addEventListener('input', validateTags);
   }
 });
 
@@ -63,18 +75,6 @@ const createdDateValidation: HTMLElement = document.getElementById('date-input-v
 const tagsValidation: HTMLElement = document.getElementById('tags-input-validation') as HTMLElement;
 
 let tags: string[] = [];
-
-(async function sanitiseInputs() {  
-  runValidation();
-
-  subtitle.addEventListener('input', validateSubtitle);
-  createdDate.addEventListener('input', validateDate);
-  uriInput.addEventListener('input', validateUri);
-  title.addEventListener('input', validateTitle);
-  
-  tagsInput.addEventListener('input', validateTags);
-  
-})();
 
 function runValidation() {
   validateUri();

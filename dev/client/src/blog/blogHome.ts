@@ -24,32 +24,22 @@ const navHeaderBgBox: HTMLElement = document.querySelector('.blogs-header-bgBox'
 const blogHomePage: HTMLElement = document.querySelector('.faux-page-home') as HTMLElement;
 const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTMLElement;
 
-const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
-
-// Carousel for featured blogs
 const featuredBlogs: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog') as NodeListOf<HTMLElement>;
 const featuredBlogLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog-link') as NodeListOf<HTMLElement>;
-
-// Format dates
 const blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
-
-// Format descriptions
 const blogDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
 const recipeDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.recipe-description') as NodeListOf<HTMLElement>;
 const allBlogsDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.all-blog-description') as NodeListOf<HTMLElement>;
-  
-//Manipulate all blogs DOM
-const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 
-// Pagination
+const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
+const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
 
 window.addEventListener('load', async () => {
   urlParams = new URLSearchParams(window.location.search);
   const path = window.location.pathname;
 
   if (path.includes('/blog') && !path.includes('/blog/')) {
-    console.log('start');
     start()
   }
 });
@@ -59,6 +49,7 @@ let currentFeaturedBlog = 0;
 
 async function start() {
   setEventListeners();
+  cycleFeaturedBlogs();
 
   (async function () {
     const section = urlParams.get('section');
@@ -100,7 +91,6 @@ async function start() {
       return;
     }
     else {
-      cycleFeaturedBlogs();
       enableHomePage();
       return;
     }

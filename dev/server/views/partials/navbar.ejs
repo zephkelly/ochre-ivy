@@ -6,13 +6,12 @@
             <h3 class="nav-text">Ochre & Ivy</h3>
             <div class="nav-text-spacer"></div>
           </a>
-          <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
+          <button type="button" class="nav-btn-bg"><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
           <nav class="nav-menu">
             <ul class="nav-list">
               <li class="nav-item"><a href="/">Home</a></li>
               <li class="nav-item"><a href="/blog">Blog</a></li>
               <li class="nav-item"><a href="/blog?section=all&filter=recipe">Recipes</a></li>
-
               <% if (typeof session !== 'undefined' && session.admin) { %>
                 <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
               <% } else { %>

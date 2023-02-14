@@ -2,10 +2,11 @@ import { formatString, formatDate } from '../helperFunctions';
 
 window.addEventListener('load', () => {
   const path = window.location.pathname;
-  if (path.includes('/blog/')) {
 
+  if (path.includes('/blog/')) {
     const blogPost = path.split('/blog/')[1]?.split('/')[0];
-    if (blogPost != 'new' && blogPost != 'edit') {
+
+    if (blogPost != 'new/' && blogPost != 'edit/') {
       blogPostValidation();
     }
   }
