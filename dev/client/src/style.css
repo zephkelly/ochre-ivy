@@ -342,25 +342,21 @@ main {
 }
 
 #blog-section {
-  height: 850px;
-  margin-bottom: 14rem;
+  height: 750px;
+  margin-bottom: 25rem;
 }
 #blog-section .section-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
+  gap: 1rem;
 }
 #blog-section .blog.container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-}
-#blog-section .latest-post.container {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  height: 100%;
 }
 #blog-section .blog-text {
   font-size: 4.1rem;
@@ -379,14 +375,11 @@ main {
   text-align: end;
   padding-left: 25rem;
 }
-#blog-section .latest-post-btn:hover {
-  color: var(--light);
-}
 #blog-section #blog-illustration {
   position: absolute;
   transition: margin-top, right 0.3s ease-out;
   left: -3rem;
-  bottom: 10rem;
+  top: 8rem;
   width: 70%;
   height: auto;
   min-width: 5rem;
@@ -394,14 +387,91 @@ main {
   z-index: 0;
   transform: rotate(30deg);
 }
+#blog-section .blog-post .latest-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  text-align: end;
+  margin: 0rem;
+}
+#blog-section .blog-post {
+  width: 48%;
+  height: 100%;
+  min-height: 0rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+#blog-section .blog-post .group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#blog-section .blog-post .group .wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#blog-section .blog-post .group .wrapper .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+#blog-section .blog-post .group .wrapper:last-of-type {
+  justify-content: center;
+  align-items: center;
+}
+#blog-section .blog-post .blog-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  text-align: start;
+  margin-top: 0rem;
+  margin-bottom: 0.2rem;
+  max-width: 20rem;
+  width: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#blog-section .blog-post .blog-date {
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-family: 'Lato', sans-serif;
+  text-align: start;
+  margin: 0rem;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  color: grey;
+}
+#blog-section .blog-post .blog-subtitle {
+  margin: 0rem;
+  font-size: 0.9rem;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  text-align: start;
+  width: 25rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#blog-section .blog-post .blog-btn {
+  width: 4rem;
+  height: 2rem;
+  font-size: 1rem;
+  margin-top: 0rem;
+}
 #blog-section #blog-bgBox {
   position: absolute;
-  top: 6rem;
-  left: -10rem;
+  top: 8rem;
+  left: -12rem;
   border-radius: 15rem;
   background-color: var(--accent-color);
-  width: 40rem;
-  height: 40rem;
+  width: 38rem;
+  height: 38rem;
   transform: rotate(38deg);
   animation-name: softRotate;
   animation-duration: 40s;
@@ -442,7 +512,6 @@ main {
 
 #recipes-section {
   height: 1000px;
-  margin-top: 7rem;
   margin-bottom: 14rem;
 }
 #recipes-section .section-container {
@@ -510,7 +579,7 @@ main {
   background-color: var(--accent-color);
 }
 #footer-main .container {
-  border-top: 0.2rem solid;
+  border-top: 2px solid;
   border-color: var(--dark);
   box-sizing: border-box;
   position: relative;
@@ -1943,351 +2012,5 @@ main {
   .navbar .container {
     max-width: 1920px;
     margin: auto;
-  }
-}
-
-@media (max-width: 3250px) {
-  #landing #hero-illustration {
-    margin-top: -4rem;
-  }
-}
-
-@media (max-width: 1920px) {
-  section {
-    width: 100%;
-  }
-
-  #landing .hero-text {
-    font-size: 3.2rem;
-  }
-  #landing .hero-description {
-    font-size: 1.8rem;
-    margin-top: 1rem;
-  }
-  #landing #hero-illustration {
-    width: 60%;
-    margin-top: -6rem;
-  }
-
-  #blog-section .blog-text {
-    font-size: 3rem;
-  }
-
-  #recipes-section .recipes-text {
-    font-size: 3rem;
-  }
-/*
-  #recipes-section .recipe-bgBox:last-of-type {
-    position: relative;
-    left: -148rem;
-    top: -164rem;
-    border-radius: 20rem;
-    width: 200rem;
-    height: 200rem;
-  }
-  */
-}
-@media (max-width: 1480px) {
-  #landing .hero-text {
-    font-size: 3.2rem;
-  }
-  #landing .hero-description {
-    font-size: 1.8rem;
-    margin-top: 1rem;
-  }
-  #landing #hero-illustration {
-    width: 50%;
-    margin-top: -6rem;
-  }
-
-  #blog-section .blog-text {
-    font-size: 3rem;
-  }
-
-  #recipes-section {
-    margin-top: 10vw;
-  }
-  #recipes-section .recipes-text {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 1230px) {
-  #blog-section .blog-description {
-    padding-left: 30%;
-  }
-}
-
-@media (max-width: 1000px) {
-  #landing .hero-text {
-    margin-top: 1rem;
-  }
-  #landing #hero-illustration {
-    width: 55%;
-    margin-top: -2rem;
-  }
-}
-
-@media (max-width: 980px) {
-  .navbar .nav-text {
-    font-size: 1.6rem;
-    width: 10rem;
-  }
-  .navbar .nav-text-spacer {
-    display: none;
-  }
-  .navbar button {
-    position: relative;
-    top: 0.5rem;
-    display: block;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-  }
-  .navbar .nav-menu-btn {
-    transition: 0.15s ease-out;
-  }
-  .navbar .nav-menu {
-    display: none;
-    position: absolute;
-    top: 7rem;
-    right: 1.95rem;
-    padding: 1rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    transition: opacity, top 0.15s ease-out
-  }
-  .navbar .nav-list {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-    top: 0rem;
-    padding: 0rem;
-  }
-  .navbar .nav-list .nav-item {
-    margin: 0rem;
-    align-items: center;
-    height: 3.8rem;
-    width: 60vw;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
-  }
-  .navbar .nav-item:hover  {
-    background-color: #fef1ed;
-    font-size: 1.1rem;
-  }
-  .navbar .nav-item:hover > * {
-    color: black;
-    font-size: 1.1rem;
-  }
-  #landing .hero-text {
-    margin-top: 0rem;
-  }
-  #landing .landing-bgBox {
-    bottom: clamp(0rem,16vh,14rem);
-  }
-
-  #blog-section .blog-description {
-    padding-left: 32%;
-  }
-}
-
-@media (max-width: 900px) {
-  #landing .hero-text {
-    padding-right: 12%;
-  }
-  #landing #hero-illustration {
-    width: 65%;
-    margin-top: -2rem;
-  }
-
-  #blog-section .blog-description {
-    padding-left: 10%;
-  }
-
-  #recipes-section .container {
-    margin-top: 20vw;
-  }
-  #recipes-section .recipes-text {
-    padding-right: 10%;
-  }
-  /*
-  #recipes-section .recipe-bgBox:first-of-type {
-    top: -2rem;
-    right: 68rem;
-  }
-  */
-  #recipes-section .recipe-bgBox:last-of-type {
-    display: none;
-  }
-}
-
-@media (max-width: 720px) {
-  #landing #hero-illustration {
-    width: 75%;
-    margin-top: -2rem;
-  }
-
-  #recipes-section {
-    margin-top: 18vw;
-    height: 900px;
-  }
-  /*
-  #recipes-section .recipe-bgBox:first-of-type {
-    right: 72rem;
-  }
-  */
-}
-
-@media (max-width: 630px) {
-  .navbar .nav-menu {
-    right: 7.5vw;
-    left: 7.5vw;
-  }
-  .navbar .nav-list .nav-item {
-    width: 100%;
-  }
-
-  #landing .container {
-    padding: 0rem;
-  }
-  #landing .hero-text {
-    font-size: 2.2rem;
-    align-self: flex-start;
-    padding: 0rem;
-    font-weight: 700;
-    letter-spacing: 0.08rem;
-    line-height: 2.4rem;
-  }
-  #landing .hero-description {
-    font-size: 1.6rem;
-  }
-  #landing .hero-learnmore-btn {
-    font-size: 1rem;
-    width: 7rem;
-    height: 2.8rem;
-  }
-  #landing #hero-illustration {
-    width: 85%;
-    margin-top: 0rem;
-  }
-
-  #blog-section .blog-text {
-    font-size: 2rem;
-    line-height: 2.4rem;
-    margin-right: 0rem;
-  }
-  #blog-section .blog-description {
-    font-size: 1.2rem;
-    padding: 0rem;
-  }
-  #blog-section .blog-btn {
-    margin-right: 0rem;
-        height: 2.8rem;
-  }
-
-  #recipes-section {
-    margin-top: 10vw;
-    height: 900px;
-  }
-  #recipes-section .recipes-text {
-    font-size: 2rem;
-    line-height: 2.4rem;
-  }
-  #recipes-section .recipes-description {
-    font-size: 1.2rem;
-    padding: 0rem;
-  }
-  #recipes-section .recipes-btn {
-    margin-right: 0rem;
-    height: 2.8rem;
-  }
-  /*
-  #recipes-section .recipe-bgBox:first-of-type {
-    right: auto;
-    bottom: auto;
-    left: -20rem;
-    top: -20rem;
-    width: 60rem;
-    height: 80rem;
-    border-radius: 30rem;
-  }
-  */
-
-  #footer-main .footer-links{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 530px) {
-  .navbar .nav-text {
-    font-size: 1.6rem;
-    width: 10rem;
-  }
-  .navbar .nav-text-spacer {
-    display: none;
-  }
-
-  #landing .container {
-    padding: 0rem;
-  }
-  #landing .hero-text {
-    font-size: 2rem;
-    align-self: flex-start;
-    padding: 0rem;
-    line-height: 2.4rem;
-  }
-  #landing .hero-description {
-    font-size: 1.6rem;
-  }
-  #landing .hero-learnmore-btn {
-    font-size: 1rem;
-    width: 7rem;
-    height: 2.8rem;
-  }
-  #landing #hero-illustration {
-    width: 90%;
-    margin-top: 0vw;
-  }
-
-  #blog-section .blog-text {
-    font-size: 1.8rem;
-    line-height: 2.4rem;
-    margin-right: 0rem;
-  }
-  #blog-section .blog-description {
-    font-size: 1.2rem;
-    padding: 0rem;
-  }
-  #blog-section .blog-btn {
-    margin-right: 0rem;
-        height: 2.8rem;
-  }
-  #blog-section #blog-bgBox {
-    right: auto;
-    bottom: auto;
-    left: -20rem;
-    top: -26rem;
-  }
-
-  #recipes-section {
-    margin-top: 5vw;
-    height: 900px;
-  }
-  #recipes-section .recipes-text {
-    font-size: 1.8rem;
-    line-height: 2.4rem;
-  }
-  #recipes-section .recipes-description {
-    font-size: 1.2rem;
-    padding: 0rem;
-  }
-  #recipes-section .recipes-btn {
-    margin-right: 0rem;
-    height: 2.8rem;
-  }
-
-  #footer-main .footer-links{
-    grid-template-columns: 1fr 1fr;
   }
 }

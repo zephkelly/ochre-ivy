@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <%- include('../partials/head.ejs') %>
+  <script type="module" crossorigin src="/admin.js"></script>
 </head>
 <body>
   <%- include('../partials/navbar.ejs') %>
@@ -31,23 +32,31 @@
     </section>
     <section id="blog-section">
       <div class="section-container">
+        <div id="blog-bgBox"></div>
+        <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
         <div class="blog container">
           <h3 class="blog-text">A naturally simple blog.</h3>
           <p class="blog-description">Your body deserves to be nourished, but where do you start? Being <span class="color-highlight">healthy</span> can be an overwhelming topic but our blog makes it simple; without the clutter.</p>
           <a class="blog-btn accent-button button-solid-accent">View blog</a>
         </div>
-        <div class="latest-post container">
-          <div class="wrapper">
-            <h4 class="latest-post-title">Latest post</h4>
-            <p class="latest-post-date">May 1, 2021</p>
+        <div class="blog-post">
+          <h4 class="latest-text">Latest posts</h4>
+          <% for (let i = 0; i < blogsData.length; i++) { %>
+            <div class="group">
+              <div class="wrapper">
+                <div class="container">
+                  <h3 class="blog-title"><%= blogsData[i].title %></h3>
+                  <h6 class="blog-date"><%= blogsData[i].createdDate %></h6>
+                </div>
+                <h5 class="blog-subtitle"><%= blogsData[i].subtitle %></h5>
+              </div>
+              <div class="wrapper">
+                <a class="blog-btn accent-button button-outlined-accent" href="/blog/<%= blogsData[i].uri %>">Read</a>
+              </div>
+            </div>
+            <% } %>
           </div>
-          <h3 class="latest-post-text">How to make a healthy smoothie</h3>
-          <p class="latest-post-description">Smoothies are a great way to get a quick, healthy meal in. They’re easy to make, and you can customize them to your liking. Here’s how to make a healthy smoothie.</p>
-          <a class="latest-post-btn accent-button button-outlined-black">Read now</a>
-        </div>
-        <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
       </div>
-      <div id="blog-bgBox"></div>
     </section>
     <section id="recipes-section">
       <div class="section-container">
@@ -70,18 +79,6 @@
             <li class="footer-nav-item"><a href="/about">About</a></li>
           </ul>
         </nav>
-        <nav>
-          <h3>Socials</h3>
-          <ul class="footer-socials-menu">
-            <li class="footer-socials-item"><a href="instagram.com">Instagram</a></li>
-          </ul>
-        </nav>
-        <form action="post" id="footer-contact-form">
-          <h3>Send me a message</h3>
-          <input type="text">
-          <input type="text">
-          <input type="button" value="Send">
-        </form>
       </section>
     </div>
   </footer>

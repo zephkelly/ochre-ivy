@@ -4,20 +4,23 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   build: {
-    rollupOptions: {
+    modulePreload: 
+    {
+      polyfill: true,
+      polyfillDynamicImport: true,
+    },
+    rollupOptions:
+    {
       input: {
-        about: resolve(__dirname, 'about.html'),
+        main: resolve(__dirname, 'index.html'),
+        admin: resolve(__dirname, 'admin.html'),
+        helperFunctions: 'src/helperFunctions.ts',
         style: 'src/style.css',
-        blogEditor: 'src/blog/blogEditor.ts',
-        blogHome: 'src/blog/blogHome.ts',
-        blogPost: 'src/blog/blogPost.ts',
-        dashboard: 'src/admin/dashboard.ts',
       },
       output: {
         entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`,
+        assetFileNames: `[name].[ext]`
       }
-    },
-  },
+    }
+  }
 })

@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
-    "copyHTML": "copyfiles -u 1 ./dist/*.html ./../../dist",
     "copyImages": "copyfiles -u 1 ./public/* ./../../dist/public",
     "copyAssetsJs": "copyfiles -u 1 ./dist/*.js ./../../dist/assets",
     "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./../../dist/assets",
-    "copy": "npm run copyHTML && npm run copyImages && npm run copyAssetsJs && npm run copyAssetsCss",
+    "copy": "npm run copyImages && npm run copyAssetsJs && npm run copyAssetsCss",
     "build": "tsc && vite build && npm run copy",
     "buildCSS": "vite build && npm run copyAssetsCss"
   },

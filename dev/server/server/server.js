@@ -92,15 +92,17 @@ app.get('/', updateAnalytics, (req, res) => __awaiter(void 0, void 0, void 0, fu
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
                 session.notification = true;
             }
-            res.status(200).render('admin/admin-index', { session, siteData: yield getSiteData() });
+            res.status(200).render('admin/admin-index', { session, siteData: yield getSiteData(), blogsData: yield getBlogsData() });
         }
         return;
     }
-    res.status(200).render('index', { session, blogData: yield getBlogData() });
+    res.status(200).render('index', { session, blogData: yield getBlogsData() });
     //Functions
-    function getBlogData() {
+    function getBlogsData() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield fetch('http://localhost:' + process.env.PORT + '/api/blogs?filter=recent&limit=1&display=true');
+            const data = yield fetch('http://localhost:' + process.env.PORT + '/api/blog?filter=newest&limit=3&display=true');
+            const blogsData = yield data.json();
+            return blogsData;
         });
     }
     function getSiteData() {

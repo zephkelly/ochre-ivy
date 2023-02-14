@@ -96,16 +96,19 @@ app.get('/', updateAnalytics, async (req, res) => {
         session.notification = true;
       }
       
-      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData() });
+      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData(), blogsData: await getBlogsData() });
     } 
     return;
   }
   
-  res.status(200).render('index', { session, blogData: await getBlogData() })
+  res.status(200).render('index', { session, blogData: await getBlogsData() })
   
   //Functions
-  async function getBlogData() {
-    return await fetch('http://localhost:' + process.env.PORT + '/api/blogs?filter=recent&limit=1&display=true')
+  async function getBlogsData() {
+    const data = await fetch('http://localhost:' + process.env.PORT + '/api/blog?filter=newest&limit=3&display=true');
+    const blogsData = await data.json();
+
+    return blogsData;
   }
 
   async function getSiteData() {

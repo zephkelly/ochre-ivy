@@ -137,7 +137,7 @@ export function blogAPI_get(req, res) {
           res.send(blogList);
         });
         break;
-      case 'newest':
+      case 'newest' || 'recent' || 'latest':
         Blog.Model.find({}).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
           if (err) { return console.log(err); }
           pushToBlogList(blogs, queryDisplay);
