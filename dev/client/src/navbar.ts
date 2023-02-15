@@ -59,6 +59,15 @@ navMenuBtn.addEventListener('click', () => {
   navMenuBtnToggle();
 });
 
+document.addEventListener('click', (e) => {
+  if (navMenuBtnClicked) {
+    if (e.target != navMenu && e.target != navMenuBtn) {
+      navMenuBtnClicked = false;
+      navMenuBtnToggle();
+    }
+  }
+});
+
 function navMenuBtnToggle() {
   if (navMenuBtnClicked) {
     navMenu.style.display = 'block';
