@@ -16,6 +16,7 @@ var Blog;
         tags: Array,
         content: { type: Object, required: true },
         views: Number,
+        comments: Array
     });
     Blog.Model = (0, mongoose_1.model)('Blog', Blog.BlogSchema);
 })(Blog = exports.Blog || (exports.Blog = {}));

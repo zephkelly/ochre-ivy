@@ -1,6 +1,7 @@
 require('dotenv').config()
 const fetch = require("node-fetch-commonjs");
-const mongoose = require('mongoose').mongoose;
+const sharp = require('sharp');
+const fs = require('fs'); 
 
 import { Analytics } from '../models/analyticsModel';
 import { Blog } from '../models/blogModel';
@@ -361,7 +362,7 @@ export async function blogAPI_delete(req, res) {
   });
 }
 
-export function blogAPI_imageUpload(req, res) {
+export async function blogAPI_imageUpload(req, res) {
   const { image } = req.files;
 
   const imageData = {
@@ -375,10 +376,20 @@ export function blogAPI_imageUpload(req, res) {
     return res.status(400).send(JSON.stringify(imageData));
   }
   
-  image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
+  await image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
+
+  let newName = image.name.split('.')[0] + '-' + Date.now() + '.webp';
+  newName = newName.replace(/\s/g, '-');
+
+  await sharp(__dirname + '/../../public/uploaded-images/' + image.name)
+    .resize()
+    .webp({ quality: 70 })
+    .toFile(__dirname + '/../../public/uploaded-images/' + newName);
+
+  fs.unlink(__dirname + '/../../public/uploaded-images/' + image.name, (err) => { if (err) { console.log(err); } });
 
   imageData.success = 1;
-  imageData.file.url = '/uploaded-images/' + image.name;
+  imageData.file.url = '/uploaded-images/' + newName;
 
   res.status(200).send(JSON.stringify(imageData));
 }

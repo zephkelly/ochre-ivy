@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.blog_getURI = exports.blog_homePage = exports.blogAPI_imageUpload = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
 require('dotenv').config();
 const fetch = require("node-fetch-commonjs");
-const mongoose = require('mongoose').mongoose;
+const sharp = require('sharp');
+const fs = require('fs');
 const analyticsModel_1 = require("../models/analyticsModel");
 const blogModel_1 = require("../models/blogModel");
 //API Routes ------------------------------------------------
@@ -365,20 +366,31 @@ function blogAPI_delete(req, res) {
 }
 exports.blogAPI_delete = blogAPI_delete;
 function blogAPI_imageUpload(req, res) {
-    const { image } = req.files;
-    const imageData = {
-        success: 0,
-        file: {
-            url: ''
+    return __awaiter(this, void 0, void 0, function* () {
+        const { image } = req.files;
+        const imageData = {
+            success: 0,
+            file: {
+                url: ''
+            }
+        };
+        if (!image) {
+            return res.status(400).send(JSON.stringify(imageData));
         }
-    };
-    if (!image) {
-        return res.status(400).send(JSON.stringify(imageData));
-    }
-    image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
-    imageData.success = 1;
-    imageData.file.url = '/uploaded-images/' + image.name;
-    res.status(200).send(JSON.stringify(imageData));
+        yield image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
+        let newName = image.name.split('.')[0] + '-' + Date.now() + '.webp';
+        newName = newName.replace(/\s/g, '-');
+        yield sharp(__dirname + '/../../public/uploaded-images/' + image.name)
+            .resize()
+            .webp({ quality: 70 })
+            .toFile(__dirname + '/../../public/uploaded-images/' + newName);
+        fs.unlink(__dirname + '/../../public/uploaded-images/' + image.name, (err) => { if (err) {
+            console.log(err);
+        } });
+        imageData.success = 1;
+        imageData.file.url = '/uploaded-images/' + newName;
+        res.status(200).send(JSON.stringify(imageData));
+    });
 }
 exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
@@ -465,6 +477,7 @@ function validateBlogData(body, isUpdate = false) {
         tags: body.tags,
         content: body.content,
         views: (isUpdate) ? body.views : 0,
+        comments: (isUpdate) ? body.comments : [],
     });
     if (body.uri == null || body.uri == "")
         return { failedValidation: true, message: uriEmptyMsg, status: 400 };
