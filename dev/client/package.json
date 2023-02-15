@@ -7,7 +7,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "copyImages": "copyfiles -u 1 ./public/* ./../../dist/public",
-    "copyAssetsJs": "copyfiles -u 1 ./dist/*.js ./../../dist/assets",
+    "copyAssetsJs": "copyfiles -u 1 ./dist/*.js/*.js ./../../dist/assets",
     "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./../../dist/assets",
     "copy": "npm run copyImages && npm run copyAssetsJs && npm run copyAssetsCss",
     "build": "tsc && vite build && npm run copy",
