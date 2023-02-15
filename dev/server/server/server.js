@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express = require('express');
@@ -50,26 +49,26 @@ app.use(fileUpload());
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
     app.listen(PORT, () => { console.log('Listening on port ' + PORT); });
+    // Analytics
+    analyticsModel_1.Analytics.Model.findOne({}, (err, analytics) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            if (!analytics) {
+                const analytics = new analyticsModel_1.Analytics.Model({
+                    siteHits: 0,
+                    blogViews: 0,
+                    recipeViews: 0,
+                    blogCount: 0,
+                    recipeCount: 0
+                });
+                analytics.save();
+            }
+        }
+    });
 })
     .catch((err) => console.log(err));
-// Analytics
-analyticsModel_1.Analytics.Model.findOne({}, (err, analytics) => {
-    if (err) {
-        console.log(err);
-    }
-    else {
-        if (!analytics) {
-            const analytics = new analyticsModel_1.Analytics.Model({
-                siteHits: 0,
-                blogViews: 0,
-                recipeViews: 0,
-                blogCount: 0,
-                recipeCount: 0
-            });
-            analytics.save();
-        }
-    }
-});
 function updateAnalytics(req, res, next) {
     analyticsModel_1.Analytics.Model.findOne({}, (err, analytics) => {
         if (err) {
