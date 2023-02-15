@@ -96,12 +96,11 @@ app.get('/', updateAnalytics, async (req, res) => {
         session.notification = true;
       }
       
-      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData(), recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() });
+      return res.status(200).render('admin/admin-index', { session, siteData: await getSiteData(), recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() });
     } 
-    return;
   }
   
-  res.status(200).render('index', { session, recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() })
+  return res.status(200).render('index', { session, recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() });
   
   //Functions
   async function getBlogsData() {

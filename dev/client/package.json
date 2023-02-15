@@ -7,11 +7,12 @@
     "dev": "vite",
     "preview": "vite preview",
     "copyImages": "copyfiles -u 1 ./public/* ./../../dist/public",
-    "copyAssetsJs": "copyfiles -u 1 ./dist/*.js/*.js ./../../dist/assets",
-    "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./../../dist/assets",
-    "copy": "npm run copyImages && npm run copyAssetsJs && npm run copyAssetsCss",
-    "build": "tsc && vite build && npm run copy",
-    "buildCSS": "vite build && npm run copyAssetsCss"
+    "copyAssets": "copyfiles -u 1 ./dist/*.js ./dist/*/*.js ./dist/*.css ./dist/*/*.css ./../../dist/assets",
+    "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./dist/*/*.css ./../../dist/assets",
+    "copyFull": "npm run copyImages && npm run copyAssets",
+    "build": "tsc && vite build && npm run copyAssets",
+    "buildCSS": "vite build && npm run copyAssetsCss",
+    "buildFull": "tsc && vite build && npm run copy"
   },
   "dependencies": {
     "@editorjs/editorjs": "^2.26.4",

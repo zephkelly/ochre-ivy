@@ -367,6 +367,7 @@ function blogAPI_delete(req, res) {
 exports.blogAPI_delete = blogAPI_delete;
 function blogAPI_imageUpload(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const path = __dirname + '/public/uploaded-images/';
         const { image } = req.files;
         const imageData = {
             success: 0,
@@ -377,14 +378,14 @@ function blogAPI_imageUpload(req, res) {
         if (!image) {
             return res.status(400).send(JSON.stringify(imageData));
         }
-        yield image.mv(__dirname + '/../../public/uploaded-images/' + image.name);
+        yield image.mv(path + image.name);
         let newName = image.name.split('.')[0] + '-' + Date.now() + '.webp';
         newName = newName.replace(/\s/g, '-');
-        yield sharp(__dirname + '/../../public/uploaded-images/' + image.name)
+        yield sharp(path + image.name)
             .resize()
-            .webp({ quality: 70 })
-            .toFile(__dirname + '/../../public/uploaded-images/' + newName);
-        fs.unlink(__dirname + '/../../public/uploaded-images/' + image.name, (err) => { if (err) {
+            .webp({ quality: 60 })
+            .toFile(path + newName);
+        fs.unlink(path + image.name, (err) => { if (err) {
             console.log(err);
         } });
         imageData.success = 1;

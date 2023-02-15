@@ -168,14 +168,14 @@ function login_post(req, res) {
                     else {
                         data.message = "Email or password is incorrect";
                     }
-                });
-            }
-            if (data.message != null) {
-                res.render('login', { data }, (err, html) => {
-                    if (err) {
-                        return console.log(err);
+                    if (data.message != null) {
+                        res.render('login', { data }, (err, html) => {
+                            if (err) {
+                                return console.log(err);
+                            }
+                            return res.status(401).send(html);
+                        });
                     }
-                    return res.status(401).send(html);
                 });
             }
         }));

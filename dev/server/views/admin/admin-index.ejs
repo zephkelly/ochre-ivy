@@ -6,20 +6,7 @@
 </head>
 <body>
   <%- include('../partials/navbar.ejs') %>
-  <% if ( session.notification ) { %>
-    <section id="notification">
-      <div class="container">
-        <div class="wrapper">
-          <h6 class="logged-in">Signed in successfully!</h6>
-          <span class="check-symbol material-symbols-outlined">done</span>
-        </div>
-        <p class="logged-in-notification">Welcome back, <%= session.name %>.</p>
-      </div>
-      <script>
-        window.history.replaceState({}, document.title, "/");
-      </script>
-    </section>
-  <% } %>
+  <%- include('../partials/notification.ejs') %>
   <main>
     <section id="landing">
       <div class="section-container">
