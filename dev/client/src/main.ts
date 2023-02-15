@@ -14,6 +14,15 @@ if (blogPost != null)
   blogPost.innerHTML = formatString(blogPostText, 150);
 }
 
+const recipesDescriptions: NodeListOf<HTMLElement> = document.querySelectorAll('.recipe-desc');
+
+if (recipesDescriptions != null) {
+  for (let i = 0; i < recipesDescriptions.length; i++) {
+    const recipeText: string = recipesDescriptions[i].innerHTML;
+    recipesDescriptions[i].innerHTML = formatString(recipeText, 250);
+  }
+}
+
 const blogDates: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date');
 
 if (blogDates != null) {

@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
   if (path.includes('/blog/')) {
     const blogPost = path.split('/blog/')[1]?.split('/')[0];
 
-    if (blogPost != 'new/' && blogPost != 'edit/') {
+    if (blogPost != 'new' && blogPost != 'edit') {
       blogPostValidation();
     }
   }

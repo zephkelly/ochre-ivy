@@ -96,7 +96,7 @@ app.get('/', updateAnalytics, async (req, res) => {
         session.notification = true;
       }
       
-      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData(), blogsData: await getBlogsData() });
+      res.status(200).render('admin/admin-index', { session, siteData: await getSiteData(), recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() });
     } 
     return;
   }
@@ -106,9 +106,16 @@ app.get('/', updateAnalytics, async (req, res) => {
   //Functions
   async function getBlogsData() {
     const data = await fetch('http://localhost:' + process.env.PORT + '/api/blog?filter=newest&limit=3&display=true');
-    const blogsData = await data.json();
+    const recentBlogs = await data.json();
 
-    return blogsData;
+    return recentBlogs;
+  }
+
+  async function getRecipesData() {
+    const data = await fetch('http://localhost:' + process.env.PORT + '/api/blog?tag=recipe&limit=5&display=false');
+    const recipeBlogs = await data.json();
+
+    return recipeBlogs;
   }
 
   async function getSiteData() {

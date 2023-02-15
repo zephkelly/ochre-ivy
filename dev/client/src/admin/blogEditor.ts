@@ -12,8 +12,11 @@ window.addEventListener('load', async () => {
   //check if the url contains /blog/edit/ and if so, load the blog data
   if (window.location.href.includes('/dashboard/blog/edit/')) {
     await setupBlogEditor()
-    await loadEditBlog();
-    
+
+    if (editor.isReady) {
+      loadEditBlog();
+    }
+      
     const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
     dashboardNavLink.innerText = 'Edit';
     
@@ -30,7 +33,7 @@ window.addEventListener('load', async () => {
   }
 
   function setupBlogEditor() {
-    new EditorJS({
+    editor = new EditorJS({
       holder: 'editorjs',
       minHeight: 120,
       tools: {

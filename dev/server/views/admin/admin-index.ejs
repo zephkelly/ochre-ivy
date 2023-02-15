@@ -40,18 +40,17 @@
           <a class="blog-btn accent-button button-solid-accent">View blog</a>
         </div>
         <div class="blog-post">
-          <h4 class="latest-text">Latest posts</h4>
-          <% for (let i = 0; i < blogsData.length; i++) { %>
+          <% for (let i = 0; i < recentBlogs.length; i++) { %>
             <div class="group">
               <div class="wrapper">
                 <div class="container">
-                  <h3 class="blog-title"><%= blogsData[i].title %></h3>
-                  <h6 class="blog-date"><%= blogsData[i].createdDate %></h6>
+                  <h3 class="blog-title"><%= recentBlogs[i].title %></h3>
+                  <h6 class="blog-date"><%= recentBlogs[i].createdDate %></h6>
                 </div>
-                <h5 class="blog-subtitle"><%= blogsData[i].subtitle %></h5>
+                <h5 class="blog-subtitle"><%= recentBlogs[i].subtitle %></h5>
               </div>
               <div class="wrapper">
-                <a class="blog-btn accent-button button-outlined-accent" href="/blog/<%= blogsData[i].uri %>">Read</a>
+                <a class="blog-btn accent-button button-outlined-accent" href="/blog/<%= recentBlogs[i].uri %>">Read</a>
               </div>
             </div>
             <% } %>
@@ -61,10 +60,35 @@
     <section id="recipes-section">
       <div class="section-container">
         <div class="recipe-bgBox"></div>
-        <div class="recipe-bgBox"></div>
+        <div class="recipe-bgBox2"></div>
         <h3 class="recipes-text">Delicious, plant-based recipes.</h3>
         <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
-        <a class="recipes-btn accent-button button-outlined-black">Read now</a>
+        <a class="recipes-section-btn accent-button button-outlined-black">Read now</a>
+      </div>
+    </section>
+    <section id="recipes-box">
+      <div class="section-container">
+        <div class="container-full-width">
+          <% for (let i = 0; i < recipeBlogs.length; i++) { %>
+            <div class="recipe-post">
+              <div class="cover-img">
+                <img src="<%= recipeBlogs[i].cover %>" alt="<%= recipeBlogs[i].title %>">
+              </div>
+              <div class="wrapper">
+                <div class="group">
+                  <h3 class="recipe-title"><%= recipeBlogs[i].title %></h3>
+                  <h5 class="recipe-subtitle"><%= recipeBlogs[i].subtitle %></h5>
+                  <h6 class="blog-date"><%= recipeBlogs[i].createdDate %></h6>
+                  <p class="recipe-desc"><%= recipeBlogs[i].description %></p>
+                  <p class="recipe-method"><%= recipeBlogs[i].content.blocks %></p>
+                </div>
+                <div class="group">
+                  <a class="recipe-btn accent-button button-outlined-accent" href="/blog/<%= recipeBlogs[i].uri %>">Read</a>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
       </div>
     </section>
   </main>
