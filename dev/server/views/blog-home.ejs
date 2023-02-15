@@ -44,10 +44,10 @@
                 <div class="wrapper">
                   <h3 class="blog-title-featured"><%= blog.title %></h3>
                   <h6 class="blog-subtitle"><%= blog.subtitle %></h6>
-                  <p class="blog-date"><%= blog.createdDate %></p>
+                  <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
                 </div>
                 <div class="wrapper">
-                  <p class="blog-description"><%= blog.description %></p>
+                  <p class="blog-description" data-description="<%= blog.description %>"></p>
                   <a href="/blog/<%= blog.uri %>" class="blog-link">Read more</a>
                 </div>
               </div>
@@ -68,7 +68,7 @@
       <section id="blogs-recipes-popular">
         <div class="section-container">
           <div class="wrapper">
-            <h2 class="title">RECIPES</h2>
+            <h2 class="title recipes">RECIPES</h2>
             <section id="blogs-recipes">
               <% for (i = 0; i < recipesBlogs.length; i++) { %>
                 <% const blog = recipesBlogs[i]; %>
@@ -80,10 +80,10 @@
                       <div class="wrapper">
                         <h3 class="blog-title"><%= blog.title %></h3>
                         <h6 class="blog-subtitle"><%= blog.subtitle %></h6>
-                        <p class="blog-date"><%= blog.createdDate %></p>
+                        <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
                       </div>
                       <div class="wrapper">
-                        <p class="recipe-description"><%= blog.description %></p>
+                        <p class="recipe-description" data-description="<%= blog.description %>"></p>
                         <a href="/blog/<%= blog.uri %>" class="blog-link button-outlined-accent">Read more</a>
                       </div>
                     </div>
@@ -92,7 +92,7 @@
             </section>
           </div>
           <div class="wrapper">
-            <h2 class="title">RECENT</h2>
+            <h2 class="title recent">RECENT</h2>
             <section id="blogs-recent">
               <% for (i = 0; i < recentBlogs.length; i++) { %>
                 <% const blog = recentBlogs[i]; %>
@@ -105,7 +105,7 @@
                             <div class="blog-subtitle"><%= blog.subtitle %></div>
                           </div>
                           <div class="container">
-                            <div class="blog-date"><%= blog.createdDate %></div>
+                            <div class="blog-date" data-date="<%= blog.createdDate %>"></div>
                             <a class="recent-blog-btn accent-button button-outlined-accent" href="/blog/<%= blog.uri %>"><span class="material-symbols-outlined">chevron_right</span></a>
                           </div>
                         </div>
@@ -174,18 +174,6 @@
             <li class="footer-nav-item"><a href="#">About</a></li>
           </ul>
         </nav>
-        <nav>
-          <h3>Socials</h3>
-          <ul class="footer-socials-menu">
-            <li class="footer-socials-item"><a href="instagram.com">Instagram</a></li>
-          </ul>
-        </nav>
-        <form action="post" id="footer-contact-form">
-          <h3>Send me a message</h3>
-          <input type="text">
-          <input type="text">
-          <input type="button" value="Send">
-        </form>
       </section>
     </div>
   </footer>

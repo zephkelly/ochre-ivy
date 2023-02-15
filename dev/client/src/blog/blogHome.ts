@@ -16,6 +16,7 @@ const azFilter: HTMLElement = document.querySelector('.filter-button.az') as HTM
 const filters = [allFilter, recipesFilter, newestFilter, oldestFilter, azFilter];
 
 // Navigation menu
+const blogsNav: HTMLElement = document.querySelector('.blogs-home-nav') as HTMLElement;
 const blogTitle: HTMLElement = document.querySelector('.blog-nav-title') as HTMLElement;
 const blogNavHome: HTMLElement = document.querySelector('.blog-nav-home') as HTMLElement;
 const blogNavAll: HTMLElement = document.querySelector('.blog-nav-all') as HTMLElement;
@@ -26,11 +27,12 @@ const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTM
 
 const featuredBlogs: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog') as NodeListOf<HTMLElement>;
 const featuredBlogLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog-link') as NodeListOf<HTMLElement>;
-const blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
+let blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
 const blogDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
 const recipeDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.recipe-description') as NodeListOf<HTMLElement>;
-const allBlogsDescription: NodeListOf<HTMLElement> = document.querySelectorAll('.all-blog-description') as NodeListOf<HTMLElement>;
 
+let allBlogsDescriptions: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description.all') as NodeListOf<HTMLElement>;
+let allBlogsSubtitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle.all') as NodeListOf<HTMLElement>;
 const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
 const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
@@ -46,6 +48,8 @@ window.addEventListener('load', async () => {
 
 let lastFeaturedBlog = featuredBlogs.length - 1;
 let currentFeaturedBlog = 0;
+
+let activePage = 'home';
 
 async function start() {
   setEventListeners();
@@ -96,28 +100,38 @@ async function start() {
     }
   })()
 
+  function descriptionSize() {
+    if (window.innerWidth < 630) {
+      return 180;
+    }
+    else {
+      return 400
+    }
+  }
+
+  //blog created date
   for (let i = 0; i < blogCreatedDate.length; i++) {
-    const blogCreatedDateText = blogCreatedDate[i].innerText;
-    const date = formatDate(blogCreatedDateText, true);
-    blogCreatedDate[i].innerText = date.toString();
+    const dateAttribute: any = blogCreatedDate[i].getAttribute('data-date');
+    const date = formatDate(dateAttribute);
+    blogCreatedDate[i].innerText = date;
   }
 
   for (let i = 0; i < blogDescription.length; i++) {
-    const blogDescriptionText = blogDescription[i].innerText;
-    const description = formatString(blogDescriptionText, 400);
+    const descriptionAttribute: any = blogDescription[i].getAttribute('data-description');
+    const description = formatString(descriptionAttribute, descriptionSize());
     blogDescription[i].innerText = description;
   }
 
   for (let i = 0; i < recipeDescription.length; i++) {
-    const recipeDescriptionText = recipeDescription[i].innerText;
-    const description = formatString(recipeDescriptionText, 250);
+    const descriptionAttribute: any = recipeDescription[i].getAttribute('data-description');
+    const description = formatString(descriptionAttribute, 250);
     recipeDescription[i].innerText = description;
   }
 
-  for (let i = 0; i < allBlogsDescription.length; i++) {
-    const allBlogsDescriptionText = allBlogsDescription[i].innerText;
+  for (let i = 0; i < allBlogsDescriptions.length; i++) {
+    const allBlogsDescriptionText = allBlogsDescriptions[i].innerText;
     const description = formatString(allBlogsDescriptionText, 255);
-    allBlogsDescription[i].innerText = description;
+    allBlogsDescriptions[i].innerText = description;
   }
 }
 
@@ -134,7 +148,49 @@ function setEventListeners() {
           setActiveFilter(filter);
         }
       });
-    });
+  });
+
+
+  let formattedForMobile = false;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 460) {
+      if (!formattedForMobile) {
+        formatStringElements(blogDescription, 400);
+        formatStringElements(recipeDescription, 180);
+
+        formattedForMobile = true;
+      }
+
+      if (activePage === 'home') {
+        blogsNav.style.paddingLeft = '0rem';
+        blogTitle.style.paddingLeft = '0rem';
+      }
+      else {
+        blogsNav.style.paddingLeft = '';
+        blogTitle.style.paddingLeft = '0rem';
+      }
+    }
+    else if (window.innerWidth > 630) {
+      if (formattedForMobile) {
+        formatStringElements(blogDescription, 400);
+        formatStringElements(recipeDescription, 250);
+
+        formattedForMobile = false;
+      }
+
+      if (activePage === 'home') {
+        blogsNav.style.paddingLeft = '';
+        blogTitle.style.paddingLeft = '';
+      }
+      else {
+        blogsNav.style.paddingLeft = '';
+        blogTitle.style.paddingLeft = '0rem';
+      }
+    }
+
+    formatAllBlogDescriptions();
+    formatAllBlogSubtitles();
+  });
 
   blogNavHome.addEventListener('click', () => {
     if (blogNavHome.classList.contains('active')) {
@@ -252,8 +308,10 @@ function enableHomePage() {
   urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
-  //Featured
   interval = setInterval(cycleFeaturedBlogs, 6500);
+  activePage = 'home';
+
+  checkIfPaddingLeft();
 
   //Reset all page
   searchInput.value = '';
@@ -268,9 +326,10 @@ function enableHomePage() {
   navHeaderBgBox.style.transform = 'rotate(-8deg)';
   navHeaderBgBox.style.position = 'absolute';
   navHeaderBgBox.style.top = '';
+  navHeaderBgBox.style.height = '';
+  navHeaderBgBox.style.borderRadius = '';
 
   footerContainer.style.borderTop = 'none';
-  blogTitle.style.paddingLeft = '';
   blogTitle.style.marginLeft = '';
 
   blogAllPage.classList.remove('active');
@@ -283,6 +342,16 @@ function enableHomePage() {
       blogHomePage.classList.add('active');
     }, 5);
   }, 150);
+
+  function checkIfPaddingLeft() {
+    if (window.innerWidth < 630) {
+      blogTitle.style.paddingLeft = '0rem';
+      blogsNav.style.paddingLeft = '';
+    } 
+    else {
+      blogTitle.style.paddingLeft = '';
+    }
+  }
 }
 
 function enableAllPage() {
@@ -291,18 +360,22 @@ function enableAllPage() {
   urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
+  activePage = 'all';
   interval = null;
+
+  checkIfPaddingLeft();
 
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
 
   navHeaderBgBox.style.transform = 'rotate(0deg)';
   navHeaderBgBox.style.position = 'fixed';
-  navHeaderBgBox.style.top = '-10rem';
+  navHeaderBgBox.style.top = '0rem';
+  navHeaderBgBox.style.height = "120vh"
+  navHeaderBgBox.style.borderRadius = '0rem';
 
   footerContainer.style.borderTop = '2px solid var(--dark)';
   blogTitle.style.paddingLeft = '0rem';
-  blogTitle.style.marginLeft = '-0.2rem';
 
   blogHomePage.classList.remove('active');
 
@@ -314,7 +387,19 @@ function enableAllPage() {
       blogAllPage.classList.add('active');
     }, 5);
   }, 150);
+
+  function checkIfPaddingLeft() {
+    if (window.innerWidth < 630) {
+      blogsNav.style.paddingLeft = '';
+      blogTitle.style.marginLeft = '0rem';
+    }
+    else {
+      blogTitle.style.marginLeft = '-0.2rem';
+    }
+  }
 }
+
+
 
 let interval: any = null;
 function cycleFeaturedBlogs() {
@@ -397,19 +482,57 @@ function appendBlogs(data: any) {
       <div class="content">
         <div class="wrapper">
           <h3 class="blog-title">${data[i].title}</h3>
-          <h6 class="blog-subtitle">${data[i].subtitle}</h6>
-          <p class="blog-date">${formatDate(data[i].createdDate, true)}</p>
+          <h6 class="blog-subtitle all" data-subtitle="${data[i].subtitle}"></h6>
+          <p class="blog-date all" data-date="${data[i].createdDate}"></p>
         </div>
         <div class="wrapper">
-          <p class="all-blog-description">${formatString(data[i].description, 255)}</p>
+          <p class="blog-description all" data-description="${data[i].description}"></p>
           <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-outlined-accent">Read</a>
         </div>
       </div>
     </div>
   `;
   }
-}
+
+  const createdDates = document.querySelectorAll('.blog-date.all');
+  createdDates.forEach((date) => {
+    const dateData: any = date.getAttribute('data-date');
+    date.innerHTML = formatDate(dateData, true);
+  });
+
+  const descriptions: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description.all');
+  const subtitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle.all');
+  allBlogsDescriptions = descriptions;
+  allBlogsSubtitles = subtitles;
   
+  formatAllBlogDescriptions();
+  formatAllBlogSubtitles();
+}
+
+function formatAllBlogDescriptions() {
+  if (window.innerWidth < 400) {
+    formatStringElements(allBlogsDescriptions, 80);
+  } else if (window.innerWidth < 530) {
+    formatStringElements(allBlogsDescriptions, 200);
+  } else if (window.innerWidth < 800) {
+    formatStringElements(allBlogsDescriptions, 380);
+  } else {
+    formatStringElements(allBlogsDescriptions, 200);
+  }
+}
+
+function formatAllBlogSubtitles() {
+  if (window.innerWidth < 400) {
+    formatStringElements(allBlogsSubtitles, 64, 'data-subtitle');
+  } else if (window.innerWidth < 530) {
+    formatStringElements(allBlogsSubtitles, 80, 'data-subtitle');
+  } else if (window.innerWidth < 800) {
+    formatStringElements(allBlogsSubtitles, 150, 'data-subtitle');
+  } else {
+    formatStringElements(allBlogsSubtitles, 200, 'data-subtitle');
+  }
+}
+
 //Request
 async function makeRequest(queryParam: string, page = 1) {
   if (page == null || page == undefined) {
@@ -438,4 +561,12 @@ async function makeRequest(queryParam: string, page = 1) {
   checkIfMoreBlogs(data);
   appendBlogs(data);
 }
+
+function formatStringElements(descriptionElement: any, charCount: number, attribute:string = 'data-description') {
+  descriptionElement.forEach((description: any) => {
+    const descriptionData: any = description.getAttribute(attribute);
+    description.innerHTML = formatString(descriptionData, charCount);
+  });
+}
+
 export { };

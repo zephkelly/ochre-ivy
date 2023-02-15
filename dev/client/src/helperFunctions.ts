@@ -41,7 +41,7 @@ export function formatDate(inputDate: string, noDay: boolean = false) {
     dateString = dateString.slice(0, 6) + "," + dateString.slice(6);
   }
   else {
-    dateString = dateString.slice(0, 3) + "," + dateString.slice(3);
+    dateString = dateString.slice(0, 3) + dateString.slice(3);
     dateString = dateString.slice(0, 11) + "," + dateString.slice(11);
   }
 
