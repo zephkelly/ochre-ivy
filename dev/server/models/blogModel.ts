@@ -13,6 +13,7 @@ export module Blog {
     tags: string[];
     content: object;
     views: number;
+    comments: object[];
   }
 
   export const BlogSchema = new Schema({
@@ -27,6 +28,7 @@ export module Blog {
     tags: Array,
     content: { type: Object, required: true },
     views: Number,
+    comments: Array
   });
 
   export const Model = model<IBlog>('Blog', BlogSchema);

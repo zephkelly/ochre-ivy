@@ -144,34 +144,18 @@ function login_post(req, res) {
             res.redirect("/");
             return;
         }
+        const data = { message: null };
         //Validate inputs
         if (req.body.email == null || req.body.password == null) {
-            const data = { message: "Email or password is empty." };
-            res.render('login', { data }, (err, html) => {
-                if (err) {
-                    return console.log(err);
-                }
-                res.status(400).send(html);
-                return;
-            });
+            data.message = "Email or password is empty.";
         }
         //Check if user exists
         User.find({ email: req.body.email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
-            const data = {
-                message: null
-            };
             if (user.length == 0) {
                 data.message = "Email or password is incorrect";
-                res.render('login', { data }, (err, html) => {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    res.status(401).send(html);
-                    return;
-                });
             }
             else {
-                bcrypt.compare(JSON.stringify(req.body.password), user[0].password, (err, match) => {
+                yield bcrypt.compare(JSON.stringify(req.body.password), user[0].password, (err, match) => {
                     if (match) {
                         req.session.userid = user[0]._id;
                         req.session.email = user[0].email;
@@ -179,19 +163,19 @@ function login_post(req, res) {
                         req.session.roles = user[0].roles;
                         req.session.save();
                         let string = encodeURIComponent('true');
-                        res.status(200).redirect("/?loggingIn=" + string);
-                        return;
+                        return res.status(200).redirect("/?loggingIn=" + string);
                     }
                     else {
                         data.message = "Email or password is incorrect";
-                        res.render('login', { data }, (err, html) => {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            res.status(401).send(html);
-                            return;
-                        });
                     }
+                });
+            }
+            if (data.message != null) {
+                res.render('login', { data }, (err, html) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    return res.status(401).send(html);
                 });
             }
         }));

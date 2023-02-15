@@ -467,7 +467,8 @@ function validateBlogData(body, isUpdate = false) {
     cover: body.cover,
     tags: body.tags,
     content: body.content,
-    views: (isUpdate) ? body.views: 0,
+    views: (isUpdate) ? body.views : 0,
+    comments: (isUpdate) ? body.comments : [],
   });
 
   if (body.uri == null || body.uri == "") return { failedValidation: true, message: uriEmptyMsg, status: 400 };
