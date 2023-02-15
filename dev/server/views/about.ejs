@@ -1,38 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&700&display=swap" rel="stylesheet">
-  <title>Ochre & Ivy</title>
+  <%- include('partials/head.ejs') %>
 </head>
 <body>
-  <header>
-    <div class="navbar">
-      <div class="section">
-        <div class="container">
-          <a class="wrapper" href="/">
-            <h3 class="nav-text">Ochre & Ivy</h3>
-            <div class="nav-text-spacer"></div>
-          </a>
-          <button type="button" class=""><span class="nav-menu-btn material-symbols-outlined">menu</span></button>
-          <nav class="nav-menu">
-            <ul class="nav-list">
-              <li class="nav-item"><a href="/">Home</a></li>
-              <li class="nav-item"><a href="/blog">Blog</a></li>
-              <li class="nav-item"><a href="/blog?page=all&filter=recipe">Recipes</a></li>
-              <li class="nav-item"><a href="">About</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
+  <%- include('partials/navbar.ejs') %>
   <main>
     <section id="about-section">
       <div class="section-container">
@@ -47,8 +19,6 @@
             </div>
           </div>
           <div class="wrapper">
-            
-
             <p class="about-description">
               Hello there! My name is Kylie and I am a primary school teacher and creator with a passion for inspiring creativity in others. I have always been drawn to the creative arts - music, dance, drama, and art - and love sharing my passions with my students.
             </p>
@@ -66,26 +36,8 @@
         </div>
       </div>
     </section>
-    <!-- <section id="about-instagram">
-      <div class="section-container">
-        <h2 class="about-page-title">INSTAGRAM PAGE</h2>
-      </div>
-    </section> -->
   </main>
-  <footer id="footer-main">
-    <div class="container" id="footer-container">
-      <section class="footer-links">
-        <nav>
-          <ul class="footer-nav-menu">
-            <li class="footer-nav-item"><a href="/">Home</a></li>
-            <li class="footer-nav-item"><a href="/blog">Blog</a></li>
-            <li class="footer-nav-item"><a href="/blog?section=all&filter=recipe">Recipes</a></li>
-            <li class="footer-nav-item"><a href="">About</a></li>
-          </ul>
-        </nav>
-      </section>
-    </div>
-  </footer>
+  <%- include('partials/footer.ejs') %>
 </body>
   <footer>
     <script type="module" src="/src/main.ts"></script>

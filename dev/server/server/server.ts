@@ -151,7 +151,7 @@ app.get('/about', (req, res) => {
     }
   }
 
-  res.status(200).sendFile(__dirname + '/about.html');
+  res.status(200).render('about', { session });
 });
 
 app.use(authRoutes);

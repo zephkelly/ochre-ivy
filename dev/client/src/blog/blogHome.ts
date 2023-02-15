@@ -53,8 +53,6 @@ let activePage = 'home';
 
 async function start() {
   setEventListeners();
-  cycleFeaturedBlogs();
-  changeFeaturedCoverPosition();
 
   (async function () {
     const section = urlParams.get('section');
@@ -110,10 +108,11 @@ async function start() {
     }
   }
 
-  //blog created date
   for (let i = 0; i < blogCreatedDate.length; i++) {
     const dateAttribute: any = blogCreatedDate[i].getAttribute('data-date');
-    const date = formatDate(dateAttribute);
+    console.log(dateAttribute);
+
+    const date = formatDate(dateAttribute, true);
     blogCreatedDate[i].innerText = date;
   }
 
@@ -134,6 +133,9 @@ async function start() {
     const description = formatString(allBlogsDescriptionText, 255);
     allBlogsDescriptions[i].innerText = description;
   }
+
+  changeFeaturedCoverPosition();
+  cycleFeaturedBlogs();
 }
 
 function setEventListeners() {

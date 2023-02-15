@@ -138,7 +138,7 @@ app.get('/about', (req, res) => {
             session.admin = true;
         }
     }
-    res.status(200).sendFile(__dirname + '/about.html');
+    res.status(200).render('about', { session });
 });
 app.use(authRoutes);
 app.use(blogRoutes);
