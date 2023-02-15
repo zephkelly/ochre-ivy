@@ -54,6 +54,7 @@ let activePage = 'home';
 async function start() {
   setEventListeners();
   cycleFeaturedBlogs();
+  changeFeaturedCoverPosition();
 
   (async function () {
     const section = urlParams.get('section');
@@ -153,6 +154,8 @@ function setEventListeners() {
 
   let formattedForMobile = false;
   window.addEventListener('resize', () => {
+    changeFeaturedCoverPosition();
+
     if (window.innerWidth < 460) {
       if (!formattedForMobile) {
         formatStringElements(blogDescription, 400);
@@ -560,6 +563,27 @@ async function makeRequest(queryParam: string, page = 1) {
 
   checkIfMoreBlogs(data);
   appendBlogs(data);
+}
+
+function changeFeaturedCoverPosition() {
+  if (window.innerWidth < 980) {
+    featuredBlogs.forEach((blog) => {
+      const content = blog.querySelector('.content') as HTMLElement;
+      const contentString = content.outerHTML;
+
+      blog.removeChild(content);
+      blog.innerHTML += contentString;
+    });
+  }
+  else {
+    featuredBlogs.forEach((blog) => {
+      const cover = blog.querySelector('.cover-img') as HTMLElement;
+      const coverString = cover.outerHTML;
+
+      blog.removeChild(cover);
+      blog.innerHTML += coverString;
+    });
+  }
 }
 
 function formatStringElements(descriptionElement: any, charCount: number, attribute:string = 'data-description') {
