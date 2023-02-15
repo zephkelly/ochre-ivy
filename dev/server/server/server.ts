@@ -101,7 +101,7 @@ app.get('/', updateAnalytics, async (req, res) => {
     return;
   }
   
-  res.status(200).render('index', { session, blogData: await getBlogsData() })
+  res.status(200).render('index', { session, recentBlogs: await getBlogsData(), recipeBlogs: await getRecipesData() })
   
   //Functions
   async function getBlogsData() {

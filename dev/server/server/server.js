@@ -96,7 +96,7 @@ app.get('/', updateAnalytics, (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
         return;
     }
-    res.status(200).render('index', { session, blogData: yield getBlogsData() });
+    res.status(200).render('index', { session, recentBlogs: yield getBlogsData(), recipeBlogs: yield getRecipesData() });
     //Functions
     function getBlogsData() {
         return __awaiter(this, void 0, void 0, function* () {
