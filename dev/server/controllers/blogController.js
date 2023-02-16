@@ -371,7 +371,7 @@ function blogAPI_imageUpload(req, res) {
         const image = req.file;
         const dirPath = __dirname + '/../../' + process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/';
         const originalName = image.filename;
-        const newName = Date.now() + '-' + originalName;
+        const newName = Date.now() + '-' + originalName.split('.').slice(0, -1).join('.') + '.webp';
         if (!image) {
             console.log("No image sent in request");
             return res.status(400).send(JSON.stringify({ success: 0 }));

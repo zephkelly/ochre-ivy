@@ -1,1 +1,1 @@
-mongod --dbpath /var/www/database/ochre-ivy --port 27017 --fork --logpath /var/www/database/ochre-ivy/mongod.log
+mongod --dbpath /var/www/database/ochre-ivy --port 27017 --logpath /var/www/database/ochre-ivy/mongod.log

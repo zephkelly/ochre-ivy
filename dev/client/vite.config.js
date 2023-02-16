@@ -4,14 +4,6 @@ import { defineConfig } from 'vite'
 
 export default defineConfig(
   {
-    server: {
-      watch: true,
-      port: 3000,
-      fs: {
-        strict: true,
-        allow: ['..']
-      }
-    },
     build: {
       rollupOptions:
       {

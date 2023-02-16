@@ -8,9 +8,10 @@
     "preview": "vite preview",
     "copyImages": "copyfiles -u 1 ./public/* ./../../dist/public",
     "copyAssets": "copyfiles -u 1 ./dist/*.js ./dist/*/*.js ./dist/*.css ./dist/*/*.css ./../../dist/assets",
+    "copyAssetsPollyfills": "copyfiles -f ./dist/*/*.js ./../../dist/assets",
     "copyAssetsCss": "copyfiles -u 1 ./dist/*.css ./dist/*/*.css ./../../dist/assets",
-    "copyFull": "npm run copyImages && npm run copyAssets",
-    "build": "tsc && vite build && npm run copyAssets",
+    "copyFull": "npm run copyImages && npm run copyAssets && npm run copyAssetsPollyfills",
+    "build": "tsc && vite build && npm run copyAssets && npm run copyAssetsPollyfills",
     "buildCSS": "vite build && npm run copyAssetsCss",
     "buildFull": "tsc && vite build && npm run copy"
   },
