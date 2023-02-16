@@ -92,11 +92,10 @@ app.get('/', updateAnalytics, (req, res) => __awaiter(void 0, void 0, void 0, fu
             if ((_a = req.query) === null || _a === void 0 ? void 0 : _a.loggingIn) {
                 session.notification = true;
             }
-            res.status(200).render('admin/admin-index', { session, siteData: yield getSiteData(), recentBlogs: yield getBlogsData(), recipeBlogs: yield getRecipesData() });
+            return res.status(200).render('admin/admin-index', { session, siteData: yield getSiteData(), recentBlogs: yield getBlogsData(), recipeBlogs: yield getRecipesData() });
         }
-        return;
     }
-    res.status(200).render('index', { session, recentBlogs: yield getBlogsData(), recipeBlogs: yield getRecipesData() });
+    return res.status(200).render('index', { session, recentBlogs: yield getBlogsData(), recipeBlogs: yield getRecipesData() });
     //Functions
     function getBlogsData() {
         return __awaiter(this, void 0, void 0, function* () {
