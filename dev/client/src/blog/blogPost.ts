@@ -7,6 +7,7 @@ window.addEventListener('load', () => {
     const blogPost = path.split('/blog/')[1]?.split('/')[0];
 
     if (blogPost != 'new' && blogPost != 'edit') {
+      console.log(blogPost);
       blogPostValidation();
     }
   }
@@ -36,10 +37,9 @@ function blogPostValidation() {
     });
   }
 
-  // Format date
   const blogCreatedDate: HTMLElement = document.getElementById('post-date') as HTMLElement;
 
   const blogCreatedDateText = blogCreatedDate?.innerText;
   const date = formatDate(blogCreatedDateText);
-  blogCreatedDate.innerText = date;
+  blogCreatedDate.innerText = date
 }  

@@ -35,7 +35,7 @@ let allBlogsDescriptions: NodeListOf<HTMLElement> = document.querySelectorAll('.
 let allBlogsSubtitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle.all') as NodeListOf<HTMLElement>;
 const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
-const footerContainer: HTMLElement = document.querySelector('#footer-container') as HTMLElement;
+const footerContainer: HTMLElement = document.querySelector('#footer-main .container') as HTMLElement;
 
 window.addEventListener('load', async () => {
   urlParams = new URLSearchParams(window.location.search);
@@ -110,8 +110,6 @@ async function start() {
 
   for (let i = 0; i < blogCreatedDate.length; i++) {
     const dateAttribute: any = blogCreatedDate[i].getAttribute('data-date');
-    console.log(dateAttribute);
-
     const date = formatDate(dateAttribute, true);
     blogCreatedDate[i].innerText = date;
   }

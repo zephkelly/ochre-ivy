@@ -1,5 +1,6 @@
 import { formatString, formatDate } from '../helperFunctions';
 
+
 // Filter blogs by category
 const allFilter: HTMLElement = document.querySelector('.filter-button.all') as HTMLElement;
 const recipesFilter: HTMLElement = document.querySelector('.filter-button.recipes') as HTMLElement;

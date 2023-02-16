@@ -2,26 +2,31 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 
-export default defineConfig({
-  build: {
-    modulePreload: 
-    {
-      polyfill: true,
-      polyfillDynamicImport: true,
+export default defineConfig(
+  {
+    server: {
+      watch: true,
+      port: 3000,
+      fs: {
+        strict: true,
+        allow: ['..']
+      }
     },
-    rollupOptions:
-    {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        admin: resolve(__dirname, 'admin.html'),
-        helperFunctions: 'src/helperFunctions.ts',
-        blogEditor: 'src/admin/blogEditor.ts',
-        style: 'src/style.css',
-      },
-      output: {
-        entryFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`
+    build: {
+      rollupOptions:
+      {
+        input: {
+          main: resolve(__dirname, 'index.html'),
+          admin: 'admin.html',
+          helperFunctions: 'src/helperFunctions.ts',
+          blogEditor: 'src/admin/blogEditor.ts',
+          style: 'src/style.css',
+        },
+        output: {
+          entryFileNames: `[name].js`,
+          assetFileNames: `[name].[ext]`
+        }
       }
     }
   }
-})
+)

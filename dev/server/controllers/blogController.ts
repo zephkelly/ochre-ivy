@@ -363,9 +363,6 @@ export async function blogAPI_delete(req, res) {
 }
 
 export async function blogAPI_imageUpload(req, res) {
-  const path = __dirname + '/public/uploaded-images/';
-  const { image } = req.files;
-
   const imageData = {
     success: 0,
     file: {
@@ -373,21 +370,26 @@ export async function blogAPI_imageUpload(req, res) {
     }
   }
 
+  const { image } = req.files;
+  const dirPath = __dirname + '/../../public/uploaded-images/';
+  
+  if (!fs.existsSync(dirPath)) { fs.mkdirSync(dirPath); }
+
   if (!image) {
     return res.status(400).send(JSON.stringify(imageData));
   }
 
-  await image.mv(path + image.name);
+  await image.mv(dirPath + image.name);
 
   let newName = image.name.split('.')[0] + '-' + Date.now() + '.webp';
   newName = newName.replace(/\s/g, '-');
 
-  await sharp(path + image.name)
+  await sharp(dirPath + image.name)
     .resize()
     .webp({ quality: 60 })
-    .toFile(path + newName);
+    .toFile(dirPath + newName);
 
-  fs.unlink(path + image.name, (err) => { if (err) { console.log(err); } });
+  fs.unlink(dirPath + image.name, (err) => { if (err) { console.log(err); } });
 
   imageData.success = 1;
   imageData.file.url = '/uploaded-images/' + newName;
