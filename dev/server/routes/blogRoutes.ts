@@ -1,9 +1,11 @@
 export { };
 
 const { Router } = require('express');
+const { multer }= require('multer');
 
 const blogController = require('../controllers/blogController');
 const { isAuthorised } = require('../controllers/authController');
+const { upload } = require('../../server');
 
 const router = Router();
 
@@ -18,7 +20,7 @@ router.put('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController.bl
 
 router.delete('/api/blog/:blogURI', isAuthorised, (req, res) => { blogController.blogAPI_delete(req, res) });
 
-router.post('/api/blog/imageupload', isAuthorised, (req, res) => { blogController.blogAPI_imageUpload(req, res) });
+router.post('/api/blog/imageupload', isAuthorised, upload.single('blogImage'), (req, res) => { blogController.blogAPI_imageUpload(req, res) });
 
 //Routes ------------------------------------------------
 router.get('/blog', (req, res) => { blogController.blog_homePage(req, res); });

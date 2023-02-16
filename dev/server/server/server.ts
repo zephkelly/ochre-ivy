@@ -5,8 +5,24 @@ const cookieParser = require("cookie-parser");
 const fetch = require('node-fetch');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const fileUpload = require('express-fileupload');
 const MongoStore = require('connect-mongo');
+
+const multer = require('multer')
+
+//multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/');
+  },
+  filename: function (req, file, cb) {
+    let newName = file.originalname.replace(/ /g, '-');
+    newName = Date.now() + '-' + newName;
+
+    cb(null, newName);
+  },
+})
+
+export const upload = multer({ storage: storage })
 
 const authRoutes = require('./server/routes/authRoutes');
 const blogRoutes = require('./server/routes/blogRoutes');
@@ -39,7 +55,6 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(fileUpload());
 
 //Database
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })

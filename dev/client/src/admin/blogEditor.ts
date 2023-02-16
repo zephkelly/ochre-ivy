@@ -50,8 +50,32 @@ window.addEventListener('load', async () => {
         image: {
           class: Image,
           config: {
-            endpoints: {
-              byFile: '/api/blog/imageupload',
+            uploader: {
+              uploadByFile(file: any) {
+                const data = new FormData();
+                data.append('blogImage', file);
+                data.append('name', file.name);
+                return fetch('/api/blog/imageupload', {
+                  method: 'POST',
+                  body: data,
+                })
+                  .then((response) => {
+                    return response.json();
+                  })
+                  .then((response) => {
+                    return {
+                      success: 1,
+                      file: {
+                        url: response.url
+                      }
+                    };
+                  })
+                  .catch(() => {
+                    return {
+                      success: 0
+                    };
+                  });
+              }
             }
           }
         }

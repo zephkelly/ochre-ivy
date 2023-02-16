@@ -365,35 +365,29 @@ function blogAPI_delete(req, res) {
     });
 }
 exports.blogAPI_delete = blogAPI_delete;
+sharp.cache(false);
 function blogAPI_imageUpload(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const imageData = {
-            success: 0,
-            file: {
-                url: ''
-            }
-        };
-        const { image } = req.files;
-        const dirPath = __dirname + '/../../../../database/ochre-ivy/public/uploaded-images/';
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath);
-        }
+        const image = req.file;
+        const dirPath = __dirname + '/../../' + process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/';
+        const originalName = image.filename;
+        const newName = Date.now() + '-' + originalName;
         if (!image) {
-            return res.status(400).send(JSON.stringify(imageData));
+            console.log("No image sent in request");
+            return res.status(400).send(JSON.stringify({ success: 0 }));
         }
-        yield image.mv(dirPath + image.name);
-        let newName = image.name.split('.')[0] + '-' + Date.now() + '.webp';
-        newName = newName.replace(/\s/g, '-');
-        yield sharp(dirPath + image.name)
-            .resize()
+        yield sharp(dirPath + originalName)
             .webp({ quality: 60 })
+            .resize(1920, 1080, {
+            kernel: sharp.kernel.cubic,
+            fit: 'cover',
+        })
             .toFile(dirPath + newName);
-        fs.unlink(dirPath + image.name, (err) => { if (err) {
+        fs.unlink(dirPath + originalName, (err) => { if (err) {
             console.log(err);
         } });
-        imageData.success = 1;
-        imageData.file.url = '/uploaded-images/' + newName;
-        res.status(200).send(JSON.stringify(imageData));
+        const imgPath = '/uploaded-images/' + newName;
+        res.status(200).send(JSON.stringify({ url: imgPath }));
     });
 }
 exports.blogAPI_imageUpload = blogAPI_imageUpload;
