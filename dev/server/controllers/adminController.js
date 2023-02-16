@@ -68,7 +68,7 @@ function dashboard_blog_get(req, res) {
                 session.admin = true;
             }
         }
-        const response = yield fetch('http://localhost:62264/api/blog/');
+        const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/');
         if (response.status == 200) {
             const blogsData = yield response.json();
             res.render('admin/admin-dashboard-blog', { session, blogsData }, (err, html) => {
@@ -99,7 +99,7 @@ function dashboard_blog_new_get(req, res) {
 exports.dashboard_blog_new_get = dashboard_blog_new_get;
 function dashboard_blog_new_post(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch('http://localhost:62264/api/blog/', {
+        const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ function dashboard_blog_new_post(req, res) {
 exports.dashboard_blog_new_post = dashboard_blog_new_post;
 function dashboard_blog_editURI(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch('http://localhost:62264/api/blog/' + req.params.blogURI);
+        const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI);
         const session = { admin: false };
         if (response.status == 200) {
             const blogData = { uri: req.params.blogURI, data: yield response.json() };
@@ -139,7 +139,7 @@ function dashboard_blog_editURI(req, res) {
 exports.dashboard_blog_editURI = dashboard_blog_editURI;
 function dashboard_blog_editURI_post(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch('http://localhost:62264/api/blog/' + req.params.blogURI, {
+        const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

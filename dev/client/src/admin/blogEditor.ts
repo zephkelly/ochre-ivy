@@ -51,7 +51,7 @@ window.addEventListener('load', async () => {
           class: Image,
           config: {
             endpoints: {
-              byFile: 'http://localhost:62264/api/blog/imageupload', // Your backend file uploader endpoint
+              byFile: '/api/blog/imageupload',
             }
           }
         }

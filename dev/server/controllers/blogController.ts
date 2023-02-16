@@ -371,7 +371,7 @@ export async function blogAPI_imageUpload(req, res) {
   }
 
   const { image } = req.files;
-  const dirPath = __dirname + '/../../public/uploaded-images/';
+  const dirPath = __dirname + '/../../../../database/ochre-ivy/public/uploaded-images/';
   
   if (!fs.existsSync(dirPath)) { fs.mkdirSync(dirPath); }
 

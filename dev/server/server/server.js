@@ -145,3 +145,4 @@ app.use(adminRoutes);
 app.use(analyticsRoutes);
 app.use(express.static('./assets'));
 app.use(express.static('./public'));
+app.use(express.static('./../../database/ochre-ivy/public'));

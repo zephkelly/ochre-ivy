@@ -64,7 +64,7 @@ export async function dashboard_blog_get(req, res)
     }
   }
 
-  const response = await fetch('http://localhost:62264/api/blog/');
+  const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/');
 
   if (response.status == 200) {
     const blogsData = await response.json();
@@ -95,7 +95,7 @@ export function dashboard_blog_new_get(req, res)
 
 export async function dashboard_blog_new_post(req, res)
 {
-  const response = await fetch('http://localhost:62264/api/blog/', {
+  const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ export async function dashboard_blog_new_post(req, res)
 
 export async function dashboard_blog_editURI(req, res)
 {
-  const response = await fetch('http://localhost:62264/api/blog/' + req.params.blogURI);
+  const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI);
   const session = { admin: false };
 
   if (response.status == 200) {
@@ -135,7 +135,7 @@ export async function dashboard_blog_editURI(req, res)
 
 export async function dashboard_blog_editURI_post(req, res)
 {
-  const response = await fetch('http://localhost:62264/api/blog/' + req.params.blogURI, {
+  const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
