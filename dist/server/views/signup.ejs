@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head.ejs') %>
+</head>
+<body>
+  <%- include('partials/navbar.ejs') %>
+  <main>
+    <section id="signup-main">
+      <% if (data.completed) { %>
+        <div class="container">
+          <h1 class="signup-title">Signed up successfully!</h1>
+          <h3 class="signup-subtitle">Follow the link below to log in</h3>
+          <p class="signup-ref"><a href="/login">Login Now</a></p>
+        </div>
+      <% } else { %>
+        <div class="container">
+          <h1 class="signup-title">Welcome!</h1>
+          <h3 class="signup-subtitle">Register an account below</h3>
+          <h3 class="signup-message"><%= data.message %></h3>
+          <div class="wrapper">
+            <form class="signup-form" action="/signup" method="POST" id="signup-form">
+              <div class="signup-section">
+                <label for="name">First Name</label>
+                <input id="signup-name" class="input" type="text" name="name" placeholder="First Name" required>
+              </div>
+              <div class="signup-section">
+                <label for="email">Email</label>
+                <input id="signup-email" class="input" type="email" name="email" placeholder="Email" required>
+                <p id="signup-email-validation" for="email"></p>
+              </div>
+              <div class="signup-section">
+                <label for="password">Password</label>
+                <input id="signup-password" class="input" type="password" name="password" placeholder="Password" required>
+                <p id="signup-password-validation" for="password"></p>
+              </div>
+              <div class="signup-section">
+                <label for="passwordConfirm">Repeat Password</label>
+                <input id="signup-password-confirm" class="input" type="password" name="passwordConfirm" placeholder="Repeat Password" required>
+                <p id="signup-password-confirm-validation" for="passwordConfirm"></p>
+              </div>
+              <input class="signup-button" type="submit" value="Sign Up">
+            </form>
+          </div>
+          <p class="signup-ref">Already have an account? <a href="/login">Login</a></p>
+        </div>
+      <% } %>
+    </section>
+  </main>
+</body>
+<script>
+const emailInputSignup = document.getElementById('signup-email');
+const passwordInput = document.getElementById('signup-password');
+const passwordConfirmInput = document.getElementById('signup-password-confirm');
+
+const emailValidationMessage = document.getElementById('signup-email-validation');
+const passwordConfirmValidationMessage = document.getElementById('signup-password-confirm-validation');
+
+emailInputSignup.addEventListener("input", checkEmail);
+passwordInput.addEventListener("input", checkPassword);
+passwordConfirmInput.addEventListener("input", checkPassword);
+
+function checkEmail() {
+  var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+  if (emailInputSignup.value.match(validRegex)) {
+    emailValidationMessage.style.display = "";
+    emailValidationMessage.innerHTML = "";
+
+    emailInputSignup.setCustomValidity("");
+  }
+  else {
+    emailInputSignup.setCustomValidity("Please enter a valid email address.");
+    emailValidationMessage.innerHTML = "Please enter a valid email address.";
+
+    emailValidationMessage.style.display = "block";
+  }
+}
+
+function checkPassword() {
+  if (passwordInput.value !== passwordConfirmInput.value) {
+    passwordInput.setCustomValidity("Passwords do not match.");
+    passwordConfirmInput.setCustomValidity("Passwords do not match.");
+    passwordConfirmValidationMessage.innerHTML = "Passwords do not match.";
+
+    passwordConfirmValidationMessage.style.display = "block";
+  }
+  else {
+    passwordInput.setCustomValidity("");
+    passwordConfirmInput.setCustomValidity("");
+    passwordConfirmValidationMessage.innerHTML = "";
+
+    passwordConfirmValidationMessage.style.display = "none";
+  }
+}
+</script>
+</html>
