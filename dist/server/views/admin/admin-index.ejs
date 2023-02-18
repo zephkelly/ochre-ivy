@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <%- include('../partials/head.ejs') %>
+  <title>Admin - Ochre & Ivy</title>
+
   <script type="module" crossorigin src="/admin.js"></script>
 </head>
 <body>
@@ -13,16 +15,16 @@
         <h1 class="hero-text">WELCOME BACK, <%= session.name.toUpperCase() %></h1>
         <p class="hero-description"><%= siteData.blogCount %> blogs, <%= siteData.recipeCount %> recipes, <%= siteData.blogViews %> blog views</p>
         <a class="landing-btn accent-button button-outlined-black" href="/dashboard">Dashboard</a>
-        <img id="hero-illustration" class="" src="./painters-palette.png" alt="A painting paintbrush">
+        <img id="hero-illustration" class="" src="./painters-palette.webp" alt="A painting paintbrush">
       </div>
       <div class="landing-bgBox"></div> 
     </section>
     <section id="blog-section">
       <div class="section-container">
         <div id="blog-bgBox"></div>
-        <img id="blog-illustration" class="" src="./idea-tree.png" alt="An idea tree">
+        <img id="blog-illustration" class="" src="./idea-tree.webp" alt="An idea tree">
         <div class="blog container">
-          <h3 class="blog-text">A naturally simple blog.</h3>
+          <h3 class="blog-text">A naturally simple blog</h3>
           <p class="blog-description">Your body deserves to be nourished, but where do you start? Being <span class="color-highlight">healthy</span> can be an overwhelming topic but our blog makes it simple; without the clutter.</p>
           <a class="blog-btn accent-button button-solid-accent">View blog</a>
         </div>
@@ -48,7 +50,7 @@
       <div class="section-container">
         <div class="recipe-bgBox"></div>
         <div class="recipe-bgBox2"></div>
-        <h3 class="recipes-text">Delicious, plant-based recipes.</h3>
+        <h3 class="recipes-text">Delicious, plant-based recipes</h3>
         <p class="recipes-description">Boost your energy and help your body thrive with gut-health friendly recipes.</p>
         <a class="recipes-section-btn accent-button button-outlined-black" href="/blog?section=all&filter=recipe">Read now</a>
       </div>
@@ -67,7 +69,29 @@
                   <h5 class="recipe-subtitle"><%= recipeBlogs[i].subtitle %></h5>
                   <h6 class="blog-date"><%= recipeBlogs[i].createdDate %></h6>
                   <p class="recipe-desc"><%= recipeBlogs[i].description %></p>
-                  <p class="recipe-method"><%= recipeBlogs[i].content.blocks %></p>
+                  <div class="method-container">
+                    <% const blocks = recipeBlogs[i].content.blocks %>
+                    <% for (let i = 0; i < 5; i++) { %>
+                      <% const block = blocks[i] %>
+                      <% if (block === undefined || block === null) { continue; } %>
+                      <% if (block.type === 'paragraph') { %>
+                        <% if (i == 0 || i == 1) { continue; } %>
+                        <p class="recipe-method-p"><%= block.data.text %></p>
+                      <% } else if (block.type === 'header') { %>
+                        <% if (block.data.level == 3) { %>
+                          <h4 class="recipe-method-h3"><%= block.data.text %></h4>
+                        <% } else if (block.data.level == 4) { %>
+                          <h5 class="recipe-method-h4"><%= block.data.text %></h4>
+                        <% } %>
+                      <% } else if (block.type === 'list') { %>
+                        <ul class="recipe-method-ul">
+                          <% block.data.items.forEach((item) => { %>
+                            <li class="cdx-list__item"><%= item %></li>
+                          <% }); %>
+                        </ul>
+                      <% } %>
+                    <% } %>
+                  </div>
                 </div>
                 <div class="group">
                   <a class="recipe-btn accent-button button-outlined-accent" href="/blog/<%= recipeBlogs[i].uri %>">Read</a>
