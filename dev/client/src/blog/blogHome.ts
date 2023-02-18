@@ -113,7 +113,7 @@ async function activatePages() {
     enableHomePage();
   }
 
-  await setDataAttributes();
+  setDataAttributes();
   formatElements();
 }
 
@@ -510,39 +510,6 @@ function checkIfMoreBlogs(data: any) {
   }
 }
 
-function appendBlogs(data: any) {
-  //for loop
-  for (let i = 0; i < data.length; i++) {
-    blogsAllSection.innerHTML += `
-    <div class="all-blog">
-      <div class="cover-img">
-        <img src="${data[i].cover}" alt="${data[i].title}" class="recipe-image">
-      </div>
-      <div class="content">
-        <div class="wrapper">
-          <h3 class="blog-title">${data[i].title}</h3>
-          <h6 class="blog-subtitle all" data-subtitle="${data[i].subtitle}"></h6>
-          <p class="blog-date all" data-date="${data[i].createdDate}"></p>
-        </div>
-        <div class="wrapper">
-          <p class="blog-description all" data-description="${data[i].description}"></p>
-          <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-outlined-accent">Read</a>
-        </div>
-      </div>
-    </div>
-  `;
-  }
-
-  const createdDates = document.querySelectorAll('.blog-date.all');
-  createdDates.forEach((date) => {
-    const dateData: any = date.getAttribute('data-date');
-    date.innerHTML = formatDate(dateData, true);
-  });
-
-  formatBlogsDescriptionsAll();
-  formatBlogSubtitlesAll();
-}
-
 const hideExtraBlogs_current = { width: 200 };
 function hideExtraBlogs(selector: string, max630: number, max980: number) {
   if (window.innerWidth < 630) {
@@ -810,7 +777,51 @@ async function makeRequest(queryParam: string, page = 1) {
 
   checkIfMoreBlogs(data);
   appendBlogs(data);
-  formatElements();
+}
+
+function appendBlogs(data: any) {
+  //for loop
+  for (let i = 0; i < data.length; i++) {
+    blogsAllSection.innerHTML += `
+    <div class="all-blog">
+      <div class="cover-img">
+        <img src="${data[i].cover}" alt="${data[i].title}" class="recipe-image">
+      </div>
+      <div class="content">
+        <div class="wrapper">
+          <h3 class="blog-title">${data[i].title}</h3>
+          <h6 class="blog-subtitle all" data-subtitle="${data[i].subtitle}"></h6>
+          <p class="blog-date all" data-date="${data[i].createdDate}"></p>
+        </div>
+        <div class="wrapper">
+          <p class="blog-description all" data-description="${data[i].description}"></p>
+          <a href="/blog/${data[i].uri}" class="blog-link-all accent-button button-outlined-accent">Read</a>
+        </div>
+      </div>
+    </div>
+  `;
+  }
+
+  const createdDates = document.querySelectorAll('.blog-date.all');
+  createdDates.forEach((date) => {
+    const dateData: any = date.getAttribute('data-date');
+    date.innerHTML = formatDate(dateData, true);
+  });
+
+  const descAll = document.querySelectorAll('.blog-description.all');
+  descAll.forEach((desc) => {
+    const descData: any = desc.getAttribute('data-description');
+    desc.innerHTML = formatString(descData, 200);
+  });
+
+  const subAll = document.querySelectorAll('.blog-subtitle.all');
+  subAll.forEach((sub) => {
+    const subData: any = sub.getAttribute('data-subtitle');
+    sub.innerHTML = formatString(subData, 100);
+  });
+
+  formatBlogsDescriptionsAll();
+  formatBlogSubtitlesAll();
 }
 
 function changeFeaturedCoverPosition() {
