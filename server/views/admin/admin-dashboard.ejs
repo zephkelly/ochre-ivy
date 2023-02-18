@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <%- include('../partials/head.ejs') %>
+  <title>Dashboard - Ochre & Ivy</title>
+
   <script type="module" crossorigin src="/admin.js"></script>
 </head>
   <body>
@@ -32,20 +34,20 @@
           <div class="wrapper">
             <div class="container main">
               <div class="stat">
-                <h2 class="stat-label">Blog</h2>
+                <h2 class="stat-label">BLOG</h2>
                 <div class="stat-container">
                   <div class="group">
-                    <h3 class="stat-title">Blogs count</h3>
+                    <h3 class="stat-title">Blog ount</h3>
                     <p class="stat-value"><%= siteData.blogCount %></p>
                   </div>
                   <div class="group">
-                    <h3 class="stat-title">Recipes count</h3>
+                    <h3 class="stat-title">Recipe Count</h3>
                     <p class="stat-value"><%= siteData.recipeCount %></p>
                   </div>
                 </div>
               </div>
               <div class="stat">
-                <h2 class="stat-label">Views</h2>
+                <h2 class="stat-label">VIEWS</h2>
                 <div class="stat-container">
                   <div class="group">
                     <h3 class="stat-title">Site Hits</h3>
@@ -60,7 +62,7 @@
             </div>
             <div class="container most-viewed">
               <div class="stat">
-                <h3 class="stat-label">Most viewed posts</h3>
+                <h3 class="stat-label">MOST VIEWED</h3>
                 <div class="group">
                   <nav class="stat-most-viewed">
                     <% if (siteData.mostViewedBlogs.length > 0) { %>

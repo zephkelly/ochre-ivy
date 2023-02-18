@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
   <%- include('partials/head.ejs') %>
+  <title><%= blogData.title %></title>
+  <meta property="og:title" content="<%= blogData.title %>" />
+  <meta name="description" content="<%= blogData.subtitle %>" />
+  <meta property="og:description" content="<%= blogData.subtitle %>" />
 </head>
 <body>
   <%- include('partials/navbar.ejs') %>
@@ -42,6 +46,11 @@
           });
         </script>
       <% } %>
+      <div class="section-container" style="min-height: 0rem;">
+        <div class="nav-controls">
+          <a href="<%= blogData.ref %>">Back to <%= blogData.refName %></a>
+        </div>
+      </div>
       <div class="section-container">
         <h1 class="post-title"><%= blogData.title %></h1>
         <h3 class="post-subtitle"><%= blogData.subtitle %></h3>
@@ -49,26 +58,42 @@
           <%= blogData.createdDate %>
         </h6>
         <div id="blog-body">
-          <% blogData.content.blocks.forEach((block) => { %>
+          <% const blocks = blogData.content.blocks %>
+          <% for (let i = 0; i < blocks.length; i++) { %>
+            <% const block = blocks[i] %>
+            <% const currentBlock = blocks[i] %>
+            <% const nextBlock = blocks[i+1] %>
+            <% const previousBlock = blocks[i-1] %>
             <div class="ce-block__content">
               <% if (block.type === 'header') { %>
                 <% if (block.data.level === 3) { %>
                   <h3 class="ce-header"><%= block.data.text %></h3>
-                <% } %>
-                <% if (block.data.level === 4) { %>
+                <% } else if (block.data.level === 4) { %>
                   <h4 class="ce-header"><%= block.data.text %></h4>
                 <% } %>
               <% } %>
               <% if (block.type === 'paragraph') { %>
-                <p class="ce-paragraph"><%= block.data.text %></p>
+                <% let paddingStyle = null; %>
+                <% if (nextBlock == null || nextBlock == undefined) { %>
+                  <% paddingStyle = 'padding-bottom: 2.5rem' %>
+                <% } else { %>
+                  <% paddingStyle = nextBlock.type === 'image' ? 'padding-bottom: 1.5rem' : 'padding-bottom: 2.5rem' %>
+                <% } %>
+                  <p class="ce-paragraph" style="<%= paddingStyle %>"><%= block.data.text %></p>
               <% } %>
               <% if (block.type === 'image') { %>
                 <div class="image-tool">
-                  <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
-                  <p class="image-tool__caption"><%= block.data.caption %></p>
+                  <% if (block.data.caption) { %>
+                    <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
+                    <p class="image-tool__caption"><%= block.data.caption %></p>
+                  <% } else { %>
+                    <% const marginStyle = i === 0 ? 'margin-bottom: 1rem' : 'margin-bottom: 5rem' %>
+                    <img src="<%= block.data.file.url %>" style="<%= marginStyle %>"/>
+                  <% } %>
                 </div>
               <% } %>
               <% if (block.type === 'quote') { %>
+                <% currentBlock.type = 'quote' %>
                 <p class="cdx-quote__text"><%= block.data.text %></p>
                 <p class="cdx-quote__caption"><%= block.data.caption %></p>
               <% } %>
@@ -89,7 +114,7 @@
                 <% } %>
               <% } %>
             </div>
-          <% }); %>
+          <% } %>
         </div>
       </div>
     </section>
