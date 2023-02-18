@@ -369,7 +369,7 @@ sharp.cache(false);
 function blogAPI_imageUpload(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const image = req.file;
-        const dirPath = __dirname + '/../../' + process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/';
+        const dirPath = __dirname + '/../../' + 'public/uploaded-images/';
         const originalName = image.filename;
         const newName = Date.now() + '-' + originalName.split('.').slice(0, -1).join('.') + '.webp';
         if (!image) {
@@ -430,16 +430,41 @@ exports.blog_homePage = blog_homePage;
 function blog_getURI(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const blogId = req.params.blogURI;
+        //Session
         const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/' + blogId);
         const session = { notification: false, admin: false };
+        if (req.session.userid != null) {
+            if (req.session.roles == 'admin') {
+                session.admin = true;
+            }
+        }
         if (response.status == 200) {
-            const blogData = yield response.json();
-            if (req.session.userid != null) {
-                if (req.session.roles == 'admin') {
-                    session.admin = true;
+            let blogData = yield response.json();
+            //Back button reference
+            let reference = req.headers.referer;
+            let referenceName = null;
+            reference = reference.replace('http://' + req.headers.host, '');
+            if (reference.includes('/')) {
+                referenceName = "Home";
+            }
+            if (reference == req.url) {
+                reference = '/blog';
+                referenceName = "Blog";
+            }
+            if (reference.includes('/blog?')) {
+                referenceName = "Blog";
+            }
+            if (reference.includes('section=all')) {
+                if (reference.includes('filter=recipe')) {
+                    referenceName = "Recipes";
+                }
+                else {
+                    referenceName = "All";
                 }
             }
-            const blogPage = yield res.render('blog-post', { session, blogData }, (err, html) => {
+            blogData.ref = reference;
+            blogData.refName = referenceName;
+            yield res.render('blog-post', { session, blogData }, (err, html) => {
                 if (err) {
                     return console.log(err);
                 }
