@@ -448,13 +448,12 @@ export async function blog_getURI(req, res) {
     let referenceName: string = null;
 
     reference = reference.replace('http://' + req.headers.host, '');
-    console.log(reference);
 
     if (reference.includes('/')) {
       referenceName = "Home"
     }
 
-    if (reference == req.url) {
+    if (req.headers.referer == req.url) {
       reference = '/blog';
       referenceName = "Blog"
     }

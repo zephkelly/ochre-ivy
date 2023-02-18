@@ -606,7 +606,7 @@ main {
 #recipes-box .recipe-post  {
   min-width: 40rem;
   width: 80%;
-  height: 55rem;
+  height: 56rem;
   min-height: 80%;
   background-color: var(--light);
   border-radius: 0.5rem;
@@ -631,6 +631,15 @@ main {
 #recipes-box .recipe-post .recipe-method-h3 {
   font-family: 'Times New Roman', Times, serif;
   font-size: 1rem;
+  font-weight: 400;
+  margin: 0rem;
+  margin-bottom: 0.2rem;
+  color: grey;
+  font-style: bold;
+}
+#recipes-box .recipe-post .recipe-method-h4 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 0.9rem;
   font-weight: 400;
   margin: 0rem;
   margin-bottom: 0.2rem;
@@ -690,6 +699,7 @@ main {
   margin: 0rem;
   margin-bottom: 0.5rem;
   color: var(--dark);
+  line-height: 2.2rem;
 }
 #recipes-box .recipe-post .recipe-subtitle {
   font-size: 1.2rem;
@@ -1604,6 +1614,7 @@ main {
 #blogs-all .all-blog {
   width: 100%;
   height: auto;
+  min-height: 20rem;
   background-color: var(--light);
   border-radius: 0.5rem;
 }
@@ -2485,7 +2496,6 @@ main {
   }
   #recipes-box .recipe-post .recipe-title {
     font-size: 1.8rem;
-    line-height: 1.8rem;
     margin-top: 0rem;
   }
   #recipes-box .recipe-post .recipe-subtitle {
