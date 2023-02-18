@@ -11,6 +11,8 @@ let spacerPresent: boolean = false;
 const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
 const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
 
+const navList: HTMLElement = document.querySelector(".navbar .nav-list") as HTMLElement;
+
 const notification: HTMLElement = document.getElementById("notification") as HTMLElement;
 let notificationPresent: boolean = false;
 
@@ -20,6 +22,8 @@ window.addEventListener('load', () => {
   }
 
   shrinkNavbar();
+
+  navbar.style.transition = 'all 0.3s ease-in-out';
 
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
@@ -59,14 +63,25 @@ navMenuBtn.addEventListener('click', () => {
   navMenuBtnToggle();
 });
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', (e) => { checkNavMenuDisable(e) });
+document.addEventListener('scroll', (e) => { checkNavMenuDisable(e) });
+// document.addEventListener('touch', (e) => { checkNavMenuDisable(e) });
+//document.addEventListener('touchstart', (e) => { checkNavMenuDisable(e) });
+
+function checkNavMenuDisable(e: any = null) {
   if (navMenuBtnClicked) {
-    if (e.target != navMenu && e.target != navMenuBtn) {
+    if (e != null) {
+      if (e.target != navMenu && e.target != navMenuBtn && e.target != navBtnBg && e.target != navList) {
+        navMenuBtnClicked = false;
+        navMenuBtnToggle();
+      }
+    }
+    else {
       navMenuBtnClicked = false;
       navMenuBtnToggle();
     }
   }
-});
+}
 
 function navMenuBtnToggle() {
   if (navMenuBtnClicked) {
@@ -75,7 +90,7 @@ function navMenuBtnToggle() {
     navMenu.style.opacity = '1';
 
     navBtnBg.style.backgroundColor = 'white';
-    navBtnBg.style.boxShadow = '0rem -1rem 1.3rem 0rem rgba(0, 0, 0, 0.2)';
+    navBtnBg.style.boxShadow = 'rgba(0, 0, 0, 0.2) 0rem -1.2rem 3rem 0rem';
 
   } else {
     navMenu.style.opacity = '0';
@@ -126,9 +141,6 @@ export function shrinkNavbar() {
         navText.style.fontSize = tFont;
         navMenuBtn.style.fontSize = bFont;
         shrunkNavbar = shrunkState;
-
-        //So we dont get a weird transition on load
-        navbar.style.transition = "all 0.3s ease-out";
 
         if (shrunkNavbar) {
           navbar.style.backgroundColor = 'white';

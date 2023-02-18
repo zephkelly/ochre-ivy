@@ -115,14 +115,18 @@ export async function dashboard_blog_new_post(req, res)
 export async function dashboard_blog_editURI(req, res)
 {
   const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI);
-  const session = { admin: false };
+  const session = { name: null, admin: false };
+  
+  if (req.session.userid) {
+    session.name = req.session.name;
+    
+    if (req.session.roles == 'admin') {
+      session.admin = true;
+    }
+  }
 
   if (response.status == 200) {
     const blogData = { uri: req.params.blogURI, data: await response.json() };
-
-    if (req.session.admin) {
-      session.admin = true;
-    }
 
     res.render('admin/blog-editor', { session, blogData }, (err, html) => {
       if (err) { return console.log(err); }

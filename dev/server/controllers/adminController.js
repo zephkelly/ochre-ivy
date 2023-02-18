@@ -120,12 +120,15 @@ exports.dashboard_blog_new_post = dashboard_blog_new_post;
 function dashboard_blog_editURI(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch('http://localhost:' + process.env.PORT + '/api/blog/' + req.params.blogURI);
-        const session = { admin: false };
-        if (response.status == 200) {
-            const blogData = { uri: req.params.blogURI, data: yield response.json() };
-            if (req.session.admin) {
+        const session = { name: null, admin: false };
+        if (req.session.userid) {
+            session.name = req.session.name;
+            if (req.session.roles == 'admin') {
                 session.admin = true;
             }
+        }
+        if (response.status == 200) {
+            const blogData = { uri: req.params.blogURI, data: yield response.json() };
             res.render('admin/blog-editor', { session, blogData }, (err, html) => {
                 if (err) {
                     return console.log(err);

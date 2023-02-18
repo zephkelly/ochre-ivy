@@ -2,9 +2,47 @@ import './style.css'
 import { shrinkNavbar } from './navbar'
 import { formatString, formatDate } from './helperFunctions';
 
+const recipePosts: NodeListOf<HTMLElement> = document.querySelectorAll('#recipes-box .recipe-post');
+
 window.addEventListener("scroll", () => {
   shrinkNavbar();
 });
+
+window.addEventListener("load", () => {
+  hideExtraBlogs();
+});
+
+window.addEventListener("resize", () => {
+  hideExtraBlogs();
+});
+
+const hideExtraBlogs_current = { width: 200 };
+function hideExtraBlogs() {
+  if (window.innerWidth < 630) {
+    if (hideExtraBlogs_current.width === 630) return;
+    hideExtraBlogs_current.width = 630;
+
+    for (let i = 3; i < recipePosts.length; i++) {
+      recipePosts[i].classList.add('hidden');
+    }
+  }
+  else if (window.innerWidth < 980) {
+    if (hideExtraBlogs_current.width === 980) return;
+    hideExtraBlogs_current.width = 980;
+
+    for (let i = 4; i < recipePosts.length; i++) {
+      recipePosts[i].classList.add('hidden');
+    }
+  }
+  else {
+    if (hideExtraBlogs_current.width === 1000) return;
+    hideExtraBlogs_current.width = 1000;
+
+    for (let i = 0; i < recipePosts.length; i++) {
+      recipePosts[i].classList.remove('hidden');
+    }
+  }
+}
 
 const blogPost: HTMLElement = document.querySelector('.blog-desc') as HTMLElement;
 

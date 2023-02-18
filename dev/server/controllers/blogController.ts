@@ -365,7 +365,7 @@ export async function blogAPI_delete(req, res) {
 sharp.cache(false);
 export async function blogAPI_imageUpload(req, res) {
   const image  = req.file;
-  const dirPath = __dirname + '/../../' + process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/';
+  const dirPath = __dirname + '/../../' + 'public/uploaded-images/';
 
   const originalName = image.filename;
   const newName = Date.now() + '-' + originalName.split('.').slice(0, -1).join('.') + '.webp';
@@ -430,19 +430,51 @@ export async function blog_homePage(req, res) {
 export async function blog_getURI(req, res) {
   const blogId = req.params.blogURI;
 
+  //Session
   const response = await fetch('http://localhost:' + process.env.PORT + '/api/blog/' + blogId);
   const session = { notification: false, admin: false }
 
-  if (response.status == 200) {
-    const blogData = await response.json();
+  if (req.session.userid != null) {
+    if (req.session.roles == 'admin') {
+      session.admin = true;
+    }
+  }
 
-    if (req.session.userid != null) {
-      if (req.session.roles == 'admin') {
-        session.admin = true;
+  if (response.status == 200) {
+    let blogData = await response.json();
+
+    //Back button reference
+    let reference = req.headers.referer;
+    let referenceName: string = null;
+
+    reference = reference.replace('http://' + req.headers.host, '');
+    console.log(reference);
+
+    if (reference.includes('/')) {
+      referenceName = "Home"
+    }
+
+    if (reference == req.url) {
+      reference = '/blog';
+      referenceName = "Blog"
+    }
+
+    if (reference.includes('/blog?')) {
+      referenceName = "Blog"
+    }
+
+    if (reference.includes('section=all')) {
+      if (reference.includes('filter=recipe')) {
+        referenceName = "Recipes"
+      } else {
+        referenceName = "All"
       }
     }
+
+    blogData.ref = reference;
+    blogData.refName = referenceName;
   
-    const blogPage = await res.render('blog-post', { session, blogData }, (err, html) => {
+    await res.render('blog-post', { session, blogData }, (err, html) => {
       if (err) { return console.log(err); }
   
       res.status(200).send(html);

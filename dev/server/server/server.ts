@@ -12,7 +12,7 @@ const multer = require('multer')
 //multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, process.env.PUBLIC_IMAGES_REALTIVE_PATH + '/uploaded-images/');
+    cb(null, 'public/uploaded-images/');
   },
   filename: function (req, file, cb) {
     let newName = file.originalname.replace(/ /g, '-');
@@ -175,4 +175,3 @@ app.use(analyticsRoutes);
 
 app.use(express.static('./assets'));
 app.use(express.static('./public'));
-app.use(express.static('./../../database/ochre-ivy/public'));

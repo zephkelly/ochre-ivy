@@ -13,9 +13,7 @@ window.addEventListener('load', async () => {
   if (window.location.href.includes('/dashboard/blog/edit/')) {
     await setupBlogEditor()
 
-    if (editor.isReady) {
-      loadEditBlog();
-    }
+    await loadEditBlog();
       
     const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
     dashboardNavLink.innerText = 'Edit';
@@ -325,12 +323,29 @@ async function loadEditBlog() {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });
-  
+
   //read body from response ReadableStream
-  response.body?.getReader().read().then(async ({ value })=> {
+  const readerValue = await response.body?.getReader().read().then(({ value }) => value);
     if (response.status == 200) {
-      const data = new TextDecoder().decode(value);
-      const blogData = await JSON.parse(data);
+      let blogData: any = null;   
+
+      try {
+        let data = await new TextDecoder().decode(readerValue);
+        blogData = await JSON.parse(data);
+      }
+      catch (e) {
+        console.log(e);
+        
+        //fetch again
+        const response2 = await fetch('/api/blog/' + uri, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const readerValue2 = await response2.body?.getReader().read().then(({ value }) => value);
+        let data2 = await new TextDecoder().decode(readerValue2);
+        blogData = await JSON.parse(data2);
+      }
 
       loadedBlog = blogData;
 
@@ -353,9 +368,14 @@ async function loadEditBlog() {
 
       await runValidation();
 
-      await editor.isReady.then(() => {
+      await editor.isReady
+
+      try {
         editor.render(blogData.content);
-      });
+      }
+      catch (e) {
+        console.log(e);
+        editor.render(blogData.content);
+      }
     }
-  });
-}
+  }
