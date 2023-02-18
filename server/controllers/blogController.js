@@ -448,7 +448,7 @@ function blog_getURI(req, res) {
             if (reference.includes('/')) {
                 referenceName = "Home";
             }
-            if (reference == req.url) {
+            if (req.headers.referer == req.url) {
                 reference = '/blog';
                 referenceName = "Blog";
             }
