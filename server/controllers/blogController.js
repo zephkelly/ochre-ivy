@@ -444,7 +444,6 @@ function blog_getURI(req, res) {
             let reference = req.headers.referer;
             let referenceName = null;
             reference = reference.replace('http://' + req.headers.host, '');
-            
             if (reference.includes('/')) {
                 referenceName = "Home";
             }
