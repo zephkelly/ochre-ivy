@@ -1132,6 +1132,7 @@ main {
   cursor: pointer;
   margin-left: 1.75rem;
   padding-left: 0rem;
+  font-size: 2.2rem;
 }
 #blogs-nav .blog-nav-link:hover {
   color: var(--accent-color-darker);
@@ -1563,6 +1564,18 @@ main {
   border: none;
   background-color: var(--light);
   transition: background-color 0.25s ease-out;
+}
+#blog-all-toolbar .search-input::placeholder {
+  color: var(--accent-color-dark);
+}
+#blog-all-toolbar .search-input:-ms-input-placeholder {
+  color: var(--accent-color-dark);
+}
+#blog-all-toolbar .search-input::-ms-input-placeholder {
+  color: var(--accent-color-dark);
+}
+#blog-all-toolbar .search-input::-webkit-input-placeholder {
+  color: var(--accent-color-dark);
 }
 #blog-all-toolbar .search-input:focus {
   background-color: var(--light);
@@ -2640,7 +2653,7 @@ main {
     margin-bottom: 0.5rem;
   }
   #blog-all-toolbar .search-input {
-    background-color: rgba(209, 164, 150, 0.4);
+    background-color: rgba(209, 164, 150, 0.45);
   }
 
   #about-section .about-container {
