@@ -94,7 +94,7 @@ main {
   flex-direction: column;
   justify-content: center;
   height: 5.5rem;
-  transition: top 0.15s ease-out, background-color 0.15s ease-out;
+  transition: top 0.2s ease-out, background-color 0.2s ease-out;
 }
 .navbar .section {
   margin: auto;
@@ -2191,12 +2191,11 @@ main {
 .ce-block__content h3 {
   font-size: clamp(1.8rem,4vw,2rem);
   padding-top: clamp(2rem,4vw,2.5rem);
-  padding-bottom: 0.5rem;
-  padding-bottom: .8rem;
+  padding-bottom: 0.8rem;
 }
 .ce-block__content h4 {
   font-size: clamp(1.4rem,4vw,1.6rem);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.8rem;
 }
 .image-tool {
   padding: 0rem;
@@ -2365,9 +2364,7 @@ main {
     width: 95%;
   }
  
-  .navbar {
-    transition: height 0.15s ease-out, background-color 0.15s ease-out 0.05s;
-  }
+
   .navbar .container {
     width: 95%;
   }

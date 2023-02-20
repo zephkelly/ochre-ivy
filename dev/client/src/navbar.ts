@@ -136,11 +136,11 @@ export function shrinkNavbar() {
         }
       }
 
-      function manipulateNavDOM(bShadow: string, top: string, tFont: string, bFont: string, shrunkState: boolean) {
+      function manipulateNavDOM(bShadow: string, top: string, navTextFont: string, buttonWidth: string, shrunkState: boolean) {
         navbar.style.boxShadow = bShadow;
         navbar.style.top = top;
-        navText.style.fontSize = tFont;
-        navMenuBtn.style.fontSize = bFont;
+        navText.style.fontSize = navTextFont;
+        navMenuBtn.style.width = buttonWidth;
         shrunkNavbar = shrunkState;
 
         if (shrunkNavbar) {
