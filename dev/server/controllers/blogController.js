@@ -383,10 +383,18 @@ function blogAPI_imageUpload(req, res) {
             fit: 'cover',
         })
             .toFile(dirPath + newName);
+        //Create thumbnail
+        yield sharp(dirPath + originalName)
+            .webp({ quality: 60 })
+            .resize(640, 360, {
+            kernel: sharp.kernel.cubic,
+            fit: 'cover',
+        })
+            .toFile(dirPath + 'thumbnails/' + newName);
         fs.unlink(dirPath + originalName, (err) => { if (err) {
             console.log(err);
         } });
-        const imgPath = '/uploaded-images/' + newName;
+        const imgPath = newName;
         res.status(200).send(JSON.stringify({ url: imgPath }));
     });
 }

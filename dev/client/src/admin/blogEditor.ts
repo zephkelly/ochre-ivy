@@ -53,6 +53,7 @@ window.addEventListener('load', async () => {
                 const data = new FormData();
                 data.append('blogImage', file);
                 data.append('name', file.name);
+
                 return fetch('/api/blog/imageupload', {
                   method: 'POST',
                   body: data,
@@ -64,7 +65,8 @@ window.addEventListener('load', async () => {
                     return {
                       success: 1,
                       file: {
-                        url: response.url
+                        url: '/uploaded-images/' + response.url,
+                        name: response.url
                       }
                     };
                   })
@@ -204,7 +206,7 @@ async function saveBlog() {
 
   for (let i = 0; i < outputData.blocks.length; i++) {
     if (outputData.blocks[i].type == 'image') {
-      coverImage = outputData.blocks[i].data.file.url;
+      coverImage = outputData.blocks[i].data.file.name;
       break;
     }
   }
@@ -269,7 +271,7 @@ async function updateBlog() {
 
   for (let i = 0; i < outputData.blocks.length; i++) {
     if (outputData.blocks[i].type == 'image') {
-      coverImage = outputData.blocks[i].data.file.url;
+      coverImage = outputData.blocks[i].data.file.name;
       break;
     }
   }
@@ -319,63 +321,50 @@ let loadedBlog: any = null;
 async function loadEditBlog() {
   const uri = window.location.pathname.split('/')[4];
 
-  const response = await fetch('/api/blog/' + uri, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
-  });
+  let blogData: any = null;
+  let response: any = null
+  
+  await readBlogData();
 
-  //read body from response ReadableStream
-  const readerValue = await response.body?.getReader().read().then(({ value }) => value);
-    if (response.status == 200) {
-      let blogData: any = null;   
+  async function readBlogData() {
+    response = await fetch('/api/blog/' + uri, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-      try {
-        let data = await new TextDecoder().decode(readerValue);
-        blogData = await JSON.parse(data);
-      }
-      catch (e) {
-        console.log(e);
-        
-        //fetch again
-        const response2 = await fetch('/api/blog/' + uri, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        const readerValue2 = await response2.body?.getReader().read().then(({ value }) => value);
-        let data2 = await new TextDecoder().decode(readerValue2);
-        blogData = await JSON.parse(data2);
-      }
-
-      loadedBlog = blogData;
-
-      uriInput.value = blogData.uri;
-      title.value = blogData.title;
-      subtitle.value = blogData.subtitle;
-      tagsInput.value = blogData.tags.join(', ');
-
-      //Turn createdDate into yyyy-mm-dd format
-      const date = new Date(blogData.createdDate);
-      const year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day: number = date.getDate();
-
-      function pad(n: number) {
-        return n < 10 ? '0' + n : n;
-      }
-
-      createdDate.value = year + '/' + pad(month) + '/' + pad(day);
-
-      await runValidation();
-
-      await editor.isReady
-
-      try {
-        editor.render(blogData.content);
-      }
-      catch (e) {
-        console.log(e);
-        editor.render(blogData.content);
-      }
+    try {
+      await response.body?.getReader().read().then(({ value } : any) => {
+        let data = new TextDecoder().decode(value);
+        blogData = JSON.parse(data);
+      });
+    }
+    catch {
+      console.log("Retrying data fetch...");
+      await readBlogData();
     }
   }
+
+  loadedBlog = blogData;
+
+  uriInput.value = blogData.uri;
+  title.value = blogData.title;
+  subtitle.value = blogData.subtitle;
+  tagsInput.value = blogData.tags.join(', ');
+
+  //Turn createdDate into yyyy-mm-dd format
+  const date = new Date(blogData.createdDate);
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day: number = date.getDate();
+
+  function pad(n: number) {
+    return n < 10 ? '0' + n : n;
+  }
+
+  createdDate.value = year + '/' + pad(month) + '/' + pad(day);
+
+  await runValidation();
+  await editor.isReady
+
+  await editor.render(blogData.content);
+}

@@ -34,9 +34,9 @@ export function formatString(string: string, charLimit: number = 0) {
 export function formatDate(inputDate: string, noDay: boolean = false) {
   let date = new Date(inputDate);
   
-  if (isNaN(date.getTime())) {
+  if (isNaN(date.getTime()) || inputDate == null || inputDate == '') {
     console.log("Date is invalid, input date: " + inputDate);
-    date = new Date();
+    return '';
   }
 
   date.toLocaleDateString('en-GB');
@@ -48,7 +48,7 @@ export function formatDate(inputDate: string, noDay: boolean = false) {
 
   let dateString = date.toDateString();
 
-  if (isNaN(date.getTime())) {
+  if (isNaN(date.getTime()) || dateString == null || dateString == '' || dateString == 'Invalid Date') {
     dateString = '';
   }
 

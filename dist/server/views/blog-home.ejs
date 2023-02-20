@@ -15,7 +15,7 @@
         <div class="container">
           <div class="wrapper">
             <h6 class="logged-in">Post deleted</h6>
-            <span class="check-symbol material-symbols-outlined">delete</span>
+            <svg class="check-symbol" height="48" viewbox="0 96 960 960" width="48"><path d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"/></svg>
           </div>
           <p class="logged-in-notification">Successfully deleted blog post!</p>
         </div>
@@ -60,7 +60,7 @@
                 </div>
               </div>
               <div class="cover-img">
-                <img src='<%- blog.cover %>' alt="<%= blog.title %>" class="blog-image">
+                <img src="/uploaded-images/thumbnails/<%= blog.cover %>"" loading="lazy" alt="<%= blog.title %>" class="blog-image">
               </div>
             </div>
           <% }; %>
@@ -82,7 +82,7 @@
                 <% const blog = recipesBlogs[i]; %>
                   <div class="recipe-blog">
                     <div class="cover-img">
-                      <img src="<%- blog.cover %>" alt="<%= blog.title %>" class="recipe-image">
+                      <img src="/uploaded-images/thumbnails/<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="recipe-image">
                     </div>
                     <div class="content">
                       <div class="wrapper">
@@ -114,7 +114,7 @@
                           </div>
                           <div class="container">
                             <div class="blog-date" data-date="<%= blog.createdDate %>"></div>
-                            <a class="recent-blog-btn accent-button button-outlined-accent" href="/blog/<%= blog.uri %>"><span class="material-symbols-outlined">chevron_right</span></a>
+                            <a class="recent-blog-btn accent-button button-outlined-accent" href="/blog/<%= blog.uri %>"><svg class="" height="48" viewBox="0 96 960 960" width="48"><path d="m375 816-43-43 198-198-198-198 43-43 241 241-241 241Z"/></svg></a>
                           </div>
                         </div>
                         <% if (i != recentBlogs.length - 1) { %>
@@ -122,13 +122,13 @@
                         <% } %>
                       </div>
                       <% if (i == 0) { %>
-                        <div class="cover-img" style="border-top-right-radius: 0.5rem;">
+                        <div class="cover-img" loading="lazy" style="border-top-right-radius: 0.5rem;">
                       <% } else if (i == recentBlogs.length - 1) { %>
-                        <div class="cover-img" style="border-bottom-right-radius: 0.5rem;">
+                        <div class="cover-img" loading="lazy" style="border-bottom-right-radius: 0.5rem;">
                       <% } else { %>
                         <div class="cover-img">
                       <% }; %>
-                          <img src="<%- blog.cover %>" alt="<%= blog.title %>" class="recent-image">
+                          <img src="/uploaded-images/thumbnails/<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="recent-image">
                         </div>
                   </div>
                 </div>
@@ -143,7 +143,7 @@
         <div class="section-container">
           <div class="wrapper">
             <input type="text" class="search-input" placeholder="Search">
-            <span class="material-symbols-outlined search-icon">search</span>
+            <svg class="search-icon" height="48" viewbox="0 96 960 960" width="48"><path d="M796 935 533 672q-30 26-69.959 40.5T378 727q-108.162 0-183.081-75Q120 577 120 471t75-181q75-75 181.5-75t181 75Q632 365 632 471.15 632 514 618 554q-14 40-42 75l264 262-44 44ZM377 667q81.25 0 138.125-57.5T572 471q0-81-56.875-138.5T377 275q-82.083 0-139.542 57.5Q180 390 180 471t57.458 138.5Q294.917 667 377 667Z"/></svg>
           </div>
           <div class="wrapper">
             <h6 class="filter-title">FILTERS</h6>

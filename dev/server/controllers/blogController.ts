@@ -376,16 +376,24 @@ export async function blogAPI_imageUpload(req, res) {
   }
 
   await sharp(dirPath + originalName)
-  .webp({ quality: 60 })
-  .resize(1920, 1080, {
-    kernel: sharp.kernel.cubic,
-    fit: 'cover',
-  })
-  .toFile(dirPath + newName);
+    .webp({ quality: 60 })
+    .resize(1920, 1080, {
+      kernel: sharp.kernel.cubic,
+      fit: 'cover',
+    })
+    .toFile(dirPath + newName);
   
-  fs.unlink(dirPath + originalName, (err) => { if (err) { console.log(err); } });
+  //Create thumbnail
+  await sharp(dirPath + originalName)
+    .webp({ quality: 60 })
+    .resize(640, 360, {
+      kernel: sharp.kernel.cubic,
+      fit: 'cover',
+    })
+    .toFile(dirPath + 'thumbnails/' + newName );
 
-  const imgPath = '/uploaded-images/' + newName;
+  fs.unlink(dirPath + originalName, (err) => { if (err) { console.log(err); } });
+  const imgPath = newName;
 
   res.status(200).send(JSON.stringify({ url: imgPath }));
 }

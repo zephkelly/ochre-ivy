@@ -116,10 +116,11 @@ export function shrinkNavbar() {
     .then(() => {
       if (scrollY > 20) {
         if (shrunkNavbar) return;
+        spacerPresent = navTextSpacer.style.display === 'none' ? false : true;
 
         manipulateNavDOM(
           '0rem 0rem 2rem 0rem rgba(0, 0, 0, 0.05)',
-          '3.8rem', '1.4rem', '1.8rem', true
+          '-1.8rem', '1.4rem', '1.8rem', true
         );
 
         if (notificationPresent) {
@@ -129,15 +130,15 @@ export function shrinkNavbar() {
       else {
         if (!shrunkNavbar) return;
         manipulateNavDOM('', '', '', '', false);
-
+        
         if (notificationPresent) {
           notification.style.top = '';
         }
       }
 
-      function manipulateNavDOM(bShadow: string, height: string, tFont: string, bFont: string, shrunkState: boolean) {
+      function manipulateNavDOM(bShadow: string, top: string, tFont: string, bFont: string, shrunkState: boolean) {
         navbar.style.boxShadow = bShadow;
-        navbar.style.height = height;
+        navbar.style.top = top;
         navText.style.fontSize = tFont;
         navMenuBtn.style.fontSize = bFont;
         shrunkNavbar = shrunkState;

@@ -34,23 +34,33 @@ const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button
 const footerContainer: HTMLElement = document.querySelector('#footer-main .container') as HTMLElement;
 
 // Formattable elements
-let recentBlogTitles: NodeListOf<HTMLElement> = document.querySelectorAll('.recent-blog-title') as NodeListOf<HTMLElement>;
+let recentBlogTitles: any = null;
+let blogDescriptions: any = null;
+let blogDescriptionsAll: any = null;
+let blogDescriptionsRecipes: any = null;
 
-let blogDescriptions: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
-let blogDescriptionsAll: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description.all') as NodeListOf<HTMLElement>;
-let blogDescriptionsRecipes: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-description.recipe') as NodeListOf<HTMLElement>;
-
-let blogSubtitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle') as NodeListOf<HTMLElement>;
-let blogSubtitlesAll: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle.all') as NodeListOf<HTMLElement>;
-
-let blogCreatedDate: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
+let blogSubtitles: any = null;
+let blogSubtitlesAll: any = null;
+let blogCreatedDate: any = null;
 
 window.addEventListener('load', async () => {
   urlParams = new URLSearchParams(window.location.search);
   const path = window.location.pathname;
 
   if (path.includes('/blog') && !path.includes('/blog/')) {
-    start()
+    await start()
+
+    recentBlogTitles = document.querySelectorAll('.recent-blog-title') as NodeListOf<HTMLElement>;
+    blogDescriptions = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
+    blogDescriptionsAll = document.querySelectorAll('.blog-description.all') as NodeListOf<HTMLElement>;
+    blogDescriptionsRecipes = document.querySelectorAll('.blog-description.recipe') as NodeListOf<HTMLElement>;
+
+    blogSubtitles = document.querySelectorAll('.blog-subtitle') as NodeListOf<HTMLElement>;
+    blogSubtitlesAll = document.querySelectorAll('.blog-subtitle.all') as NodeListOf<HTMLElement>;
+    blogCreatedDate = document.querySelectorAll('.blog-date') as NodeListOf<HTMLElement>;
+
+    await setDataAttributes();
+    formatElements();
   }
 });
 
@@ -112,9 +122,6 @@ async function activatePages() {
   else {
     await enableHomePage();
   }
-
-  await setDataAttributes();
-  await formatElements();
 }
 
 function setEventListeners() {
@@ -283,28 +290,36 @@ function adjustBlogNavPadding() {
   }
 }
 
-function setDataAttributes() {
+async function setDataAttributes() {
   for (let i = 0; i < blogCreatedDate.length; i++) {
-    const dateAttribute: any = blogCreatedDate[i].getAttribute('data-date');
-    const date = formatDate(dateAttribute, true);
+    const dateAttribute: any = await blogCreatedDate[i].getAttribute('data-date');
+    let date: any = null;
+
+    try {
+      date = formatDate(dateAttribute, true);
+    }
+    catch (e) {
+      console.log(e);
+    }
+
     blogCreatedDate[i].innerText = date;
   }
   for (let i = 0; i < blogDescriptions.length; i++) {
-    const descriptionAttribute: any = blogDescriptions[i].getAttribute('data-description');
+    const descriptionAttribute: any = await blogDescriptions[i].getAttribute('data-description');
     const description = formatString(descriptionAttribute, descriptionSize());
     blogDescriptions[i].innerText = description;
   }
   for (let i = 0; i < blogDescriptionsRecipes.length; i++) {
-    const descriptionAttribute: any = blogDescriptionsRecipes[i].getAttribute('data-description');
+    const descriptionAttribute: any = await blogDescriptionsRecipes[i].getAttribute('data-description');
     const description = formatString(descriptionAttribute, descriptionSize());
     blogDescriptionsRecipes[i].innerText = description;
   }
   for (let i = 0; i < blogDescriptionsAll.length; i++) {
-    const text: any = blogDescriptionsAll[i].getAttribute('data-description');
+    const text: any = await blogDescriptionsAll[i].getAttribute('data-description');
     blogDescriptionsAll[i].innerText = formatString(text, descriptionSize());
   }
   for (let i = 0; i < blogSubtitles.length; i++) {
-    const blogSubtitleText: any = blogSubtitles[i].getAttribute('data-subtitle');
+    const blogSubtitleText: any = await blogSubtitles[i].getAttribute('data-subtitle');
     const subtitle = formatString(blogSubtitleText, subtitleSize());
     blogSubtitles[i].innerText = subtitle;
   }
@@ -770,7 +785,7 @@ function appendBlogs(data: any) {
     blogsAllSection.innerHTML += `
     <div class="all-blog">
       <div class="cover-img">
-        <img src="${data[i].cover}" alt="${data[i].title}" class="recipe-image">
+        <img src="/thumbnails/${data[i].cover}" alt="${data[i].title}" class="recipe-image">
       </div>
       <div class="content">
         <div class="wrapper">
