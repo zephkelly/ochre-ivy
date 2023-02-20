@@ -4,7 +4,7 @@
   --accent-color-tertiary: #eaac99;
   --accent-color-dark: #79574c;
   --accent-color-darker: #6b4c42;
-  --dark: #231f20;
+  --dark: #292627;
   --light: #fcfcfc;
 }
 
@@ -1124,7 +1124,8 @@ main {
   min-height: 100rem;
 }
 #blogs-nav .blogs-home-nav {
- transition: marginLeft 0.3s ease-out;
+ transition: margin-left 0.3s ease-out;
+ padding-top: 0.22rem;
 }
 #blogs-nav .blogs-home-nav ul {
   display: flex;
@@ -1166,17 +1167,27 @@ main {
 }
 #blogs-nav .blog-nav-link.blog-nav-home.active::after {
   content: url(expand_less_SVG.svg);
-  top: 1rem;
-  left: 1.8rem;
+  top: 1.2rem;
+  left: 2rem;
   position: absolute;
-  transform: scale(0.6);
+  transform: scale(.6);
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #blogs-nav .blog-nav-link.blog-nav-all.active::after {
   content: url(expand_less_SVG.svg);
-  top: 1rem;
-  left: .3rem;
+  top: 1.2rem;
+  left: .4rem;
   position: absolute;
   transform: scale(.6);
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #blogs-nav .blogs-header-bgBox {
   position: absolute;
