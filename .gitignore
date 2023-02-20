@@ -1,6 +1,0 @@
-node_modules
-dist/
-uploaded_images
-
-.env
-startMongo.sh
