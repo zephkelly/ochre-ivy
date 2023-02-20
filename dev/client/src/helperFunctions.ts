@@ -32,9 +32,26 @@ export function formatString(string: string, charLimit: number = 0) {
 }
 
 export function formatDate(inputDate: string, noDay: boolean = false) {
-    let date = new Date(inputDate);
+  let date = new Date(inputDate);
+  
+  if (isNaN(date.getTime())) {
+    console.log("Date is invalid, input date: " + inputDate);
+    date = new Date();
+  }
+
+  date.toLocaleDateString('en-GB');
+
+  if (isNaN(date.getTime())) {
+    console.log("Date is invalid when converting to local string, input date: " + inputDate);
     date.toLocaleDateString('en-GB');
-    let dateString = date.toDateString();
+  }
+
+  let dateString = date.toDateString();
+
+  if (isNaN(date.getTime())) {
+    dateString = '';
+  }
+
 
   if (noDay) {
     dateString = dateString.slice(4);
