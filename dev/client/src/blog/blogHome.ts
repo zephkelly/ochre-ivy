@@ -190,8 +190,8 @@ function setEventListeners() {
         featuredBlogs[currentFeaturedBlog].style.opacity = '1';
       }, 5)
 
-      clearInterval(interval);
-      interval = setInterval(cycleFeaturedBlogs, 10000);
+      clearInterval(featuredInterval);
+      featuredInterval = setInterval(cycleFeaturedBlogs, 10000);
     });
   });
 
@@ -333,7 +333,8 @@ function enableHomePage() {
   urlParams.delete('page');
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
-  interval = setInterval(cycleFeaturedBlogs, 6500);
+  clearInterval(featuredInterval);
+  featuredInterval = setInterval(cycleFeaturedBlogs, 6500);
   activePage = 'home';
 
   checkIfPaddingLeft();
@@ -386,9 +387,9 @@ function enableAllPage() {
   window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
 
   activePage = 'all';
-  interval = null;
 
   checkIfPaddingLeft();
+  clearInterval(featuredInterval);
 
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
@@ -424,7 +425,7 @@ function enableAllPage() {
   }
 }
 
-let interval: any = null;
+let featuredInterval: any = null;
 function cycleFeaturedBlogs() {
   lastFeaturedBlog = currentFeaturedBlog;
 

@@ -75,6 +75,7 @@ main {
   flex-direction: column;
   justify-content: center;
   height: 5.5rem;
+  transition: box-shadow 0.3s ease-in-out, height 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 .navbar .section {
   margin: auto;
@@ -100,7 +101,7 @@ main {
   user-select: none;
 }
 .navbar .nav-text {
-  transition: font-size 0.15s ease-out;
+  transition: font-size .3s ease-in-out, margin-bottom 0.2s ease-in-out;
   font-family: 'Times New Roman', Times, serif;
   font-size: 1.8rem;
   margin: 0;
@@ -112,7 +113,7 @@ main {
 }
 .navbar .nav-text-spacer {
   position: relative;
-  transition: left 0.15s ease-out;
+  transition: left 0.3s ease-in-out, bottom 0.3s ease-in-out, height 0.3s ease-in-out, opacity 0.3s ease-in-out;
   height: 0.2rem;
   left: 0.6rem;
   bottom: 0.2rem;
@@ -123,7 +124,7 @@ main {
   background-color: var(--light);
 }
 .navbar .nav-menu-btn {
-  transition: font-size 0.15s ease-out, color 0.05s ease-out, border-color 0.15s ease-out;
+  transition: font-size 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
   font-size: 2.2rem;
   padding: 0rem;
   display: flex;
@@ -144,10 +145,11 @@ main {
   border: none;
 }
 .navbar .nav-btn-bg {
-  transition: background-color 0.15s ease-out;
+  transition: background-color 0.3s ease-in-out;
 }
 .navbar .nav-menu {
   display: block;
+  transition: top 0.3s ease-in-out, border-radius 0.3s ease-in-out;
 }
 .navbar .nav-list {
   position: relative;
@@ -170,7 +172,7 @@ main {
   text-align: center;
   text-decoration: none;
   font-family: 'Lato', sans-serif;
-  transition: font-size 0.1s ease-out, color 0.1s ease-out;
+  transition: font-size 0.1s ease-in-out, color 0.1s ease-in-out;
   display: flex;
   width: 100%;
   height: 100%;

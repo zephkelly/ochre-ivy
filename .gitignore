@@ -1,6 +1,6 @@
 node_modules
 dist/
-uploaded_images
+dist/public/uploaded_images/
 
 .env
 startMongo.sh
