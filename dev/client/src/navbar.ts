@@ -63,6 +63,21 @@ navMenuBtn.addEventListener('click', () => {
   navMenuBtnToggle();
 });
 
+navMenuBtn.addEventListener('touch', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
+});
+
+navBtnBg.addEventListener('click', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
+});
+
+navBtnBg.addEventListener('touch', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
+});
+
 document.addEventListener('click', (e) => { checkNavMenuDisable(e) });
 document.addEventListener('scroll', (e) => { checkNavMenuDisable(e) });
 // document.addEventListener('touch', (e) => { checkNavMenuDisable(e) });
