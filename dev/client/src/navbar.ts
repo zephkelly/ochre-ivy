@@ -58,7 +58,12 @@ window.addEventListener("resize", () => {
 
 // -- Toggling navmenu/btn on click
 let navMenuBtnClicked: boolean = false;
-navMenuBtn.addEventListener('click', () => {
+navBtnBg.addEventListener('click', () => {
+  navMenuBtnClicked = !navMenuBtnClicked;
+  navMenuBtnToggle();
+});
+
+navBtnBg.addEventListener('touch', () => {
   navMenuBtnClicked = !navMenuBtnClicked;
   navMenuBtnToggle();
 });
