@@ -785,7 +785,7 @@ function appendBlogs(data: any) {
     blogsAllSection.innerHTML += `
     <div class="all-blog">
       <div class="cover-img">
-        <img src="/uploaded-images/thumbnails/${data[i].cover}" alt="${data[i].title}" class="recipe-image">
+        <img src="/uploaded-images/thumbnails${data[i].cover}" alt="${data[i].title}" class="recipe-image">
       </div>
       <div class="content">
         <div class="wrapper">
