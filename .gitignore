@@ -1,5 +1,4 @@
 node_modules
-dist/
 dist/public/uploaded_images/
 
 .env
