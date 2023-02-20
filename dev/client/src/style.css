@@ -114,9 +114,9 @@ main {
 .navbar .nav-text-spacer {
   position: relative;
   transition: left 0.15s ease-out, bottom 0.15s ease-out, height 0.15s ease-out, opacity 0.15s ease-out;
-  height: 0.15srem;
+  height: 0.15rem;
   left: 0.6rem;
-  bottom: 0.15srem;
+  bottom: 0.15rem;
   width: 7.7rem;
   background-color: var(--dark);
 }
