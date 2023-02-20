@@ -84,11 +84,11 @@
               <% if (block.type === 'image') { %>
                 <div class="image-tool">
                   <% if (block.data.caption) { %>
-                    <img src="<%= block.data.file.url %>" alt="<%= block.data.caption %>" />
+                    <img src="<%= block.data.file.url %>" loading="lazy" alt="<%= block.data.caption %>" />
                     <p class="image-tool__caption"><%= block.data.caption %></p>
                   <% } else { %>
                     <% const marginStyle = i === 0 ? 'margin-bottom: 1rem' : 'margin-bottom: 5rem' %>
-                    <img src="<%= block.data.file.url %>" style="<%= marginStyle %>"/>
+                    <img src="<%= block.data.file.url %>" loading="lazy" style="<%= marginStyle %>"/>
                   <% } %>
                 </div>
               <% } %>
