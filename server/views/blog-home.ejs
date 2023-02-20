@@ -60,7 +60,7 @@
                 </div>
               </div>
               <div class="cover-img">
-                <img src="/uploaded-images/thumbnails/<%= blog.cover %>"" loading="lazy" alt="<%= blog.title %>" class="blog-image">
+                <img src="/uploaded-images/<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="blog-image">
               </div>
             </div>
           <% }; %>
@@ -128,7 +128,7 @@
                       <% } else { %>
                         <div class="cover-img">
                       <% }; %>
-                          <img src="/uploaded-images/thumbnails/<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="recent-image">
+                          <img src="/uploaded-images/thumbnails<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="recent-image">
                         </div>
                   </div>
                 </div>
