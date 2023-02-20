@@ -107,14 +107,14 @@ async function activatePages() {
     }
 
     await makeRequest('');
-    enableAllPage();
+    await enableAllPage();
   }
   else {
-    enableHomePage();
+    await enableHomePage();
   }
 
-  setDataAttributes();
-  formatElements();
+  await setDataAttributes();
+  await formatElements();
 }
 
 function setEventListeners() {
@@ -261,22 +261,6 @@ function formatElements() {
   formatBlogsRecipesDescriptions();
   formatRecentBlogTitles();
 }
-
-// function adjustBlogNavPadding() {
-//   if (window.innerWidth < 630) {
-//     blogTitle.style.transition = 'none';
-//     blogTitle.style.paddingLeft = '0rem';
-//     //blogTitle.style.marginLeft = '0rem';
-
-//     setTimeout(() => {
-//       blogTitle.style.transition = '';
-//     }, 10);
-//   }
-//   else {
-//     blogTitle.style.paddingLeft = '1.75rem';
-//     //blogTitle.style.marginLeft = '1rem';
-//   }
-// }
 
 function adjustBlogNavPadding() {
   if (window.innerWidth < 460) {

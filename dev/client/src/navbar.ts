@@ -23,7 +23,7 @@ window.addEventListener('load', () => {
 
   shrinkNavbar();
 
-  navbar.style.transition = 'all 0.3s ease-in-out';
+  navbar.style.transition = 'backgroundColor 0.3 ease-in-out, height 0.3s ease-in-out';
 
   if (screen.width <= 982) {
     navMenu.style.display = 'none';

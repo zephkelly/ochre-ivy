@@ -100,7 +100,7 @@ main {
   user-select: none;
 }
 .navbar .nav-text {
-  transition: 0.15s ease-out;
+  transition: font-size 0.15s ease-out;
   font-family: 'Times New Roman', Times, serif;
   font-size: 1.8rem;
   margin: 0;
@@ -112,7 +112,7 @@ main {
 }
 .navbar .nav-text-spacer {
   position: relative;
-  transition: 0.15s ease-out;
+  transition: left 0.15s ease-out;
   height: 0.2rem;
   left: 0.6rem;
   bottom: 0.2rem;
@@ -123,7 +123,7 @@ main {
   background-color: var(--light);
 }
 .navbar .nav-menu-btn {
-  transition: font-size 0.15s ease-out;
+  transition: font-size 0.15s ease-out, color 0.05s ease-out, border-color 0.15s ease-out;
   font-size: 2.2rem;
   padding: 0rem;
   display: flex;
@@ -136,7 +136,6 @@ main {
   color: var(--light);
 }
 .navbar .nav-menu-btn:hover {
-  transition: color 0.05s ease-out;
   color: var(--accent-color-darker);
 }
 .navbar button {
@@ -171,7 +170,7 @@ main {
   text-align: center;
   text-decoration: none;
   font-family: 'Lato', sans-serif;
-  transition: 0.1s ease-out;
+  transition: font-size 0.1s ease-out, color 0.1s ease-out;
   display: flex;
   width: 100%;
   height: 100%;
@@ -198,7 +197,7 @@ main {
   text-decoration: none;
   border-radius: 1.15rem;
   border: solid 2px;
-  transition: 0.15s ease-out;
+  transition: color 0.15s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out;
   cursor: pointer;
 }
 
@@ -249,7 +248,7 @@ main {
   left: 4rem;
   top: 7.2rem;
   z-index: 3;
-  transition: 0.3s ease-out;
+  transition: opacity 0.3s ease-out, left 0.3s ease-out, top 0.3s ease-out;
   opacity: 1;
 }
 #notification .container {
@@ -737,6 +736,7 @@ main {
   right: 0;
   background-color: var(--accent-color);
   z-index: 1;
+  overflow: hidden;
 }
 #footer-main .container {
   border-top: 2px solid;
@@ -774,7 +774,7 @@ main {
   font-family: 'Lato', sans-serif;
   margin-left: 1.8rem;
   font-size: 1.1rem;
-  transition: 0.1s ease-out;
+  transition: font-size 0.1s ease-out, color 0.1s ease-out;
 }
 #footer-main .footer-nav-item:hover > * {
   color: var(--accent-color-secondary);
@@ -931,15 +931,15 @@ main {
   height:3.2rem;
   border:.2rem var(--accent-color) solid;
   border-radius:.5rem;
-  transition:.15s ease-out;
+  transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
   background-color:var(--accent-color);
-  color:#fff;
+  color: var(--light);
   font-family:Lato,sans-serif;
   font-size:1.2rem;
   font-weight:400;
   cursor:pointer
 }
-#login-main .input-section p{
+#login-main .input-section p {
   font-size:.9rem;
   font-family:Lato,
   sans-serif;
@@ -1048,7 +1048,7 @@ main {
   min-height: 3.2rem;
   border: 0.2rem var(--accent-color) solid;
   border-radius: 0.5rem;
-  transition: 0.15s ease-out;
+  transition: color 0.15s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out;
   background-color: var(--accent-color);
   color: black;
   font-family: Lato, sans-serif;
@@ -1100,9 +1100,10 @@ main {
   overflow: hidden;
   top: 0rem;
   bottom: -5rem;
+  min-height: 100rem;
 }
 #blogs-nav .blogs-home-nav {
- transition: 0.3s ease-out;
+ transition: marginLeft 0.3s ease-out;
 }
 #blogs-nav .blogs-home-nav ul {
   display: flex;
@@ -1122,20 +1123,23 @@ main {
   color: var(--dark);
   padding-left: 0rem;
   cursor: default;
-  transition: 0.3s ease-out;
+  transition: font-size 0.3s ease-out, padding-left 0.3s ease-out;
 }
 #blogs-nav .blog-nav-link {
-  color: var(--accent-color-tertiary);
-  transition: 0.15s ease-out;
+  color: var(--accent-color-dark);
+  opacity: 0.3;
+  transition: margin-left 0.15s ease-out, color 0.15s ease-out, opacity 0.15s ease-out;
   cursor: pointer;
   margin-left: 1.75rem;
   padding-left: 0rem;
 }
 #blogs-nav .blog-nav-link:hover {
   color: var(--accent-color-darker);
+  opacity: 1;
 }
 #blogs-nav .blog-nav-link.active {
   color: var(--dark);
+  opacity: 1;
   cursor: default;
 }
 #blogs-nav .blog-nav-link.blog-nav-home.active::after {
@@ -1160,7 +1164,7 @@ main {
   position: absolute;
   border-radius: 40rem;
   transform: rotate(-8deg);
-  transition: 0.8s ease-out;
+  /* transition: 0.8s ease-out; */
   background-color: var(--accent-color);
   width: auto;
   height: auto;
@@ -1176,7 +1180,7 @@ main {
   width: 100%;
   max-width: 1280px;
   min-height: 80vh;
-  transition: 0.15s ease-out;
+  transition: opacity 0.15s ease-out;
 }
 .faux-page.active {
   opacity: 1;
@@ -1189,7 +1193,7 @@ main {
 #blogs-featured .featured-blog {
   height: 36rem;
   width: calc(100% - 2rem);
-  transition: 0.5s ease-out;
+  transition: opacity 0.5s ease-out;
   top: 1rem;
   left: 1rem;
   box-sizing: border-box;
@@ -1268,7 +1272,7 @@ main {
   background-color: transparent;
   border: 2px var(--accent-color-secondary) solid;
   border-radius: 1.17rem;
-  transition: .15s ease-out;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
 }
 #blogs-featured .featured-blog .blog-link:hover {
   background-color: var(--accent-color);
@@ -1316,7 +1320,7 @@ main {
   border-radius: 100%;
   background-color: transparent;
   border: 2px solid var(--accent-color);
-  transition: .15s ease-out;
+  transition: color 0.15s ease-out, background-color 0.15s ease-out;
   display: block;
   text-decoration: none;
   padding: 0rem;
@@ -1435,7 +1439,7 @@ main {
   font-weight: 400;
   border-radius: 1.17rem;
   border: 2px solid;
-  transition: .15s ease-out;
+  /* transition:  0.15s ease-out; */
   cursor: pointer;
 }
 
@@ -1557,16 +1561,22 @@ main {
   border-radius: 1rem;
   padding: 0rem 0.8rem;
   border: none;
-  transition: 0.15s ease-out;
+  background-color: var(--light);
+  transition: background-color 0.25s ease-out;
+}
+#blog-all-toolbar .search-input:focus {
+  background-color: var(--light);
 }
 #blog-all-toolbar .search-input:focus {
   outline: none;
 }
 #blog-all-toolbar .search-icon {
   position: relative;
-  color: grey;
+  color: black;
+  opacity: 0.5;
   font-size: 1.4rem;
   right: 2.2rem;
+  top: -0.1rem;
   height: 2rem;
   width: 2rem;
   display: flex;
@@ -1594,7 +1604,9 @@ main {
   margin: 0rem;
   color: var(--accent-color-secondary);
   cursor: pointer;
-  transition: .15s ease-out;
+  transition: color .15s ease-out;
+  display: flex;
+  align-items: flex-start;
 }
 #blog-all-toolbar .filter-buttons .filter-button:hover {
   color: var(--dark);
@@ -1672,6 +1684,7 @@ main {
   font-weight: 400;
   margin: 0rem;
   color: grey;
+  padding: 1rem 0rem;
 }
 #blogs-all .content .blog-link-all {
   font-family: 'Lato', sans-serif;
@@ -1962,7 +1975,7 @@ main {
   font-size: 1.1rem;
   text-decoration: none;
   border: 2px solid;
-  transition: 0.15s ease-out;
+  transition: font-size 0.15s ease-out;
 }
 #blogs-all .blog-link-all-dash:hover {
   font-size: 1.2rem;
@@ -2072,7 +2085,7 @@ main {
   background-color: var(--accent-color);
   border: 0.2rem var(--accent-color) solid;
   border-radius: 1.17rem;
-  transition: 0.15s ease-out;
+  transition: color 0.15s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out;
 }
 #editor-section #save-button:hover {
   background-color: var(--accent-color-secondary);
@@ -2335,7 +2348,7 @@ main {
     border-radius: 0.5rem;
   }
   .navbar .nav-menu-btn {
-    transition: 0.15s ease-out;
+    transition: color 0.15s ease-out, background-color 0.15s ease-out;
   }
   .navbar .nav-btn-bg {
     margin-right: -0.5rem;
@@ -2621,9 +2634,13 @@ main {
   #blog-all-toolbar .wrapper .search-icon {
     position: absolute;
     right: 1.4rem;
+    top: 1.2rem;
   }
   #blog-all-toolbar .section-container .filter-title {
     margin-bottom: 0.5rem;
+  }
+  #blog-all-toolbar .search-input {
+    background-color: rgba(209, 164, 150, 0.4);
   }
 
   #about-section .about-container {
@@ -2683,6 +2700,10 @@ main {
   #landing .group {
     gap: 1rem;
   }
+  #landing #hero-illustration {
+    width: clamp(21rem,65vw,30rem);
+    bottom: 7rem;
+  }
 
   #blog-section {
     margin-bottom: clamp(15rem,30vw,23rem);
@@ -2719,8 +2740,6 @@ main {
   }
   #blogs-nav .blog-title.blog-nav-title {
     line-height: 3.5rem;
-    border-bottom: 3.5px solid var(--dark);
-    margin-bottom: 1rem;
   }
   #blogs-nav .blogs-home-nav .blog-nav-home {
     margin-left: 0rem;
@@ -2734,15 +2753,24 @@ main {
   #blog-all-toolbar .section-container .filter-title {
     margin-bottom: 1rem;
   }
+
+  #editor-section #blog-new-form .wrapper {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 530px) {
-  .navbar .nav-text {
-    font-size: 1.6rem;
-    width: 10rem;
-  }
   .navbar .nav-text-spacer {
     display: none;
+  }
+
+  #landing .landing-btn.recipes {
+    display: none;
+  }
+  #landing #hero-illustration {
+    width: clamp(21rem,65vw,30rem);
+    bottom: 7rem;
   }
 
   #blog-section {
@@ -2810,9 +2838,12 @@ main {
   
   #blog-all-toolbar .group.filter-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
+  }
+  #blog-all-toolbar .group.filter-buttons .filter-button {
+    width: 100%;
+    padding: 0rem 0.2rem;
   }
 }
 

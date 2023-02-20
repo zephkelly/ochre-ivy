@@ -49,8 +49,10 @@
               <div class="content">
                 <div class="wrapper">
                   <h3 class="blog-title-featured"><%= blog.title %></h3>
-                  <h6 class="blog-subtitle" data-subtitle="<%= blog.subtitle %>"></h6>
-                  <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
+                  <h6 class="blog-subtitle" data-subtitle="<%= blog.subtitle %>"></h6>         
+                  <% if (blog.createdDate && blog.createdDate != '') { %>
+                    <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
+                  <% } %>
                 </div>
                 <div class="wrapper">
                   <p class="blog-description" data-description="<%= blog.description %>"></p>
@@ -146,10 +148,10 @@
           <div class="wrapper">
             <h6 class="filter-title">FILTERS</h6>
             <div class="group filter-buttons">
-              <a class="filter-button all active">All</a>
               <a class="filter-button recipes">Recipes</a>
               <a class="filter-button newest">Newest</a>
               <a class="filter-button oldest">Oldest</a>
+              <a class="filter-button all active">All</a>
               <a class="filter-button az">A-Z</a>
             </div>
           </div>
