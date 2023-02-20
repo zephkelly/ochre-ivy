@@ -1310,7 +1310,6 @@ main {
 }
 #blogs-featured .featured-blog .cover-img {
   width: 45%;
-  height: 100%;
   overflow: hidden;
   border-radius: 0rem 0.5rem 0.5rem 0rem;
   display: flex;
@@ -1320,6 +1319,8 @@ main {
 #blogs-featured .featured-blog .cover-img img {
   width: auto;
   height: 100%;
+  z-index: 2;
+  position: relative;
 }
 #blogs-featured .blog-image {
   width: auto;
@@ -1992,9 +1993,6 @@ main {
   font-weight: 400;
   width: 10rem;
 }
-#blogs-all .all-blog.dashboard {
-  height: 35rem;
-}
 #blogs-all .wrapper .group {
   display: flex;
   flex-direction: row;
@@ -2662,6 +2660,13 @@ main {
     position: relative;
   }
 
+  #blogs-nav .blog-nav-link.blog-nav-all.active::after {
+    display: none;
+  }
+  #blogs-nav .blog-nav-link.blog-nav-home.active::after {
+    display: none;
+  }
+
   #blog-all-toolbar .group.filter-buttons {
     width: 100%;
   }
@@ -2671,7 +2676,6 @@ main {
     gap: 2rem;
     align-items: center;
   }
-  
   #blog-all-toolbar .section-container .wrapper {
     width: 100%;
   }
