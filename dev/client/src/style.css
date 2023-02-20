@@ -164,7 +164,7 @@ main {
   border: none;
 }
 .navbar .nav-btn-bg {
-  transition: background-color 0.15s ease-out;
+  transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 .navbar .nav-menu {
   display: block;
@@ -2389,7 +2389,7 @@ main {
   }
   .navbar .nav-btn-bg {
     margin-right: -0.5rem;
-    margin-bottom: -0.1rem;
+    margin-bottom: -0.15rem;
   }
   .navbar .nav-menu {
     display: none;

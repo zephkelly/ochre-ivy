@@ -90,7 +90,7 @@ function navMenuBtnToggle() {
     navMenu.style.opacity = '1';
 
     navBtnBg.style.backgroundColor = 'white';
-    navBtnBg.style.boxShadow = 'rgba(0, 0, 0, 0.2) 0rem -1.2rem 3rem 0rem';
+    navBtnBg.style.boxShadow = 'rgba(0, 0, 0, 0.15) 0rem -3rem 3rem 0rem';
 
   } else {
     navMenu.style.opacity = '0';
@@ -148,7 +148,7 @@ export function shrinkNavbar() {
           navText.style.marginBottom = '0';
           
           navMenuBtn.style.top = '0.5rem';
-          navMenu.style.top = '4.2rem';
+          navMenu.style.top = '5.5rem';
           navMenu.style.borderRadius = '0 0 0.5rem 0.5rem';
           
           if (!spacerPresent) return;
