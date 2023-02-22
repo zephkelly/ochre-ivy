@@ -28,11 +28,11 @@
     <% } %>
     <section id="blogs-nav">
       <div class="section-container">
-          <h1 class="blog-title blog-nav-title">BLOGS</h1>
+          <h1 class="blog-nav-title">BLOGS</h1>
           <nav class="blogs-home-nav">
             <ul>
-              <li><a class="blog-title blog-nav-link blog-nav-home active">HOME</a></li>
-              <li><a class="blog-title blog-nav-link blog-nav-all">ALL</a></li>
+              <li><a class="blog-nav-title blog-nav-link blog-nav-home active">HOME</a></li>
+              <li><a class="blog-nav-title blog-nav-link blog-nav-all">ALL</a></li>
             </ul>
           </nav>
         </div>
@@ -48,8 +48,8 @@
             <div class="featured-blog" style="opacity: 0; display: none;">
               <div class="content">
                 <div class="wrapper">
-                  <h3 class="blog-title-featured"><%= blog.title %></h3>
-                  <h6 class="blog-subtitle" data-subtitle="<%= blog.subtitle %>"></h6>         
+                  <h3 class="blog-title featured" data-title="<%= blog.title %>"></h3>
+                  <h6 class="blog-subtitle featured" data-subtitle="<%= blog.subtitle %>"></h6>         
                   <% if (blog.createdDate && blog.createdDate != '') { %>
                     <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
                   <% } %>
@@ -60,7 +60,7 @@
                 </div>
               </div>
               <div class="cover-img">
-                <img src="/uploaded-images/<%= blog.cover %>" loading="lazy" alt="<%= blog.title %>" class="blog-image">
+                <img src="/uploaded-images/<%= blog.cover %>" loading="eager" alt="<%= blog.title %>" class="blog-image">
               </div>
             </div>
           <% }; %>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="content">
                       <div class="wrapper">
-                        <h3 class="blog-title"><%= blog.title %></h3>
+                        <h3 class="blog-title recipe" data-title="<%= blog.title %>"></h3>
                         <h6 class="blog-subtitle" data-subtitle="<%= blog.subtitle %>"></h6>
                         <p class="blog-date" data-date="<%= blog.createdDate %>"></p>
                       </div>
@@ -109,7 +109,7 @@
                       <div class="wrapper">
                         <div class="group">
                           <div class="container">
-                            <div class="blog-title"><%= blog.title %></div>
+                            <div class="blog-title recent" data-title="<%= blog.title %>"></div>
                             <div class="blog-subtitle" data-subtitle="<%= blog.subtitle %>"></div>
                           </div>
                           <div class="container">
