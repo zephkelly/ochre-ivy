@@ -28,7 +28,7 @@
     "@editorjs/image": "^2.8.1",
     "@editorjs/quote": "^2.5.0",
     "@types/editorjs__header": "^2.6.0",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.14.0",
     "copyfiles": "^2.4.1"
   }
 }

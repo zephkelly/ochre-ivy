@@ -5,6 +5,7 @@
   --accent-color-dark: #79574c;
   --accent-color-darker: #6b4c42;
   --dark: #292627;
+  --grey: #5d5d5d;
   --light: #fcfcfc;
 }
 
@@ -95,6 +96,7 @@ main {
   justify-content: center;
   height: 5.5rem;
   transition: top 0.2s ease-out, background-color 0.2s ease-out;
+  transform: translate3d(0, 0, 0);
 }
 .navbar .section {
   margin: auto;
@@ -126,6 +128,7 @@ main {
   margin: 0;
   margin-bottom: 0.4rem;
   color: var(--dark);
+  transform: translate3d(0, 0, 0);
 }
 .navbar .nav-text.dark-mode {
   color: var(--light);
@@ -138,6 +141,7 @@ main {
   bottom: 0.15rem;
   width: 7.7rem;
   background-color: var(--dark);
+  transform: translate3d(0, 0, 0);
 }
 .navbar .nav-text-spacer.dark-mode {
   background-color: var(--light);
@@ -151,6 +155,7 @@ main {
   justify-content: flex-end;
   border-color: var(--dark);
   color: var(--dark);
+  transform: translate3d(0, 0, 0);
 }
 .navbar .nav-menu-btn.dark-mode {
   color: var(--light);
@@ -610,7 +615,7 @@ main {
 #recipes-box .container-full-width {
   width: 100vw;
   min-width: 100vw;
-  min-height: 60rem;
+  min-height: 63rem;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -654,7 +659,7 @@ main {
   font-weight: 400;
   margin: 0rem;
   margin-bottom: 0.2rem;
-  color: grey;
+  color: var(--grey);
   font-style: bold;
 }
 #recipes-box .recipe-post .recipe-method-h4 {
@@ -663,7 +668,7 @@ main {
   font-weight: 400;
   margin: 0rem;
   margin-bottom: 0.2rem;
-  color: grey;
+  color: var(--grey);
   font-style: bold;
 }
 #recipes-box .recipe-post .recipe-method-p {
@@ -672,11 +677,11 @@ main {
   font-weight: 400;
   margin: 0rem;
   margin-bottom: 1rem;
-  color: grey;
+  color: var(--grey);
 }
 #recipes-box .recipe-post .recipe-method-ul {
   margin: 0rem;
-  color: grey;
+  color: var(--grey);
   padding: 0rem;
   padding-left: 1.5rem;
 }
@@ -727,7 +732,7 @@ main {
   font-family: 'Lato', sans-serif;
   margin: 0rem;
   margin-bottom: 0.5rem;
-  color: grey;
+  color: var(--grey);
 }
 #recipes-box .recipe-post .blog-date {
   font-size: 1rem;
@@ -735,7 +740,7 @@ main {
   font-weight: 400;
   margin: 0rem;
   margin-bottom: 2rem;
-  color: grey;
+  color: var(--grey);
 }
 #recipes-box .recipe-post .blog-description.recipe {
   font-size: 1rem;
@@ -1321,6 +1326,10 @@ main {
   height: 100%;
   z-index: 2;
   position: relative;
+  /* Safari scroll flicker fix */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 #blogs-featured .blog-image {
   width: auto;
@@ -2574,7 +2583,7 @@ main {
   }
   #blogs-featured .featured-blog {
     flex-direction: column;
-    height: 40rem;
+    height: auto;
   }
   #blogs-featured .featured-blog .content {
     width: 100%;

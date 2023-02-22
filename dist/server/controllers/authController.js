@@ -11,10 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login_post = exports.login_get = exports.signup_post = exports.signup_get = exports.makeAdmin_get = exports.logout_get = exports.isAuthorised = void 0;
 const bcrypt = require("bcrypt");
-const express = require('express');
 const mongoose = require('mongoose').mongoose;
-const fetch = require("node-fetch-commonjs");
-const ejs = require('ejs').ejs;
 const saltRounds = 12;
 // Models ------------------------------------------------
 const userSchema = new mongoose.Schema({

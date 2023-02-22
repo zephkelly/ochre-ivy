@@ -1,7 +1,5 @@
 require('dotenv').config()
 const fetch = require("node-fetch-commonjs");
-const sharp = require('sharp');
-const fs = require('fs'); 
 
 import { Analytics } from '../models/analyticsModel';
 import { Blog } from '../models/blogModel';
@@ -334,7 +332,7 @@ export async function blogAPI_update(req, res) {
   const validationStatus = await validateBlogPost();
 
   if (validationStatus.failedValidation) {
-    res.status(400).send("Bad request: " + validationStatus.message);
+    res.status(400).send(validationStatus.message);
     return;
   }
 
@@ -360,42 +358,6 @@ export async function blogAPI_delete(req, res) {
 
     res.status(200).send("Post deleted");
   });
-}
-
-sharp.cache(false);
-export async function blogAPI_imageUpload(req, res) {
-  const image  = req.file;
-  const dirPath = __dirname + '/../../' + 'public/uploaded-images/';
-
-  const originalName = image.filename;
-  const newName = Date.now() + '-' + originalName.split('.').slice(0, -1).join('.') + '.webp';
-
-  if (!image) {
-    console.log("No image sent in request");
-    return res.status(400).send(JSON.stringify({success: 0}));
-  }
-
-  await sharp(dirPath + originalName)
-    .webp({ quality: 60 })
-    .resize(1920, 1080, {
-      kernel: sharp.kernel.cubic,
-      fit: 'cover',
-    })
-    .toFile(dirPath + newName);
-  
-  //Create thumbnail
-  await sharp(dirPath + originalName)
-    .webp({ quality: 60 })
-    .resize(640, 360, {
-      kernel: sharp.kernel.cubic,
-      fit: 'cover',
-    })
-    .toFile(dirPath + 'thumbnails/' + newName );
-
-  fs.unlink(dirPath + originalName, (err) => { if (err) { console.log(err); } });
-  const imgPath = newName;
-
-  res.status(200).send(JSON.stringify({ url: imgPath }));
 }
 
 //Routes ------------------------------------------------
@@ -455,7 +417,9 @@ export async function blog_getURI(req, res) {
     let reference = req.headers.referer;
     let referenceName: string = null;
 
-    reference = reference.replace('http://' + req.headers.host, '');
+    reference = reference.replace(req.headers.host, '');
+    reference = reference.replace('http://', '');
+    reference = reference.replace('https://', '');
 
     if (reference.includes('/')) {
       referenceName = "Home"
