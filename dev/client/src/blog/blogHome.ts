@@ -387,6 +387,8 @@ function enableAllPage() {
   checkIfPaddingLeft();
   clearInterval(featuredInterval);
 
+  setActiveFilter('all');
+
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
 
@@ -449,31 +451,54 @@ function setActiveFilter(filter: HTMLElement) {
   filter.classList.add('active');
   console.log(filter + " Should be active");
 
-  const urlParams = new URLSearchParams(window.location.search);
+    removeActiveFilter();
+    filter.classList.add('active');
 
-  function getFilter(): string {
-    if (filter === allFilter) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    function getFilter(): string {
+      if (filter === allFilter) {
+        return 'none';
+      } else if (filter === recipesFilter) {
+        return 'recipe';
+      } else if (filter === newestFilter) {
+        return 'newest';
+      } else if (filter === oldestFilter) {
+        return 'oldest';
+      } else if (filter === azFilter) {
+        return 'alphabetical';
+      }
+
+      console.log("Cant find filter");
       return 'none';
-    } else if (filter === recipesFilter) {
-      return 'recipe';
-    } else if (filter === newestFilter) {
-      return 'newest';
-    } else if (filter === oldestFilter) {
-      return 'oldest';
-    } else if (filter === azFilter) {
-      return 'alphabetical';
     }
 
-    console.log("Cant find filter");
-    return 'none';
+    const selectedFilter = getFilter();
+
+    urlParams.set('filter', selectedFilter);
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+    makeRequest("&filter=" + selectedFilter);
   }
-
-  const selectedFilter = getFilter();
-
-  urlParams.set('filter', selectedFilter);
-  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
-
-  makeRequest("&filter=" + selectedFilter);
+  else if (filter == String) {
+    switch (filter) {
+      case 'all':
+        setActiveFilter(allFilter);
+        break;
+      case 'recipe':
+        setActiveFilter(recipesFilter);
+        break;
+      case 'newest':
+        setActiveFilter(newestFilter);
+        break;
+      case 'oldest':
+        setActiveFilter(oldestFilter);
+        break;
+      case 'alphabetical':
+        setActiveFilter(azFilter);
+        break;
+    }
+  }
 }
 
 function removeActiveFilter() {
