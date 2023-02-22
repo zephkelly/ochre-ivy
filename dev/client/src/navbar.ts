@@ -8,8 +8,10 @@ const navText: HTMLElement = document.querySelector(".nav-text") as HTMLElement;
 const navTextSpacer: HTMLElement = document.querySelector(".nav-text-spacer") as HTMLElement;
 let spacerPresent: boolean = false;
 
-const navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
-const navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
+let navbarContainer: HTMLElement = document.querySelector(".navbar .navbar-container") as HTMLElement;
+let navMenuBtn: HTMLElement = document.querySelector(".nav-menu-btn") as HTMLElement;
+let navMenuBtnPath: HTMLElement = document.querySelector(".nav-menu-btn-path") as HTMLElement;
+let navBtnBg: HTMLElement = document.querySelector(".nav-btn-bg") as HTMLElement;
 
 const navList: HTMLElement = document.querySelector(".navbar .nav-list") as HTMLElement;
 
@@ -22,6 +24,11 @@ window.addEventListener('load', () => {
   if (navTextSpacer) {
     spacerPresent = true;
   }
+
+  navbarContainer = document.querySelector(".navbar .navbar-container") as HTMLElement;
+  navMenuBtn = document.querySelector(".nav-menu-btn") as HTMLElement;
+  navMenuBtnPath = document.querySelector(".nav-menu-btn-path") as HTMLElement;
+  navBtnBg = document.querySelector(".nav-btn-bg") as HTMLElement;
 
   shrinkNavbar();
 
@@ -63,9 +70,17 @@ window.addEventListener("resize", () => {
 
 // -- Toggling navmenu/btn on click
 let navMenuBtnClicked: boolean = false;
-navBtnBg.addEventListener('click', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
+navbarContainer.addEventListener('click', (e) => {
+  if (e.target == null) return;
+
+  const child: HTMLElement =  e.target as HTMLElement;
+
+  if (child == null) return;
+
+  if (child == navMenuBtn || child == navBtnBg || child == navMenuBtnPath) {
+    navMenuBtnClicked = !navMenuBtnClicked;
+    navMenuBtnToggle();
+  }
 });
 
 
@@ -75,7 +90,7 @@ document.addEventListener('scroll', (e) => { checkNavMenuDisable(e) });
 function checkNavMenuDisable(e: any = null) {
   if (navMenuBtnClicked) {
     if (e != null) {
-      if (e.target != navMenu && e.target != navMenuBtn && e.target != navBtnBg && e.target != navList) {
+      if (e.target != navMenu && e.target != navMenuBtn && e.target != navBtnBg && e.target != navList && e.target != navMenuBtnPath) {
         navMenuBtnClicked = false;
         navMenuBtnToggle();
       }
