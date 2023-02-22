@@ -27,14 +27,21 @@ const blogAllPage: HTMLElement = document.querySelector('.faux-page-all') as HTM
 
 // Misc Elements
 const featuredBlogs: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog') as NodeListOf<HTMLElement>;
+const featuredNav: HTMLElement = document.querySelector('#blogs-featured .featured-nav') as HTMLElement;
 const featuredBlogLinks: NodeListOf<HTMLElement> = document.querySelectorAll('.featured-blog-link') as NodeListOf<HTMLElement>;
+
+const blogsRecipesPopular: HTMLElement = document.querySelector('#blogs-recipes-popular') as HTMLElement;
 
 const blogsAllSection: HTMLElement = document.querySelector('#blogs-all .section-container') as HTMLElement;
 const morebutton: HTMLElement = document.querySelector('#blogs-more .more-button') as HTMLElement;
 const footerContainer: HTMLElement = document.querySelector('#footer-main .container') as HTMLElement;
 
 // Formattable elements
+let blogTitles: any = null;
+// let allBlogTitles: any = null;
 let recentBlogTitles: any = null;
+let featuredBlogTitles: any = null;
+
 let blogDescriptions: any = null;
 let blogDescriptionsAll: any = null;
 let blogDescriptionsRecipes: any = null;
@@ -50,7 +57,11 @@ window.addEventListener('load', async () => {
   if (path.includes('/blog') && !path.includes('/blog/')) {
     await start()
 
+    blogTitles = document.querySelectorAll('.blog-title') as NodeListOf<HTMLElement>;
+    // allBlogTitles = document.querySelectorAll('.blog-title.all') as NodeListOf<HTMLElement>;
     recentBlogTitles = document.querySelectorAll('.recent-blog-title') as NodeListOf<HTMLElement>;
+    featuredBlogTitles = document.querySelectorAll('.blog-title.featured') as NodeListOf<HTMLElement>;
+
     blogDescriptions = document.querySelectorAll('.blog-description') as NodeListOf<HTMLElement>;
     blogDescriptionsAll = document.querySelectorAll('.blog-description.all') as NodeListOf<HTMLElement>;
     blogDescriptionsRecipes = document.querySelectorAll('.blog-description.recipe') as NodeListOf<HTMLElement>;
@@ -64,10 +75,7 @@ window.addEventListener('load', async () => {
   }
 });
 
-let lastFeaturedBlog = featuredBlogs.length - 1;
-let currentFeaturedBlog = 0;
 let activePage = 'home';
-
 function start() {
   setEventListeners();
 
@@ -75,7 +83,7 @@ function start() {
 
   adjustBlogNavPadding();
   changeFeaturedCoverPosition();
-  cycleFeaturedBlogs();
+  cycleFeaturedBlogs(null, true);
 
   hideExtraBlogs('#blogs-recipes .recipe-blog', 3, 4)
   hideExtraBlogs('#blogs-recent .recent-blog', 4, 5)
@@ -119,6 +127,7 @@ function setEventListeners() {
   });
 
   window.addEventListener('resize', async () => {
+    setfeaturedBlogNavMargin()
     changeFeaturedCoverPosition();
     adjustBlogNavPadding();
 
@@ -157,26 +166,7 @@ function setEventListeners() {
 
       const linkIndex = Array.from(featuredBlogLinks).indexOf(link);
 
-      if (linkIndex > featuredBlogs.length - 1) {
-        return;
-      }
-
-      lastFeaturedBlog = currentFeaturedBlog;
-      currentFeaturedBlog = linkIndex;
-    
-      featuredBlogLinks[lastFeaturedBlog].classList.remove('active');
-      featuredBlogs[lastFeaturedBlog].style.opacity = '0';
-    
-      featuredBlogs[currentFeaturedBlog].style.display = 'flex';
-      featuredBlogLinks[currentFeaturedBlog].classList.add('active');
-
-      setTimeout(() => {
-        featuredBlogs[lastFeaturedBlog].style.display = 'none';
-      }, 500)
-
-      setTimeout(() => {
-        featuredBlogs[currentFeaturedBlog].style.opacity = '1';
-      }, 5)
+      cycleFeaturedBlogs(linkIndex);
 
       clearInterval(featuredInterval);
       featuredInterval = setInterval(cycleFeaturedBlogs, 10000);
@@ -241,37 +231,11 @@ function setEventListeners() {
   });
 }
 
-function formatElements() {
-  formatBlogSubtitles();
-  formatBlogSubtitlesAll();
-  formatBlogDescriptions();
-  formatBlogsDescriptionsAll();
-  formatBlogsRecipesDescriptions();
-  formatRecentBlogTitles();
-}
-
-function adjustBlogNavPadding() {
-  if (window.innerWidth < 460) {
-    blogTitle.style.paddingLeft = '0rem';
-    blogsNav.style.paddingLeft = '0rem';
-  }
-  else if (window.innerWidth < 630) {
-    blogTitle.style.paddingLeft = '0rem';
-    blogsNav.style.paddingLeft = '0rem';
-  }
-  else {
-    if (activePage === 'home') {
-      blogTitle.style.paddingLeft = '1.75rem';
-      blogsNav.style.paddingLeft = '0rem';
-    }
-    else {
-      blogTitle.style.paddingLeft = '0rem';
-      blogsNav.style.paddingLeft = '0rem';
-    }
-  }
-}
-
 async function setDataAttributes() {
+  for (let i = 0; i < blogTitles.length; i++) {
+    const titleAttribute: string = await blogTitles[i].getAttribute('data-title');
+    blogTitles[i].innerText = titleAttribute;
+  }
   for (let i = 0; i < blogCreatedDate.length; i++) {
     const dateAttribute: any = await blogCreatedDate[i].getAttribute('data-date');
     let date: any = null;
@@ -303,6 +267,56 @@ async function setDataAttributes() {
     const blogSubtitleText: any = await blogSubtitles[i].getAttribute('data-subtitle');
     const subtitle = formatString(blogSubtitleText, subtitleSize());
     blogSubtitles[i].innerText = subtitle;
+  }
+}
+
+function formatElements() {
+
+  formatFeaturedBlogTitles();
+  formatRecentBlogTitles();
+  formatBlogSubtitles();
+  formatBlogSubtitlesAll();
+  formatBlogSubtitlesFeatured();
+  formatBlogDescriptions();
+  formatBlogsDescriptionsAll();
+  formatBlogsRecipesDescriptions();
+}
+
+function adjustBlogNavPadding() {
+  if (window.innerWidth < 460) {
+    blogTitle.style.paddingLeft = '0rem';
+    blogsNav.style.paddingLeft = '0rem';
+  }
+  else if (window.innerWidth < 630) {
+    blogTitle.style.paddingLeft = '0rem';
+    blogsNav.style.paddingLeft = '0rem';
+  }
+  else {
+    if (activePage === 'home') {
+      blogTitle.style.paddingLeft = '1.75rem';
+      blogsNav.style.paddingLeft = '0rem';
+    }
+    else {
+      blogTitle.style.paddingLeft = '0rem';
+      blogsNav.style.paddingLeft = '0rem';
+    }
+  }
+}
+
+function setfeaturedBlogNavMargin() {
+  const currentFeaturedBlog: HTMLElement = document.querySelector('.featured-blog.active') as HTMLElement;
+
+  const featuredHeight = currentFeaturedBlog.offsetHeight;
+
+  const totalHeight = featuredHeight + 50;
+  
+  featuredNav.style.top = totalHeight + 'px';
+
+  if (totalHeight > 700) {
+    const difference = totalHeight - 670;
+    blogsRecipesPopular.style.paddingTop = difference + 'px';
+  } else {
+    blogsRecipesPopular.style.paddingTop = '0px';
   }
 }
 
@@ -423,25 +437,41 @@ function enableAllPage() {
   }
 }
 
+let currentFeaturedBlog = 0;
+let lastFeaturedBlog = featuredBlogs.length - 1;
 let featuredInterval: any = null;
-function cycleFeaturedBlogs() {
+function cycleFeaturedBlogs(clickedBlog: any = null, initial: boolean = false) {
   lastFeaturedBlog = currentFeaturedBlog;
 
   featuredBlogLinks[lastFeaturedBlog].classList.remove('active');
+  featuredBlogs[lastFeaturedBlog].classList.remove('active');
   featuredBlogs[lastFeaturedBlog].style.opacity = '0';
-
+  
   setTimeout(() => {
     featuredBlogs[lastFeaturedBlog].style.display = 'none';
   }, 500)
+  
+  if (clickedBlog != null) {
+    currentFeaturedBlog = clickedBlog;
+  }
+  else {
+    currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
+  }
 
-  currentFeaturedBlog = (currentFeaturedBlog + 1) % featuredBlogs.length;
+  featuredBlogLinks[currentFeaturedBlog].classList.add('active');
+
+  featuredBlogs[currentFeaturedBlog].classList.add('active');
+  featuredBlogs[currentFeaturedBlog].style.display = 'flex';
+
+  if (initial) {
+    setTimeout(() => { setfeaturedBlogNavMargin(); }, 5);
+  } else {
+    setfeaturedBlogNavMargin();
+  }
 
   setTimeout(() => {
     featuredBlogs[currentFeaturedBlog].style.opacity = '1';
   }, 5)
-
-  featuredBlogs[currentFeaturedBlog].style.display = 'flex';
-  featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 }
 
 function setActiveFilter(filter: HTMLElement) {
@@ -557,33 +587,70 @@ function formatRecentBlogTitles() {
     formatRecentBlogTitles_current.width = 400;
     getTitles();
 
-    formatStringElements(recentBlogTitles, 50);
+    formatStringElements(recentBlogTitles, 50, 'data-title');
   }
   else if (window.innerWidth < 530) {
     if (formatRecentBlogTitles_current.width === 530) return;
     formatRecentBlogTitles_current.width = 530;
     getTitles();
 
-    formatStringElements(recentBlogTitles, 80);
+    formatStringElements(recentBlogTitles, 80, 'data-title');
   }
   else if (window.innerWidth < 800) {
     if (formatRecentBlogTitles_current.width === 800) return;
     formatRecentBlogTitles_current.width = 800;
     getTitles();
 
-    formatStringElements(recentBlogTitles, 120);
+    formatStringElements(recentBlogTitles, 120, 'data-title');
   }
   else {
     if (formatRecentBlogTitles_current.width === 1000) return;
     formatRecentBlogTitles_current.width = 1000;
     getTitles();
 
-    formatStringElements(recentBlogTitles, 200);
+    formatStringElements(recentBlogTitles, 200, 'data-title');
   }
 
   function getTitles() {
     const recentTitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-title.recent');
     recentBlogTitles = recentTitles;
+  }
+}
+
+const formatFeaturedtBlogTitles_current = { width: 200 };
+function formatFeaturedBlogTitles() {
+  if (window.innerWidth < 400) {
+    if (formatFeaturedtBlogTitles_current.width === 400) return;
+    formatFeaturedtBlogTitles_current.width = 400;
+    getTitles();
+
+    formatStringElements(featuredBlogTitles, 25, 'data-title');
+  }
+  else if (window.innerWidth < 530) {
+    if (formatFeaturedtBlogTitles_current.width === 530) return;
+    formatFeaturedtBlogTitles_current.width = 530;
+    getTitles();
+
+    formatStringElements(featuredBlogTitles, 80, 'data-title');
+  }
+  else if (window.innerWidth < 800) {
+    if (formatFeaturedtBlogTitles_current.width === 800) return;
+    formatFeaturedtBlogTitles_current.width = 800;
+    getTitles();
+
+    formatStringElements(featuredBlogTitles, 120, 'data-title');
+  }
+  else {
+    if (formatFeaturedtBlogTitles_current.width === 1000) return;
+    formatFeaturedtBlogTitles_current.width = 1000;
+    getTitles();
+
+    formatStringElements(featuredBlogTitles, 200, 'data-title');
+  }
+
+  function getTitles() {
+    const featuredTitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-title.featured');
+    featuredBlogTitles = featuredTitles;
   }
 }
 
@@ -617,6 +684,40 @@ function formatBlogSubtitles() {
   function getSubtitles() {
     const subtitles: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle');
     blogSubtitles = subtitles;
+  }
+}
+
+const formatBlogSubtitlesFeatured_current = { width: 200 };
+function formatBlogSubtitlesFeatured() {
+  if (window.innerWidth < 400) {
+    if (formatBlogSubtitlesFeatured_current.width === 400) return;
+    formatBlogSubtitlesFeatured_current.width = 400;
+    getSubtitles();
+
+    formatStringElements(blogSubtitlesAll, 50, 'data-subtitle');
+  } else if (window.innerWidth < 530) {
+    if (formatBlogSubtitlesFeatured_current.width === 530) return;
+    formatBlogSubtitlesFeatured_current.width = 530;
+    getSubtitles();
+
+    formatStringElements(blogSubtitlesAll, 75, 'data-subtitle');
+  } else if (window.innerWidth < 630) {
+    if (formatBlogSubtitlesFeatured_current.width === 630) return;
+    formatBlogSubtitlesFeatured_current.width = 630;
+    getSubtitles();
+
+    formatStringElements(blogSubtitlesAll, 100, 'data-subtitle');
+  } else {
+    if (formatBlogSubtitlesFeatured_current.width === 1000) return;
+    formatBlogSubtitlesFeatured_current.width = 1000;
+    getSubtitles();
+
+    formatStringElements(blogSubtitlesAll, 250, 'data-subtitle');
+  }
+
+  function getSubtitles() {
+    const subtitlesAll: NodeListOf<HTMLElement> = document.querySelectorAll('.blog-subtitle.featured');
+    blogSubtitlesAll = subtitlesAll;
   }
 }
 
@@ -798,7 +899,7 @@ function appendBlogs(data: any) {
       </div>
       <div class="content">
         <div class="wrapper">
-          <h3 class="blog-title">${data[i].title}</h3>
+          <h3 class="blog-title all" data-title="${data[i].title}"></h3>
           <h6 class="blog-subtitle all" data-subtitle="${data[i].subtitle}"></h6>
           <p class="blog-date all" data-date="${data[i].createdDate}"></p>
         </div>
@@ -810,6 +911,12 @@ function appendBlogs(data: any) {
     </div>
   `;
   }
+
+  const titlesAll = document.querySelectorAll('.blog-title.all');
+  titlesAll.forEach((title) => {
+    const titleData: any = title.getAttribute('data-title');
+    title.innerHTML = formatString(titleData, 100);
+  });
 
   const createdDates = document.querySelectorAll('.blog-date.all');
   createdDates.forEach((date) => {
