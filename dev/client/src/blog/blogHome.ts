@@ -66,7 +66,6 @@ window.addEventListener('load', async () => {
 
 let lastFeaturedBlog = featuredBlogs.length - 1;
 let currentFeaturedBlog = 0;
-
 let activePage = 'home';
 
 function start() {
@@ -84,7 +83,6 @@ function start() {
 
 async function activatePages() {
   const section = urlParams.get('section');
-  const filter = urlParams.get('filter');
 
   if (section === 'all') {
     searchInputValue = searchInput.value;
@@ -93,12 +91,11 @@ async function activatePages() {
       await makeRequest('&search=' + searchInputValue);
       removeActiveFilter();
     }
-
-    if (filter !== null || filter !== undefined || filter !== 'none' || filter !== '') {
-      setActiveFilter(filter);
+    else {
+      setActiveFilter(allFilter);
+      await makeRequest('');
     }
 
-    await makeRequest('');
     enableAllPage();
   }
   else {
@@ -111,8 +108,8 @@ function setEventListeners() {
     filter.addEventListener('click', () => {
       if (filter.classList.contains('active')) {
         return;
-  
-      } else {
+      }
+      else {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.delete('page');
   
@@ -146,6 +143,8 @@ function setEventListeners() {
     }
 
     setActiveFilter(allFilter);
+    makeRequest('');
+
     enableAllPage();
     formatElements();
   });
@@ -388,8 +387,6 @@ function enableAllPage() {
   checkIfPaddingLeft();
   clearInterval(featuredInterval);
 
-  setActiveFilter('all');
-
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
 
@@ -445,57 +442,38 @@ function cycleFeaturedBlogs() {
   featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 }
 
-function setActiveFilter(filter: any) {
-  if (filter == HTMLElement) {
+function setActiveFilter(filter: HTMLElement) {
+  removeActiveFilter();
+  console.log("Removing active filter");
 
-    removeActiveFilter();
-    filter.classList.add('active');
+  filter.classList.add('active');
+  console.log(filter + " Should be active");
 
-    const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.search);
 
-    function getFilter(): string {
-      if (filter === allFilter) {
-        return 'none';
-      } else if (filter === recipesFilter) {
-        return 'recipe';
-      } else if (filter === newestFilter) {
-        return 'newest';
-      } else if (filter === oldestFilter) {
-        return 'oldest';
-      } else if (filter === azFilter) {
-        return 'alphabetical';
-      }
-
-      console.log("Cant find filter");
+  function getFilter(): string {
+    if (filter === allFilter) {
       return 'none';
+    } else if (filter === recipesFilter) {
+      return 'recipe';
+    } else if (filter === newestFilter) {
+      return 'newest';
+    } else if (filter === oldestFilter) {
+      return 'oldest';
+    } else if (filter === azFilter) {
+      return 'alphabetical';
     }
 
-    const selectedFilter = getFilter();
-
-    urlParams.set('filter', selectedFilter);
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
-
-    makeRequest("&filter=" + selectedFilter);
+    console.log("Cant find filter");
+    return 'none';
   }
-  else if (filter == String) {
-    switch (filter) {
-      case 'all':
-        setActiveFilter(allFilter);
-        break;
-      case 'recipe':
-        setActiveFilter(recipesFilter);
-        break;
-      case 'newest':
-        setActiveFilter(newestFilter);
-        break;
-      case 'oldest':
-        setActiveFilter(oldestFilter);
-        break;
-      case 'alphabetical':
-        setActiveFilter(azFilter);
-        break;
-    }
-  }
+
+  const selectedFilter = getFilter();
+
+  urlParams.set('filter', selectedFilter);
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  makeRequest("&filter=" + selectedFilter);
 }
 
 function removeActiveFilter() {
