@@ -2922,6 +2922,17 @@ main {
   #blogs-recent .recent-blog .cover-img {
     border-radius: 0rem 0.5rem 0.5rem 0rem;
   }
+
+  #blogs-nav .blog-nav-link.blog-nav-home.active::after {
+    display: none;
+  }
+  #blogs-nav .blog-nav-link.blog-nav-all.active::after {
+    display: none;
+  }
+
+  #blogs-all .all-blog .cover-img {
+    height: 14rem;
+  }
   
   #blogs-nav .blog-nav-link.blog-nav-home.active::after {
     display: none;

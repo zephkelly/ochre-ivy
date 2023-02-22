@@ -150,6 +150,8 @@ function login_post(req, res) {
         User.find({ email: req.body.email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
             if (user.length == 0) {
                 data.message = "Email or password is incorrect";
+                let randomTime = Math.floor(Math.random() * 1000) + 500;
+                setTimeout(() => { return renderLogin(); }, randomTime);
             }
             else {
                 yield bcrypt.compare(JSON.stringify(req.body.password), user[0].password, (err, match) => {
@@ -164,15 +166,16 @@ function login_post(req, res) {
                     }
                     else {
                         data.message = "Email or password is incorrect";
+                        return renderLogin();
                     }
-                    if (data.message != null) {
-                        res.render('login', { data }, (err, html) => {
-                            if (err) {
-                                return console.log(err);
-                            }
-                            return res.status(401).send(html);
-                        });
+                });
+            }
+            function renderLogin() {
+                res.render('login', { data }, (err, html) => {
+                    if (err) {
+                        return console.log(err);
                     }
+                    return res.status(401).send(html);
                 });
             }
         }));
