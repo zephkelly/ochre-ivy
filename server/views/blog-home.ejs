@@ -45,6 +45,7 @@
         <div class="section-container">
           <% for (i = 0; i < featuredBlogs.length; i++) { %>
             <% const blog = featuredBlogs[i]; %>
+            <% if (!blog || !blog.title) { continue; } %>
             <div class="featured-blog" style="opacity: 0; display: none;">
               <div class="content">
                 <div class="wrapper">
