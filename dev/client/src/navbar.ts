@@ -83,6 +83,7 @@ navbarContainer.addEventListener('click', (e) => {
   }
 });
 
+
 document.addEventListener('click', (e) => { checkNavMenuDisable(e) });
 document.addEventListener('scroll', (e) => { checkNavMenuDisable(e) });
 
