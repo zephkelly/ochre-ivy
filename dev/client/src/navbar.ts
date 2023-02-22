@@ -16,6 +16,8 @@ const navList: HTMLElement = document.querySelector(".navbar .nav-list") as HTML
 const notification: HTMLElement = document.getElementById("notification") as HTMLElement;
 let notificationPresent: boolean = false;
 
+
+// let mobileMode: boolean = false;
 window.addEventListener('load', () => {
   if (navTextSpacer) {
     spacerPresent = true;
@@ -27,6 +29,7 @@ window.addEventListener('load', () => {
 
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
+    // mobileMode = true;
   }
 
   if (notification) {    
@@ -51,8 +54,10 @@ window.addEventListener("resize", () => {
   
   if (screen.width <= 982) {
     navMenu.style.display = 'none';
+    // mobileMode = true;
   } else {
     navMenu.style.display = '';
+    // mobileMode = false;
   }
 });
 
@@ -63,30 +68,9 @@ navBtnBg.addEventListener('click', () => {
   navMenuBtnToggle();
 });
 
-navBtnBg.addEventListener('touch', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
-});
-
-navMenuBtn.addEventListener('touch', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
-});
-
-navBtnBg.addEventListener('click', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
-});
-
-navBtnBg.addEventListener('touch', () => {
-  navMenuBtnClicked = !navMenuBtnClicked;
-  navMenuBtnToggle();
-});
 
 document.addEventListener('click', (e) => { checkNavMenuDisable(e) });
 document.addEventListener('scroll', (e) => { checkNavMenuDisable(e) });
-// document.addEventListener('touch', (e) => { checkNavMenuDisable(e) });
-//document.addEventListener('touchstart', (e) => { checkNavMenuDisable(e) });
 
 function checkNavMenuDisable(e: any = null) {
   if (navMenuBtnClicked) {

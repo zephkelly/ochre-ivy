@@ -25,8 +25,9 @@ const storage = multer.diskStorage({
 export const upload = multer({ storage: storage })
 
 const authRoutes = require('./server/routes/authRoutes');
-const blogRoutes = require('./server/routes/blogRoutes');
 const adminRoutes = require('./server/routes/adminRoutes');
+const blogRoutes = require('./server/routes/blogRoutes');
+const uploadRoutes = require('./server/routes/uploadRoutes');
 const analyticsRoutes = require('./server/routes/analyticsRoutes');
 
 // @ts-ignore
@@ -169,8 +170,9 @@ app.get('/about', (req, res) => {
 });
 
 app.use(authRoutes);
-app.use(blogRoutes);
 app.use(adminRoutes);
+app.use(blogRoutes);
+app.use(uploadRoutes);
 app.use(analyticsRoutes);
 
 app.use(express.static('./assets'));

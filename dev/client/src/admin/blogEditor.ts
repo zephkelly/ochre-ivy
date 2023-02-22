@@ -8,13 +8,12 @@ let editor: any = null;
 
 const saveButton: HTMLElement = document.getElementById('save-button') as HTMLElement;
 
-window.addEventListener('load', async () => {
+window.addEventListener('DOMContentLoaded', async () => {
   //check if the url contains /blog/edit/ and if so, load the blog data
   if (window.location.href.includes('/dashboard/blog/edit/')) {
     await setupBlogEditor()
-
     await loadEditBlog();
-      
+
     const dashboardNavLink = document.querySelector('.dashboard-nav-link') as HTMLElement;
     dashboardNavLink.innerText = 'Edit';
     
@@ -62,6 +61,8 @@ window.addEventListener('load', async () => {
                     return response.json();
                   })
                   .then((response) => {
+                    editImageSession.push(response.url);
+
                     return {
                       success: 1,
                       file: {
@@ -75,11 +76,11 @@ window.addEventListener('load', async () => {
                       success: 0
                     };
                   });
-              }
+              },
             }
           }
-        }
-      },
+        },
+      } 
     });
 
     subtitle.addEventListener('input', validateSubtitle);
@@ -88,6 +89,32 @@ window.addEventListener('load', async () => {
     title.addEventListener('input', validateTitle);
     tagsInput.addEventListener('input', validateTags);
   }
+});
+
+// //Session to store images uploaded to compare with final image list
+const editImageSession: string[] = [];
+
+window.addEventListener('beforeunload', async (e) => {
+  //send a confirmation dialog to the user
+  e.preventDefault();
+  const shouldLeave = await confirm('Are you sure you want to leave?');
+
+  if (!shouldLeave) {
+    return;
+  }
+});
+
+window.addEventListener('unload', async () => {
+  const unusedImages = editImageSession;
+
+  const outputData = await editor.save();
+  await localStorage.setItem('draft_blogData', JSON.stringify(outputData));
+
+  const body = { images: unusedImages };
+  const headers = { type: 'application/json' };
+  const blob = new Blob([JSON.stringify(body)], headers);
+
+  navigator.sendBeacon('/api/blog/removeimages', blob);
 });
 
 const uriInput: HTMLInputElement = document.getElementById('uri-input') as HTMLInputElement;
@@ -251,6 +278,7 @@ async function saveBlog() {
 
       //clear editor
       editor.clear();
+      editImageSession.length = 0;
 
       runValidation();
     }
@@ -306,6 +334,68 @@ async function updateBlog() {
     if (response.status == 200) {
       postResponse.innerText = 'Blog updated successfully!';
       postResponse.style.color = 'green';
+
+      (function removeUnusedImages() {
+        const initialImages: string[] = [];
+        const currentImages: string[] = [];
+
+        const removableImages: string[] = [];
+
+        for (let i = 0; i < loadedBlog.content.blocks.length; i++) {
+          if (loadedBlog.content.blocks[i].type == 'image') {
+            initialImages.push(loadedBlog.content.blocks[i].data.file.name);
+          }
+        }
+
+        for (let i = 0; i < outputData.blocks.length; i++) {
+          if (outputData.blocks[i].type == 'image') {
+            currentImages.push(outputData.blocks[i].data.file.name);
+          }
+        }
+
+        //if initial images does not contain current image, try remove from editImageSession
+        for (let i = 0; i < initialImages.length; i++) {
+          if (currentImages.includes(initialImages[i])) {
+            continue;
+          }
+          else {
+            const image = initialImages[i].replace('/uploaded-images/', '');
+            editImageSession.splice(editImageSession.indexOf(image), 1);
+            removableImages.push(initialImages[i]);
+          }
+        }
+
+        for (let i = 0; i < currentImages.length; i++) {
+          if (initialImages.includes(currentImages[i])) {
+            continue;
+          }
+          else {
+            const image = currentImages[i].replace('/uploaded-images/', '');
+            editImageSession.splice(editImageSession.indexOf(image), 1);
+          }
+        }
+
+        for (let i = 0; i < editImageSession.length; i++) {
+          const image = editImageSession[i].replace('/uploaded-images/', '');    
+          removableImages.push(image);
+        }
+        
+        if (removableImages.length == 0) {
+          console.log('No images to remove')
+          return;
+        } else {
+          console.log('Removing images: ' + removableImages);
+        }
+
+        const body = { images: removableImages };
+        const headers = { type: 'application/json' };
+        const blob = new Blob([JSON.stringify(body)], headers);
+    
+        navigator.sendBeacon('/api/blog/removeimages', blob);
+      })();
+
+      editImageSession.length = 0;
+      loadedBlog = blogData;
     }
     else {
       postResponse.innerText = 'Blog update failed: ' + statusMessage;
@@ -315,7 +405,6 @@ async function updateBlog() {
     console.log('[' + response.status + '] ' + response.statusText + ': ' + statusMessage);
   });
 }
-
 
 let loadedBlog: any = null;
 async function loadEditBlog() {

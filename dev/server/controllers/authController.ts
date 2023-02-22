@@ -1,8 +1,5 @@
 import * as bcrypt from 'bcrypt';
-const express = require('express');
 const mongoose = require('mongoose').mongoose;
-const fetch = require("node-fetch-commonjs");
-const ejs = require('ejs').ejs;
 
 const saltRounds = 12;
 

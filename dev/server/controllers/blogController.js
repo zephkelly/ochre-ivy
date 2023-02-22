@@ -9,11 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blog_getURI = exports.blog_homePage = exports.blogAPI_imageUpload = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
+exports.blog_getURI = exports.blog_homePage = exports.blogAPI_delete = exports.blogAPI_update = exports.blogAPI_post = exports.blogAPI_getURI = exports.blogAPI_get = void 0;
 require('dotenv').config();
 const fetch = require("node-fetch-commonjs");
-const sharp = require('sharp');
-const fs = require('fs');
 const analyticsModel_1 = require("../models/analyticsModel");
 const blogModel_1 = require("../models/blogModel");
 //API Routes ------------------------------------------------
@@ -334,7 +332,7 @@ function blogAPI_update(req, res) {
         //If validation fails, bad request. Send error message
         const validationStatus = yield validateBlogPost();
         if (validationStatus.failedValidation) {
-            res.status(400).send("Bad request: " + validationStatus.message);
+            res.status(400).send(validationStatus.message);
             return;
         }
         blogModel_1.Blog.Model.findOneAndUpdate(filter, update, { new: true }, (err, blog) => {
@@ -365,40 +363,6 @@ function blogAPI_delete(req, res) {
     });
 }
 exports.blogAPI_delete = blogAPI_delete;
-sharp.cache(false);
-function blogAPI_imageUpload(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const image = req.file;
-        const dirPath = __dirname + '/../../' + 'public/uploaded-images/';
-        const originalName = image.filename;
-        const newName = Date.now() + '-' + originalName.split('.').slice(0, -1).join('.') + '.webp';
-        if (!image) {
-            console.log("No image sent in request");
-            return res.status(400).send(JSON.stringify({ success: 0 }));
-        }
-        yield sharp(dirPath + originalName)
-            .webp({ quality: 60 })
-            .resize(1920, 1080, {
-            kernel: sharp.kernel.cubic,
-            fit: 'cover',
-        })
-            .toFile(dirPath + newName);
-        //Create thumbnail
-        yield sharp(dirPath + originalName)
-            .webp({ quality: 60 })
-            .resize(640, 360, {
-            kernel: sharp.kernel.cubic,
-            fit: 'cover',
-        })
-            .toFile(dirPath + 'thumbnails/' + newName);
-        fs.unlink(dirPath + originalName, (err) => { if (err) {
-            console.log(err);
-        } });
-        const imgPath = newName;
-        res.status(200).send(JSON.stringify({ url: imgPath }));
-    });
-}
-exports.blogAPI_imageUpload = blogAPI_imageUpload;
 //Routes ------------------------------------------------
 function blog_homePage(req, res) {
     var _a;
@@ -451,7 +415,9 @@ function blog_getURI(req, res) {
             //Back button reference
             let reference = req.headers.referer;
             let referenceName = null;
-            reference = reference.replace('http://' + req.headers.host, '');
+            reference = reference.replace(req.headers.host, '');
+            reference = reference.replace('http://', '');
+            reference = reference.replace('https://', '');
             if (reference.includes('/')) {
                 referenceName = "Home";
             }
