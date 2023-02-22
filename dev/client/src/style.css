@@ -1326,6 +1326,10 @@ main {
   height: 100%;
   z-index: 2;
   position: relative;
+  /* Safari scroll flicker fix */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
 }
 #blogs-featured .blog-image {
   width: auto;
