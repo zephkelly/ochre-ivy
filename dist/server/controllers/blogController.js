@@ -54,8 +54,17 @@ function blogAPI_get(req, res) {
     }
     if (req.query.tag) {
         if (req.query.tag == 'featured') {
-            limit = 3;
-            skip = (page - 1) * limit;
+            blogModel_1.Blog.Model.find({ tags: { $in: ['featured'] } }).sort({ createdDate: -1 }).exec((err, blogs) => {
+                if (err) {
+                    return console.log(err);
+                }
+                const randomSort = blogs.sort(() => Math.random() - 0.5);
+                for (let i = 0; i < 3; i++) {
+                    blogList.push(randomSort[i]);
+                }
+                res.send(blogList);
+            });
+            return;
         }
         blogModel_1.Blog.Model.find({ tags: { $in: [req.query.tag] } }).sort({ createdDate: -1 }).skip(skip).limit(limit).exec((err, blogs) => {
             if (err) {
