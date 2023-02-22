@@ -66,7 +66,6 @@ window.addEventListener('load', async () => {
 
 let lastFeaturedBlog = featuredBlogs.length - 1;
 let currentFeaturedBlog = 0;
-
 let activePage = 'home';
 
 function start() {
@@ -84,7 +83,6 @@ function start() {
 
 async function activatePages() {
   const section = urlParams.get('section');
-  const filter = urlParams.get('filter');
 
   if (section === 'all') {
     searchInputValue = searchInput.value;
@@ -93,12 +91,11 @@ async function activatePages() {
       await makeRequest('&search=' + searchInputValue);
       removeActiveFilter();
     }
-
-    if (filter !== null || filter !== undefined || filter !== 'none' || filter !== '') {
-      setActiveFilter(filter);
+    else {
+      setActiveFilter(allFilter);
+      await makeRequest('');
     }
 
-    await makeRequest('');
     enableAllPage();
   }
   else {
@@ -111,8 +108,8 @@ function setEventListeners() {
     filter.addEventListener('click', () => {
       if (filter.classList.contains('active')) {
         return;
-  
-      } else {
+      }
+      else {
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.delete('page');
   
@@ -146,6 +143,8 @@ function setEventListeners() {
     }
 
     setActiveFilter(allFilter);
+    makeRequest('');
+
     enableAllPage();
     formatElements();
   });
@@ -445,8 +444,12 @@ function cycleFeaturedBlogs() {
   featuredBlogLinks[currentFeaturedBlog].classList.add('active');
 }
 
-function setActiveFilter(filter: any) {
-  if (filter == HTMLElement) {
+function setActiveFilter(filter: HTMLElement) {
+  removeActiveFilter();
+  console.log("Removing active filter");
+
+  filter.classList.add('active');
+  console.log(filter + " Should be active");
 
     removeActiveFilter();
     filter.classList.add('active');
