@@ -474,10 +474,8 @@ function cycleFeaturedBlogs(clickedBlog: any = null, initial: boolean = false) {
 
 function setActiveFilter(filter: HTMLElement) {
   removeActiveFilter();
-  console.log("Removing active filter");
 
   filter.classList.add('active');
-  console.log(filter + " Should be active");
 
   const urlParams = new URLSearchParams(window.location.search);
 
