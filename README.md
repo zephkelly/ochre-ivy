@@ -36,7 +36,7 @@ with separate thumbnail and full resolution sizes.
 <br>
 
 ### Search Feature
-![Imgur](https://imgur.com/GlalP3N.gif)
+![Imgur](https://imgur.com/PYXZXzB.gif)
 
 All blogs are given meta-data, such as:: tags, subtitles, dates, and alt text for images. The frontend makes requests to the server using query parameters and filters for limits on page size. The 
 backend `/api/blog` route contains logic to filter and sort blog data based on provided parameters. Different versions of data can be requested to reduce payload size, such as a `display=true` query param, 
