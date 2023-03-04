@@ -97,11 +97,13 @@ async function activatePages() {
 
     if (searchInputValue.length > 0) {
       await makeRequest('&search=' + searchInputValue);
-      removeActiveFilter();
+      setActiveFilter(allFilter);
+    }
+    else if (urlParams.get('filter') == 'recipes' || urlParams.get('filter') == 'recipe') {
+      setActiveFilter(recipesFilter);
     }
     else {
       setActiveFilter(allFilter);
-      await makeRequest('');
     }
 
     enableAllPage();
@@ -152,7 +154,6 @@ function setEventListeners() {
     }
 
     setActiveFilter(allFilter);
-    makeRequest('');
 
     enableAllPage();
     formatElements();
@@ -202,7 +203,6 @@ function setEventListeners() {
     searchInputValue = searchInput.value;
 
     if (searchInputValue == '') {
-      makeRequest('');
       setActiveFilter(allFilter);
       return;
     }
@@ -401,8 +401,6 @@ function enableAllPage() {
   checkIfPaddingLeft();
   clearInterval(featuredInterval);
 
-  setActiveFilter('all');
-
   blogNavHome.classList.remove('active');
   blogNavAll.classList.add('active');
 
@@ -476,59 +474,35 @@ function cycleFeaturedBlogs(clickedBlog: any = null, initial: boolean = false) {
 
 function setActiveFilter(filter: HTMLElement) {
   removeActiveFilter();
-
   filter.classList.add('active');
-  console.log(filter + " Should be active");
 
-    removeActiveFilter();
-    filter.classList.add('active');
+  const urlParams = new URLSearchParams(window.location.search);
 
-    const urlParams = new URLSearchParams(window.location.search);
-
-    function getFilter(): string {
-      if (filter === allFilter) {
-        return 'none';
-      } else if (filter === recipesFilter) {
-        return 'recipe';
-      } else if (filter === newestFilter) {
-        return 'newest';
-      } else if (filter === oldestFilter) {
-        return 'oldest';
-      } else if (filter === azFilter) {
-        return 'alphabetical';
-      }
-
-      console.log("Cant find filter");
+  function getFilter(): string {
+    if (filter === allFilter) {
       return 'none';
+    } else if (filter === recipesFilter) {
+      return 'recipe';
+    } else if (filter === newestFilter) {
+      return 'newest';
+    } else if (filter === oldestFilter) {
+      return 'oldest';
+    } else if (filter === azFilter) {
+      return 'alphabetical';
     }
 
-    const selectedFilter = getFilter();
-
-    urlParams.set('filter', selectedFilter);
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
-
-    makeRequest("&filter=" + selectedFilter);
+    console.log("Cant find filter");
+    return 'none';
   }
-  else if (filter == String) {
-    switch (filter) {
-      case 'all':
-        setActiveFilter(allFilter);
-        break;
-      case 'recipe':
-        setActiveFilter(recipesFilter);
-        break;
-      case 'newest':
-        setActiveFilter(newestFilter);
-        break;
-      case 'oldest':
-        setActiveFilter(oldestFilter);
-        break;
-      case 'alphabetical':
-        setActiveFilter(azFilter);
-        break;
-    }
-  }
+
+  const selectedFilter = getFilter();
+
+  urlParams.set('filter', selectedFilter);
+  window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+
+  makeRequest("&filter=" + selectedFilter);
 }
+
 
 function removeActiveFilter() {
   filters.forEach((filter) => {

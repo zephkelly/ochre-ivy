@@ -543,6 +543,7 @@ main {
   margin: 0rem;
   font-size: 4.1rem;
   font-weight: 400;
+  line-height: 3.6rem;
   font-family: 'Poppins', sans-serif;
   text-align: start;
 }
@@ -2683,7 +2684,7 @@ main {
   }
   #blog-all-toolbar .section-container .wrapper:last-of-type {
     align-items: flex-start;
-    width: 90%;
+    width: 85%;
   }
   #blog-all-toolbar .wrapper .search-icon {
     position: absolute;
@@ -2784,12 +2785,16 @@ main {
   }
   #blog-section .blog-text {
     margin-right: 0rem;
+    line-height: 3.4rem;
   }
   #blog-section .blog-btn {
     margin-top: 1.5rem;
     margin-right: 0rem;
   }
 
+  #recipes-section .recipe-text {
+    line-height: 3.4rem;
+  }
   #recipes-section .recipe-bgBox {
     left: -47rem;
     top: 6rem;
@@ -2887,7 +2892,7 @@ main {
 
 @media (max-width: 480px) {
   #landing .hero-text {
-    line-height: 3.5rem;
+    line-height: 3.4rem;
   }
 
   #login-main .wrapper {
