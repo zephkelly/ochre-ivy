@@ -537,7 +537,7 @@ main {
   }
 
 #recipes-section .section-container {
-  min-height: 320px;
+  min-height: 260px;
 }
 #recipes-section .recipes-text {
   margin: 0rem;
@@ -625,7 +625,7 @@ main {
   box-sizing: border-box;
   overflow-x: scroll;
   overflow-y: hidden;
-  margin-top: 1rem;
+  margin-top: 0rem;
   padding: 0rem clamp(9.5vw,calc(22vw - 10%),5rem);
   z-index: 0;
 }
@@ -2538,6 +2538,7 @@ main {
   }
 
   #recipes-box .container-full-width {
+    margin-top: 1rem;
     width: 100%;
     height: auto;
     flex-direction: column;
