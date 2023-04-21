@@ -6,7 +6,7 @@ A fullstack blog created for sharing recipes, with a focus on health and wellnes
 <br>
 
 ## Technologies
-This wesbite was created without a framework, my goal being to gain a better understanding of how websites function without the abstractions frameworks provide.
+This website was created without a framework, my goal being to gain a better understanding of how websites function without the abstractions frameworks provide.
 
 - Typescript
 - Express/Node
